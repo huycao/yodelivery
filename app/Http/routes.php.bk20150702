@@ -1,0 +1,39 @@
+<?php
+
+/*
+|--------------------------------------------------------------------------
+| Application Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register all of the routes for an application.
+| It's a breeze. Simply tell Laravel the URIs it should respond to
+| and give it the controller to call when that URI is requested.
+|
+*/
+
+$app->get('/', function() use ($app) {
+    return $app->abort(404);
+});
+
+$app->get('balloon', function() {
+	return view('home.runBalloon');
+});
+$app->get('tvc', function() {
+	return view('home.tvc');
+});
+$app->get('delivery', 'App\Http\Controllers\DeliveryController@adsProcess');
+$app->get('delivery/ova', 'App\Http\Controllers\DeliveryController@makeOva');
+$app->get('make-vast', 'App\Http\Controllers\DeliveryController@makeVast');
+$app->get('track', 'App\Http\Controllers\DeliveryController@trackEvent');
+$app->get('vast', 'App\Http\Controllers\DeliveryController@adsProcess');
+$app->get('rt', 'App\Http\Controllers\DeliveryController@retargeting');
+$app->get('conversion', 'App\Http\Controllers\ConversionController@trackConversion');
+$app->get('test-sentinel', 'App\Http\Controllers\DeliveryController@testSentinel');
+
+$app->get('getip', function(){
+	return getIP();
+});
+
+$app->get('redisflush', function(){
+	Cache::flush();
+});

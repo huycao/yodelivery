@@ -1,0 +1,96 @@
+<?php namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model as Eloquent;
+use RedisHelper;
+
+class GeoBaseModel extends Eloquent {
+
+    /**
+     *     Table name of model used
+     *     @var string
+     */
+    protected $table = 'geo';
+
+    public $timestamps = false;
+
+    public function getCountry() {
+        $cacheKey = 'GeoBaseModel_Country';
+        $cacheField = 'All';
+        $retval = RedisHelper::hGet($cacheKey, $cacheField);
+        if (!$retval) {
+            $retval = $this->groupBy('country_code')
+            ->where('country_code', '<>', '-')
+            ->get(array('country_code', 'country_name'));
+
+            RedisHelper::hSet($cacheKey, $cacheField, $retval);
+        }
+
+        return $retval;
+    }
+
+    /**
+     * 
+     * Enter Get province list
+     * @param array $country_code country code
+     */
+    public function getRegionByCountry($country_code = array()) {
+        $result = array();
+        if (!empty($country_code)) {
+            $cacheKey = "GeoBaseModel_Region";
+            foreach ($country_code as $value) {
+                $cacheField = $value;
+                $retval = RedisHelper::hGet($cacheKey, $cacheField);
+                if (!$retval) {
+                    $retval = DB::table('geo')->select('country_code','country_name','region')
+                                           ->groupBy('country_code','region')
+                                           ->where('region', '<>', '-')
+                                           ->where('country_code', $value)
+                                           ->get();
+                    RedisHelper::hSet($cacheKey, $cacheField, $retval);
+                }
+                
+                $result = $this->meargeObj($result, $retval);
+            }
+            
+            return $result;
+        } else {
+            return FALSE;
+        }
+    }
+    
+    /**
+     * 
+     * Get country, region
+     * @param $ip
+     */
+    public static function getGeoByIp($ip) {
+        $cacheKey = "GEOIP_RECORD_BYNAME";
+        $cacheField = $ip;
+        $geoip = RedisHelper::hGet($cacheKey, $cacheField);
+        if(empty($geoip)){
+            $long_ip = sprintf("%u", ip2long($ip));
+            $geoip = \DB::table('geo')->select('country_code','region')
+                                     ->where('ip_from','<=', $long_ip)
+                                     ->where('ip_to','>=', $long_ip)
+                                     ->where('country_code','NOT LIKE', '-')
+                                     ->first();
+            RedisHelper::hSet($cacheKey, $cacheField, $geoip);
+        }
+        
+        
+        return $geoip;
+    }
+    
+    /**
+     * 
+     * Merge object geo
+     * @param GeoBaseModel $obj1
+     * @param GeoBaseModel $obj2
+     */
+    public function meargeObj($obj1, $obj2=array()) {
+        foreach ($obj2 as $value) {
+            $obj1[] = $value;
+        }
+        return $obj1;
+    }
+}

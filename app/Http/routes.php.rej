@@ -1,0 +1,9 @@
+diff a/app/Http/routes.php b/app/Http/routes.php	(rejected hunks)
+@@ -15,7 +15,6 @@
+     return $app->welcome();
+ });
+ 
+-$app->get('balloon', function() {
+ $app->get('delivery', 'App\Http\Controllers\DeliveryController@adsProcess');
+ $app->get('delivery/ova', 'App\Http\Controllers\DeliveryController@makeOva');
+ $app->get('make-vast', 'App\Http\Controllers\DeliveryController@makeVast');

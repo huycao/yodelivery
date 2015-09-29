@@ -1,0 +1,167 @@
+
+@font-face {
+    font-family: 'comfortaa_bold';
+    src: url('../fonts/comfortaa_bold/comfortaa_bold.eot');
+    src: url('../fonts/comfortaa_bold/comfortaa_bold.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/comfortaa_bold/comfortaa_bold.woff') format('woff'),
+         url('../fonts/comfortaa_bold/comfortaa_bold.ttf') format('truetype'),
+         url('../fonts/comfortaa_bold/comfortaa_bold.svg#comfortaa_bold') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+.ddsmoothmenu {
+	font: 12px Verdana;
+	width: 100%;
+}
+.ddsmoothmenu ul {
+	z-index: 2000;
+	margin: 0;
+	padding: 0;
+	list-style-type: none;
+	float:left;
+}
+/*Top level list items*/
+.ddsmoothmenu ul li {
+	position: relative;
+	display: inline;
+	float: left;
+}
+.ddsmoothmenu ul li.mar-r20 {
+	margin-left:0px;
+	margin-right: 0px;
+}
+.ie8 .ddsmoothmenu ul li.mar-r20 {
+	margin-right:5px;
+}
+/**********************/
+.downarrowclass{display:none;}
+a.live{background-image:url(../images/live.png);background-position: center bottom; min-width: 102px;color:transparent}
+a.live:hover, a.live.active{color:#00a9bb !important;text-transform:uppercase}
+a.movie{background-image:url(../images/movie.png);background-position: center bottom;	min-width: 102px;color:transparent}
+a.movie:hover, a.movie.active{color:#00a9bb !important;text-transform:uppercase}
+a.drama{background-image:url(../images/drama.png);background-position: center bottom;	min-width: 102px;color:transparent}
+a.drama:hover, a.drama.active{color:#00a9bb !important;text-transform:uppercase}
+a.show{background-image:url(../images/show.png);background-position: center bottom; min-width: 102px;color:transparent}
+a.show:hover, a.show.active{color:#00a9bb !important;text-transform:uppercase}
+a.kids{background-image:url(../images/kids.png);background-position: center bottom; min-width: 102px;color:transparent}
+a.kids:hover, a.kids.active{color:#00a9bb !important;text-transform:uppercase}
+a.documentary{background-image:url(../images/documentary.png);background-position: center bottom; max-width:100pxc;olor:transparent}
+a.documentary:hover, a.documentary.active{color:#00a9bb !important;text-transform:uppercase}
+a.education{background-image:url(../images/education.png);background-position: center bottom; max-width:100px;color:transparent}
+a.education:hover, a.education.active{color:#00a9bb !important;text-transform:uppercase}
+a.etc{background-image:url(../images/etc.png);background-position: center bottom; min-width: 102px;color:transparent}
+a.etc:hover, a.etc.active{color:#00a9bb !important;text-transform:uppercase}
+/*-- menu --*/
+.ddsmoothmenu .live{padding-right:14px;padding-left:12px;text-indent:-1px}
+.ddsmoothmenu .movie{padding-right:14px;padding-left:12px;text-indent:-1px}
+.ddsmoothmenu .show{padding-right:14px;padding-left:12px;text-indent:-1px}
+.ddsmoothmenu .kids{padding-right:14px;padding-left:12px;text-indent:-1px}
+.ddsmoothmenu .documentary{padding-right:2px !important;padding-left:0px !important;text-indent:0px;}
+.ddsmoothmenu .education{padding-right: 2px !important;padding-left:0px !important;text-indent:11px;}
+.ddsmoothmenu .etc{padding-right:14px;padding-left:12px}
+/**********************/
+.menu_fa_text {
+    display: block;
+    font-size: 14px;
+	font-family:comfortaa_bold;
+    line-height: 34px;
+    padding-bottom: 1px;
+    padding-top: 65px;
+	background-repeat:no-repeat;
+	background-position:center bottom;
+	padding-right: 10px;
+	text-align:center;
+	text-indent: 4px;
+	font-weight:normal;
+}
+.menu_fa_text:hover {
+	background-position:center top;
+}
+.ie8 .menu_fa_text{font-size: 16px !important; line-height:20px; height:20px;}
+.menu_fa_ul{
+	top:70px !important;
+	background-color:#f3f3f3;
+	width:300px;
+}
+/*Top level menu link items style*/
+.ddsmoothmenu ul li a {
+	display: block;
+	text-decoration: none;
+}
+* html .ddsmoothmenu ul li a { /*IE6 hack to get sub menu links to behave correctly*/
+	display: inline-block;
+}
+.ddsmoothmenu ul li a:link, .ddsmoothmenu ul li a:visited {
+	color: transparent;
+}
+.ddsmoothmenu ul li a.selected,.ddsmoothmenu ul li a.active { /*CSS class that's dynamically added to the currently active menu items' LI A element*/
+	/*background: #f0f0f0;*/
+	background-position:center top;
+	color: #000;
+}
+.ddsmoothmenu ul li a:hover {
+	color: #000;
+}
+/*1st sub level menu*/
+.ddsmoothmenu ul li ul {
+	position: absolute;
+	left: 0;
+	display: none; /*collapse all sub menus to begin with*/
+	visibility: hidden;
+}
+/*Sub level menu list items (undo style from Top level List Items)*/
+.ddsmoothmenu ul li ul li {
+	display: list-item;
+	float: left;
+}
+.ddsmoothmenu ul li ul li a {
+	background-color: #f4f4f4;
+	color: #999999;
+
+}
+.ddsmoothmenu ul li ul li a:hover {
+	background-color: #ff6222;
+	color: #FFF;
+}
+/*All subsequent sub menu levels vertical offset after 1st level sub menu */
+.ddsmoothmenu ul li ul li ul {
+	top: 0;
+}
+/* Sub level menu links style */
+.ddsmoothmenu ul li ul li a {
+	width: 140px; /*width of sub menus*/
+	padding: 5px;
+	margin: 0;
+	font-size:12px;
+	font-size:9px;
+	font-family: "helveticaneue_boldcond_2";
+}
+.ie8 .ddsmoothmenu ul li ul li a {font-size:9px;}
+/* Holly Hack for IE \*/
+* html .ddsmoothmenu {
+	height: 1%;
+} /*Holly Hack for IE7 and below*/
+/* ######### CSS classes applied to down and right arrow images  ######### */
+
+.downarrowclass {
+	position: absolute;
+	right: 0;
+	top: 0px;
+}
+.rightarrowclass {
+	position: absolute;
+	top: 6px;
+	right: 5px;
+}
+/* ######### CSS for shadow added to sub menus  ######### */
+
+.ddshadow { /*shadow for NON CSS3 capable browsers*/
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 0;
+	height: 0;
+}
+.toplevelshadow { /*shadow opacity for NON CSS3 capable browsers. Doesn't work in IE*/
+	opacity: 0.8;
+}

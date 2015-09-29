@@ -1,0 +1,5 @@
+/storage/app
+/storage/framework
+/storage/framework/views
+/storage/logs
+.env

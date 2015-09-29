@@ -1,0 +1,91 @@
+body{width: 100%;}
+h1, h2, h3, legend {
+    color: rgb(3, 158, 231);
+}
+body.demo_vast{background: url(../img/demo_preroll_yomedia.jpg) top center no-repeat;}
+body.demo_popup{background: url(../img/yomedia_demo_popup.jpg) top center no-repeat;height: 2142px}
+.center {
+    text-align: center;
+}
+.fleft {
+    float: left;
+}
+.clear {
+    clear: both;
+}
+.w50 {
+    width: 50%;
+}
+.container {
+    width: 1030px;
+    margin: 0 auto;
+    position:relative;
+    z-index: 2
+}
+.player {
+    width: 400px;
+}
+.bg-primary{margin-bottom: 0;}
+.category {
+    width: 600px;
+    padding: 0 15px;
+}
+#msg {
+    margin-top: 10px;
+}
+#msg p {
+    margin: 0px;
+    padding: 5px 10px;
+}
+.event_btn{
+    padding-top: 25px;
+    width: 120px;
+    margin: 0px auto;
+    text-align: center;
+}
+.event_btn .btn, .control_btn .btn{
+    width: 120px;
+    text-align: center;
+    margin-top: 15px;
+}
+.control_btn{
+    text-align: center;
+    padding-top: 25px;
+    padding-left: 15px;
+    width: 440px;
+}
+h4.bg-primary{padding: 5px;}
+#companion300x250, #companion300x60, #errorLog{
+    width: 100%;
+    height: 250px;
+    border: 1px solid rgb(3, 158, 231);
+}
+#companion300x60,#errorLog{
+    height: 60px;
+}
+#errorLog{padding: 10px;}
+.input-group-addon{
+    background: #5bc0de;
+    color: #fff;
+    min-width: 150px;
+    text-align: left;
+}
+.mt40{margin-top: 40px;}
+.mt20{margin-top: 20px;}
+.mt5{margin-top: 5px;}
+.row-fluid{border-bottom: 1px solid #e5e5e5;clear: both;margin-top: 5px;}
+.ad_load_info{padding-bottom: 100px;}
+.bgtext{margin-top: 20px;}
+.bgtext span{padding: 10px 30px; background: rgba(8, 7, 7, 0.79);font-size: 16px;}
+#btn_play{width: 75px;height: 75px;display: block;position: absolute;top: 318px;left: 466px;}
+#player_container{width: 400px;height: 320px;}
+.tvtuoitre #player_container{padding-top: 222px;padding-left: 15px;width: 569px;height: 357px;}
+
+.tvtuoitre #btn_play{width: 50px;height: 50px;display: block;position: absolute;top: 162px;left: 285px;}
+.tvtuoitre{height: 2200px}
+.phim14{height: 2574px;}
+.hayhaytv{height: 2153px;}
+.phim14 #player_container{ padding-top: 313px;padding-left: 22px;width: 657px;height: 439px;}
+.phim3s #player_container{ padding-top: 301px;padding-left: 24px;width: 652px;height: 400px;}
+.hayhaytv #player_container{ padding-top: 132px;padding-left: 26px;width: 960px;height: 480px;}
+.mask{background: #353535; width: 100%;height: 100%;opacity: 0.7;filter: alpha(opacity=70);position: fixed;top :0;left: 0}

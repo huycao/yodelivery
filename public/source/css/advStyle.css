@@ -1,0 +1,24 @@
+#avlOverlayInner{
+	z-index: 2147483646!important;
+	position: fixed;
+	display: none;
+}
+#avlOverlayWrapper{
+	background: #000000;
+	opacity: 0.4;
+	filter: alpha(opacity=40);
+	z-index: 2147483645!important;
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	display: none;
+	top: 0;
+	left: 0;
+}
+
+#YoMediaBalloon {
+	overflow: hidden;
+	position: fixed;
+	z-index: 2147483640!important;
+	display: block;
+}
