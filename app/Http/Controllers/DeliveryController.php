@@ -475,8 +475,14 @@ class DeliveryController extends Controller
 		$checksum          = Input::get('cs');
 		$isOverReport      = Input::get('ovr', '');
 		
+	    $hostReferer = '*';
+        if (!empty($_SERVER['HTTP_REFERER'])) {
+            $url = $_SERVER['HTTP_REFERER'];
+            $hostReferer = parse_url($url, PHP_URL_SCHEME) . '://' . getWebDomain($url);
+        }
+		
 		$header['Content-Type']                     = 'application/xml';
-        $header['Access-Control-Allow-Origin']      = '*';
+        $header['Access-Control-Allow-Origin']      = $hostReferer;
         $header['Access-Control-Allow-Credentials'] = 'true';
         $header['Cache-Control']                    = 'no-store, no-cache, must-revalidate, max-age=0';
         $header['Cache-Control']                    = 'post-check=0, pre-check=0';
@@ -588,8 +594,14 @@ class DeliveryController extends Controller
 	{
 		$vastTag = Input::get('vast_tag');
 		
+	    $hostReferer = '*';
+        if (!empty($_SERVER['HTTP_REFERER'])) {
+            $url = $_SERVER['HTTP_REFERER'];
+            $hostReferer = parse_url($url, PHP_URL_SCHEME) . '://' . getWebDomain($url);
+        }
+		
 		$header['Content-Type']                     = 'application/xml';
-        $header['Access-Control-Allow-Origin']      = '*';
+        $header['Access-Control-Allow-Origin']      = $hostReferer;
         $header['Access-Control-Allow-Credentials'] = 'true';
         $header['Cache-Control']                    = 'no-store, no-cache, must-revalidate, max-age=0';
         $header['Cache-Control']                    = 'post-check=0, pre-check=0';
