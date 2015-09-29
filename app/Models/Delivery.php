@@ -4,6 +4,7 @@ use Input, Cookie, DB;
 use RedisHelper;
 use DeviceDetector\DeviceDetector;
 //use MobileDetect;
+//use MobileDetect;
 
 class Delivery extends Eloquent{
 	const TRACKING_CODE_ADID                          = 14; //ad format tracking code ID
