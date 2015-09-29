@@ -22,6 +22,7 @@ if(!isset($_GET['v']) || $_GET['v'] != 3){
                 <Creative id="{!! $ad->id !!}">
                     @if($ad->linear == 'linear')
                     <Linear @if ($ad->skipads)skipoffset="00:00:{!!  trim($ad->skipads)  !!}"@endif>
+                    	<Duration>{!! $ad->durationText !!}</Duration>
                         {!! $ad->linearTracks !!}
                         <VideoClicks>
                             <ClickTracking id="tracking_click"><![CDATA[{!! $ad->trackClick !!}]]></ClickTracking>

@@ -139,7 +139,6 @@ class VAST extends Eloquent {
                     $XMLView = 'wrapper';
                 }
             }
-            
             $this->setHeaderVast();
             \View::addLocation(base_path() .'/resources/views/vast');
             $body = \View::make($XMLView)->with('ad',$this);
@@ -216,8 +215,14 @@ class VAST extends Eloquent {
     }
 
     public function setHeaderVast(){
+        $hostReferer = '*';
+        if (!empty($_SERVER['HTTP_REFERER'])) {
+            $url = $_SERVER['HTTP_REFERER'];
+            $hostReferer = parse_url($url, PHP_URL_SCHEME) . '://' . getWebDomain($url);
+        }
+        
         $this->header['Content-Type']                     = 'application/xml';
-        $this->header['Access-Control-Allow-Origin']      = '*';
+        $this->header['Access-Control-Allow-Origin']      = $hostReferer;
         $this->header['Access-Control-Allow-Credentials'] = 'true';
         $this->header['Cache-Control']                    = 'no-store, no-cache, must-revalidate, max-age=0';
         $this->header['Cache-Control']                    = 'post-check=0, pre-check=0';
