@@ -3,9 +3,9 @@
 define('UPLOAD_FILE_PATH', 'public/upload/');
 define('PUBLISHER_TRAFFIC_REPORT_FILE_PATH', UPLOAD_FILE_PATH.'publisher_traffic_report/');
 
-define('TRACKER_URL', 'http://tracking.yomedia.vn/');
+define('TRACKER_URL', 'http://local.yomedia-delivery.vn/');
 
-define('AD_SERVER_FILE', 'http://delivery.yomedia.vn/');
+define('AD_SERVER_FILE', 'http://local.yomedia-delivery.vn/');
 define('LINK_VAST', AD_SERVER_FILE.'vast');
 define('LINK_JW', AD_SERVER_FILE.'public/source/js/jwplayer5/jwp5.js');
 define('LINK_AVL', AD_SERVER_FILE.'public/source/advalue.js');
