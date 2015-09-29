@@ -362,7 +362,7 @@ class DeliveryController extends Controller
     			    $thirdImpressionTrackArr = explode("\n", $flightWebsite->ad->third_impression_track);
     			    $arrCurl = array();
     			    foreach ($thirdImpressionTrackArr as $item) { 
-    			        array_push($arrCurl, trim($item));
+    			        array_push($arrCurl, trim($this->replaceParam($item)));
     			    }
     			    multipleThreadsRequest($arrCurl);
 				}
@@ -422,7 +422,7 @@ class DeliveryController extends Controller
 			    
 			    $arrCurl = array();
 			    foreach ($thirdClickTrackArr as $item) { 
-			        array_push($arrCurl, trim($item));
+			        array_push($arrCurl, trim($this->replaceParam($item)));
 			    }
 			    multipleThreadsRequest($arrCurl);
 			}
