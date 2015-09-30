@@ -198,4 +198,22 @@ function {!! $event !!}YomediaVideo_{{ $data['zid'] }}(){
 }
 @endforeach
 
+function addAnEventListener_{!! $data['zid'] !!}(obj,evt,func){
+    if ('addEventListener' in obj){
+        obj.addEventListener(evt,func, false);
+    } else if ('attachEvent' in obj){//IE
+        obj.attachEvent('on'+evt,func);
+    }
+}
+
+function iFrameListener_{!! $data['zid'] !!}(event){
+     fn = event.data;
+     if (fn != '') {
+    	 eval(fn);
+     }
+}
+
+var fn_{!! $data['zid'] !!}='';
+addAnEventListener_{!! $data['zid'] !!}(window,'message',iFrameListener_{!! $data['zid'] !!});
+
 @include("footer")
