@@ -271,7 +271,7 @@ class Tracking extends Moloquent{
    
     public function isUniqueImpression($flight_website_id, $date = ''){
     	$visitorId = $this->getVisitorId();
-    	$redis = new RedisBaseModel(env('REDIS_HOST', '127.0.0.1'), env('REDIS_PORT', '6379'));
+    	$redis = new RedisBaseModel(env('REDIS_HOST', '127.0.0.1'), env('REDIS_PORT_4', '6379'), false);
     	$cacheKey = "UniqueImpression_{$flight_website_id}_{$date}_{$visitorId}";
     	$cacheField = "1";
     	$retval = $redis->hExist($cacheKey, $cacheField);
@@ -284,7 +284,7 @@ class Tracking extends Moloquent{
     }
     public function isUniqueClick($flight_website_id, $date = ''){
     	$visitorId = $this->getVisitorId();
-    	$redis = new RedisBaseModel(env('REDIS_HOST', '127.0.0.1'), env('REDIS_PORT', '6379'));
+    	$redis = new RedisBaseModel(env('REDIS_HOST', '127.0.0.1'), env('REDIS_PORT_4', '6379'), false);
     	$cacheKey = "UniqueClick_{$flight_website_id}_{$date}_{$visitorId}";
     	$cacheField = "1";
     	$retval = $redis->hExist($cacheKey, $cacheField);
@@ -312,7 +312,7 @@ class Tracking extends Moloquent{
     public function incFreCap($flight){
     	$visitorId = $this->getVisitorId();
     	$today = date('Y_m_d');
-    	$redis = new RedisBaseModel(env('REDIS_HOST', '127.0.0.1'), env('REDIS_PORT', '6379'));
+    	$redis = new RedisBaseModel(env('REDIS_HOST', '127.0.0.1'), env('REDIS_PORT_2', '6379'), false);
     	$cacheKey = "Tracking:FrequencyCap_{$flight->id}_{$visitorId}_{$flight->event}";
     	$cacheField = $today;
     	$cacheKeyTime = "Tracking:TimeFrequencyCap_{$flight->id}_{$visitorId}_{$flight->event}";
@@ -332,7 +332,7 @@ class Tracking extends Moloquent{
     public function getTodayFreCap($flight){
     	$visitorId = $this->getVisitorId();
     	$today = date('Y_m_d');
-    	$redis = new RedisBaseModel(env('REDIS_HOST', '127.0.0.1'), env('REDIS_PORT', '6379'));
+    	$redis = new RedisBaseModel(env('REDIS_HOST', '127.0.0.1'), env('REDIS_PORT_2', '6379'), false);
     	$cacheKey = "Tracking:FrequencyCap_{$flight->id}_{$visitorId}_{$flight->event}";
     	$cacheField = $today;
     	$fromCache = $redis->hGet($cacheKey, $cacheField, false);
@@ -345,7 +345,7 @@ class Tracking extends Moloquent{
     public function getTimeFreCap($flight){
     	$visitorId = $this->getVisitorId();
     	$today = date('Y_m_d');
-    	$redis = new RedisBaseModel(env('REDIS_HOST', '127.0.0.1'), env('REDIS_PORT', '6379'));
+    	$redis = new RedisBaseModel(env('REDIS_HOST', '127.0.0.1'), env('REDIS_PORT_2', '6379'), false);
     	$cacheKey = "Tracking:TimeFrequencyCap_{$flight->id}_{$visitorId}_{$flight->event}";
     	$cacheField = $today;
     	$fromCache = $redis->hGet($cacheKey, $cacheField, false);
@@ -356,7 +356,7 @@ class Tracking extends Moloquent{
     }
     
     public function setTimeFreCap($flight, $expire) {
-        $redis = new RedisBaseModel(env('REDIS_HOST', '127.0.0.1'), env('REDIS_PORT', '6379'));
+        $redis = new RedisBaseModel(env('REDIS_HOST', '127.0.0.1'), env('REDIS_PORT_2', '6379'), false);
         $visitorId = $this->getVisitorId();
     	$cacheKey = "Tracking:FrequencyCap_{$flight->id}_{$visitorId}_{$flight->event}";
     	

@@ -15,7 +15,7 @@ class RawTrackingSummary{
 
 
     public static function connection() {
-        $redis = new RedisBaseModel(env('REDIS_HOST', '127.0.0.1'), env('REDIS_PORT', '6379'));
+        $redis = new RedisBaseModel(env('REDIS_HOST', '127.0.0.1'), env('REDIS_PORT_2', '6379'), false);
         self::$redis_connection = $redis->connection;
         return self::$redis_connection;
     }
