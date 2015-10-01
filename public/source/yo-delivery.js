@@ -1,4 +1,4 @@
-var avlDomain = 'delivery.yomedia.vn';
+var avlDomain = 'delivery.yomedia.local';
 var avlProtocal = (document.location.protocol == 'https:') ? 'https://' : 'http://';
 var avlDelivery = avlProtocal + avlDomain + '/delivery';
 
@@ -728,12 +728,12 @@ var avlInteractModule = new function(){
         },
         isMobile: function(){
             var m = ['iphone','ipad','android','blackberry','bb10','rim tablet','touch','nokia','opera mini','windows mobile','windows phone','iemobile'];
-            for (var i in m) if (navigator.userAgent.toLowerCase().indexOf(m[i]) > 0) return true;
+            for (var i in m) if (navigator.userAgent.toLowerCase().indexOf(m[i]) >-1) return true;
             return false;
         },
         isWindowPhone: function(){
             var m = ['windows mobile','windows phone','iemobile'];
-            for (var i in m) if (navigator.userAgent.toLowerCase().indexOf(m[i]) > 0) return true;
+            for (var i in m) if (navigator.userAgent.toLowerCase().indexOf(m[i]) >-1) return true;
             return false;
         },
         addBanners: function(a, b, c, d, e, f, g, h, fv) {
