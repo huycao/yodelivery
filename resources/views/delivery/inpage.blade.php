@@ -69,9 +69,8 @@ function showYoMediaPopupAd_{!! $data['zid'] !!}(s) {
         return false;
     }
     
-	var swdWidth =  wdWidth();
-    var swdHeight =  wdHeight();
-      
+	var swdWidth =  screen.width;
+    var swdHeight =  screen.height;
     //var container_width = content_{!! $data['zid'] !!}.clientWidth;
     a_{!! $data['zid'] !!}.style.opacity = 1;
     a_{!! $data['zid'] !!}.style.position = 'relative';
