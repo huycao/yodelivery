@@ -370,10 +370,15 @@ var avlInteractModule = new function(){
             domManipulate.remove(playerAdsId)
         },		
 		initVideoInline: function(pid, elw, elh, el, w, z, fp, a, az, autoStart, v, d, cs, ovr){
-
 			var domWrapPlayer = domManipulate.create('div', el, 'position:relative;top:0;bottom:0;');
-            var domPlayerInner = domManipulate.getElid(pid);
-            var domPlayerAds = domManipulate.create('div', 'inner' + el, 'position:relative;width:' + elw + 'px;height:' + elh + 'px;', '<div id="' + avlConfig.get('ICW') + el + '"><p>' + avlConfig.get('') + '</p></div>');
+			//check if not have player id
+			if(pid ===''){
+				pid = "YoMediaDiv"+el;
+				document.body.innerHTML += '<div id="'+pid+'"></div>';
+			}
+			var domPlayerInner = domManipulate.getElid(pid);
+
+			var domPlayerAds = domManipulate.create('div', 'inner' + el, 'position:relative;width:' + elw + 'px;height:' + elh + 'px;', '<div id="' + avlConfig.get('ICW') + el + '"><p>' + avlConfig.get('') + '</p></div>');
             domManipulate.append(domWrapPlayer, domPlayerInner);
             domWrapPlayer.appendChild(domPlayerAds);
             domWrapPlayer.appendChild(domPlayerInner);
@@ -728,12 +733,12 @@ var avlInteractModule = new function(){
         },
         isMobile: function(){
             var m = ['iphone','ipad','android','blackberry','bb10','rim tablet','touch','nokia','opera mini','windows mobile','windows phone','iemobile'];
-            for (var i in m) if (navigator.userAgent.toLowerCase().indexOf(m[i]) > 0) return true;
+            for (var i in m) if (navigator.userAgent.toLowerCase().indexOf(m[i]) > -1) return true;
             return false;
         },
         isWindowPhone: function(){
             var m = ['windows mobile','windows phone','iemobile'];
-            for (var i in m) if (navigator.userAgent.toLowerCase().indexOf(m[i]) > 0) return true;
+            for (var i in m) if (navigator.userAgent.toLowerCase().indexOf(m[i]) > -1) return true;
             return false;
         },
         addBanners: function(a, b, c, d, e, f, g, h, fv) {
