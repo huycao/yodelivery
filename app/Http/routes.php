@@ -63,7 +63,6 @@ $app->get('make-vast', [
 $app->get('track', 'App\Http\Controllers\DeliveryController@trackEvent');
 $app->get('vast', 'App\Http\Controllers\DeliveryController@adsProcess');
 $app->get('rt', 'App\Http\Controllers\DeliveryController@retargeting');
-$app->get('conversion', 'App\Http\Controllers\ConversionController@trackConversion');
 $app->get('test-sentinel', 'App\Http\Controllers\DeliveryController@testSentinel');
 $app->get('render-vast', 'App\Http\Controllers\DeliveryController@renderVast');
 $app->get('get-vast-tag', 'App\Http\Controllers\DeliveryController@getVastTag');
