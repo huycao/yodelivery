@@ -10,7 +10,7 @@ class Conversion extends Eloquent{
     const RESPONSE_TYPE_CONVERSION_ERROR              = 'error';
     
     function getConversion($conversionID, $renewCache = false) {
-        $redis = new RedisBaseModel(env('REDIS_HOST', '127.0.0.1'), env('REDIS_PORT', '6379'));
+        $redis = new RedisBaseModel(env('REDIS_HOST', '127.0.0.1'), env('REDIS_PORT_2', '6379'), false);
 	    $cacheKey = "Conversion";
 	    $cacheField = $conversionID;
 		$retval = $redis->hGet($cacheKey, $cacheField);

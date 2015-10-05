@@ -360,6 +360,9 @@ var avlInteractModule = new function(){
 			OW.setAttribute('style', "display:block;");
 		},
         removeVideoInline: function(playerInnerId, playerAdsId) {
+			if(playerInnerId == ''){
+				playerInnerId = "YoMediaDiv"+playerAdsId;
+			}
             var playerInnerHtml = domManipulate.getElid(playerInnerId).innerHTML;
             var playerInnerStyle = domManipulate.getElid(playerInnerId).getAttribute('style');
             playerInnerStyle = playerInnerStyle.replace('DISPLAY', 'display');
@@ -376,8 +379,8 @@ var avlInteractModule = new function(){
 				pid = "YoMediaDiv"+el;
 				document.body.innerHTML += '<div id="'+pid+'"></div>';
 			}
-			var domPlayerInner = domManipulate.getElid(pid);
 
+			var domPlayerInner = domManipulate.getElid(pid);
 			var domPlayerAds = domManipulate.create('div', 'inner' + el, 'position:relative;width:' + elw + 'px;height:' + elh + 'px;', '<div id="' + avlConfig.get('ICW') + el + '"><p>' + avlConfig.get('') + '</p></div>');
             domManipulate.append(domWrapPlayer, domPlayerInner);
             domWrapPlayer.appendChild(domPlayerAds);
@@ -415,7 +418,6 @@ var avlInteractModule = new function(){
 			        "ova-jw": {}
 			    }
 			});
-
 		},	
 		initVideoInlineVPaid: function(pid, elw, elh, el, w, z, fp, a, az, autoStart, v, d, cs, ovr){
 			var domWrapPlayer = domManipulate.create('div', el, 'position:relative;top:0;bottom:0;');
