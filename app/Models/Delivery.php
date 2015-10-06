@@ -148,6 +148,9 @@ class Delivery extends Eloquent{
 	 *  check inventory limit of requested flight
 	 */
 	public function checkInventory($flight, $flightWebsite, $event, $dateRange){
+	    if (isLocal()) {
+		    return true;
+		}
 		$RawTrackingSummarry    = new RawTrackingSummary;
 		
 		$rate                   = $flight->cost_type == 'cpm' ? 1000 : 1;
