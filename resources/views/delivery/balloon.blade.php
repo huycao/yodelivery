@@ -207,9 +207,9 @@ function addAnEventListener_{!! $data['zid'] !!}(obj,evt,func){
 }
 
 function iFrameListener_{!! $data['zid'] !!}(event){
-     fn = event.data;
-     if (fn != '') {
-    	 eval(fn);
+     if (event.data.indexOf("YomediaVideo_{!! $data['zid'] !!}") >= 0 || event.data.indexOf("Yomedia_{!! $data['zid'] !!}") >= 0) {
+    	 fn_{!! $data['zid'] !!} = event.data;
+    	 eval(fn_{!! $data['zid'] !!});
      }
 }
 
