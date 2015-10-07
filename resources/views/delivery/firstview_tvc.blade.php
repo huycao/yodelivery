@@ -106,6 +106,9 @@ container_height_{!! $data['zid'] !!}  = container_width_{!! $data['zid'] !!}  /
                 avlHelperModule.embedTracking("{!! trim(str_replace('[timestamp]', time(), $item)) !!}");
             @endforeach
         @endif
+        if (typeof _YoImp != 'undefined' && avlHelperModule.validateUrl(_YoImp)) {
+        	avlHelperModule.embedTracking(_YoImp);
+        }
         //setInterval(closeYoMediaPopupAd_{!! $data['zid'] !!} , 5000);
     }
     function closeYoMediaPopupAd_{!! $data['zid'] !!} () {
@@ -247,6 +250,9 @@ window.onclick = function(event) {
                 avlHelperModule.embedTracking("{!! trim(str_replace('[timestamp]', time(), $item)) !!}");
             @endforeach
         @endif
+        if (typeof _YoClick != 'undefined' && avlHelperModule.validateUrl(_YoClick)) {
+        	avlHelperModule.embedTracking(_YoClick);
+        }
     }
 };
 window.onscroll = function(){

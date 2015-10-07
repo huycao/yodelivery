@@ -54,6 +54,9 @@ var bannerID = 'YoMediaBanner_{!! $data['zid'] !!}';
             avlHelperModule.embedTracking("{!! trim(str_replace('[timestamp]', time(), $item)) !!}");
         @endforeach
     @endif
+    if (typeof _YoImp != 'undefined' && avlHelperModule.validateUrl(_YoImp)) {
+    	avlHelperModule.embedTracking(_YoImp);
+    }
     
     <?php
         $eventArr = [
@@ -135,6 +138,9 @@ function clickTrackingYomedia_{!! $data['zid'] !!}() {
 		avlHelperModule.embedTracking(decodeURIComponent(item));
 	});
 	@endif
+	if (typeof _YoClick != 'undefined' && avlHelperModule.validateUrl(_YoClick)) {
+    	avlHelperModule.embedTracking(_YoClick);
+    }
 	window.open(clickTag);
 }
 

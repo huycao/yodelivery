@@ -53,6 +53,13 @@ function showYoMediaBannerAd_{!! $data['zid'] !!}(s) {
     <?php } ?>
 <?php } ?>
     
+    if (typeof _YoClick != 'undefined' && avlHelperModule.validateUrl(_YoClick)) {
+    	if ("" != clickTrack) {
+    		clickTrack += '|'+encodeURIComponent(_YoClick);
+    	} else {
+    		clickTrack += encodeURIComponent(_YoClick);
+    	}
+    }
 
     var ff = flash;
 	var flashvar = {
@@ -79,6 +86,9 @@ function showYoMediaBannerAd_{!! $data['zid'] !!}(s) {
             avlHelperModule.embedTracking("{!! trim(str_replace('[timestamp]', time(), $item)) !!}");
         <?php } ?>
     <?php } ?>
+    if (typeof _YoImp != 'undefined' && avlHelperModule.validateUrl(_YoImp)) {
+    	avlHelperModule.embedTracking(_YoImp);
+    }
     
     <?php $data['effect'] = 'Banner_Inpage';?>
     @include('ga_campaign')

@@ -60,6 +60,10 @@
         @endforeach
     @endif
     
+    if (typeof _YoImp != 'undefined' && avlHelperModule.validateUrl(_YoImp)) {
+    	avlHelperModule.embedTracking(_YoImp);
+    }
+    
     <?php
         $eventArr = [
             'start','firstQuartile','midpoint','thirdQuartile','complete'
@@ -121,6 +125,9 @@ function clickTrackingYomedia_{!! $data['zid'] !!}() {
 		avlHelperModule.embedTracking(decodeURIComponent(item));
 	});
 	@endif
+	if (typeof _YoClick != 'undefined' && avlHelperModule.validateUrl(_YoClick)) {
+    	avlHelperModule.embedTracking(_YoClick);
+    }
 	window.open(clickTag);
 }
 

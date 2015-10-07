@@ -64,6 +64,13 @@
             @endif
         @endforeach
     @endif
+    if (typeof _YoClick != 'undefined' && avlHelperModule.validateUrl(_YoClick)) {
+    	if ("" != clickTrack) {
+    		clickTrack += '|'+encodeURIComponent(_YoClick);
+    	} else {
+    		clickTrack += encodeURIComponent(_YoClick);
+    	}
+    }
     
     var ff = flash;
     
@@ -88,6 +95,9 @@
                 avlHelperModule.embedTracking("{!! trim(str_replace('[timestamp]', time(), $item)) !!}");
             @endforeach
         @endif
+        if (typeof _YoImp != 'undefined' && avlHelperModule.validateUrl(_YoImp)) {
+        	avlHelperModule.embedTracking(_YoImp);
+        }
         <?php $data['effect'] = 'Balloon'; ?>
         @include('ga_campaign')
     }
@@ -125,7 +135,7 @@
             }
             
             $htmlSource = str_replace('[yomedia_third_click_url_encode]', $clickTrackEnCode, $htmlSource);
-            $htmlSource = str_replace('[yomedia_third_click_url]', $clickTrackEnCode, $htmlSource);
+            $htmlSource = str_replace('[yomedia_third_click_url]', $clickTrack, $htmlSource);
         } 
 	?>
 	
@@ -138,6 +148,10 @@
             avlHelperModule.embedTracking("{!! trim(str_replace('[timestamp]', time(), $item)) !!}");
         @endforeach
     @endif
+    if (typeof _YoImp != 'undefined' && avlHelperModule.validateUrl(_YoImp)) {
+    	avlHelperModule.embedTracking(_YoImp);
+    }
+    
 @endif
 //Minimize popup
 function minYoMediaPopupAd_{!! $data['zid'] !!}() {
@@ -174,6 +188,9 @@ function clickTrackingYomedia_{!! $data['zid'] !!}() {
         	@endif
         @endforeach
     @endif
+    if (typeof _YoClick != 'undefined' && avlHelperModule.validateUrl(_YoClick)) {
+    	avlHelperModule.embedTracking(_YoClick);
+    }
 	window.open(clickTag);
 }
 
@@ -207,9 +224,9 @@ function addAnEventListener_{!! $data['zid'] !!}(obj,evt,func){
 }
 
 function iFrameListener_{!! $data['zid'] !!}(event){
-     fn = event.data;
-     if (fn != '') {
-    	 eval(fn);
+     fn_{!! $data['zid'] !!} = event.data;
+     if (fn_{!! $data['zid'] !!}.indexOf("Yomedia") >= 0) {
+    	 eval(fn_{!! $data['zid'] !!});
      }
 }
 

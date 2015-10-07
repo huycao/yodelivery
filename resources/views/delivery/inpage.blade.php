@@ -97,6 +97,9 @@ function showYoMediaPopupAd_{!! $data['zid'] !!}(s) {
             avlHelperModule.embedTracking("{!! trim(str_replace('[timestamp]', time(), $item)) !!}");
         @endforeach
     @endif
+    if (typeof _YoImp != 'undefined' && avlHelperModule.validateUrl(_YoImp)) {
+    	avlHelperModule.embedTracking(_YoImp);
+    }
 
     }else {
     domManipulate.getElid('YomediaInpage_{!! $data['zid'] !!}').innerHTML = rs;
@@ -172,11 +175,14 @@ document.onreadystatechange = function () {
             var checkID = 'yomedia-destination-{!! $data['zid'] !!}';
             var checkID2 = 'yomedia-inpage-banner';
             if (checkID == event.target.id || checkID2 == event.target.id) {
-            @if(!empty($thirdClickTrackArr))
-                @foreach( $thirdClickTrackArr as $item )
-                    avlHelperModule.embedTracking("{!! trim(str_replace('[timestamp]', time(), $item)) !!}");
-                @endforeach
-            @endif
+                @if(!empty($thirdClickTrackArr))
+                    @foreach( $thirdClickTrackArr as $item )
+                        avlHelperModule.embedTracking("{!! trim(str_replace('[timestamp]', time(), $item)) !!}");
+                    @endforeach
+                @endif
+                if (typeof _YoClick != 'undefined' && avlHelperModule.validateUrl(_YoClick)) {
+                	avlHelperModule.embedTracking(_YoClick);
+                }
             }
         };
     

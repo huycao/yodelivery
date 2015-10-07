@@ -79,6 +79,9 @@ function showYoMediaBannerAd_{!! $data['zid'] !!}(s) {
                 avlHelperModule.embedTracking("{!! trim(str_replace('[timestamp]', time(), $item)) !!}");
             <?php } ?>
         <?php } ?>
+    if (typeof _YoImp != 'undefined' && avlHelperModule.validateUrl(_YoImp)) {
+    	avlHelperModule.embedTracking(_YoImp);
+    }
 }
 
 
@@ -94,7 +97,10 @@ window.onclick = function(event) {
             avlHelperModule.embedTracking("{!! trim(str_replace('[timestamp]', time(), $item)) !!}");
         <?php } ?>
     <?php } ?>
-        
+    
+    	if (typeof _YoClick != 'undefined' && avlHelperModule.validateUrl(_YoClick)) {
+        	avlHelperModule.embedTracking(_YoClick);
+        }        
     }
 }
 @include("footer")
