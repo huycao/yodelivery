@@ -94,7 +94,7 @@ var flashVar = "zid={!! $data['zid'] !!}";
         }
         
         $htmlSource = str_replace('[yomedia_third_click_url_encode]', $clickTrackEnCode, $htmlSource);
-        $htmlSource = str_replace('[yomedia_third_click_url]', $clickTrackEnCode, $htmlSource);
+        $htmlSource = str_replace('[yomedia_third_click_url]', $clickTrack, $htmlSource);
     } 
 ?>
 	
@@ -161,6 +161,9 @@ function impressionTrackingYomedia() {
             avlHelperModule.embedTracking("{!! trim(str_replace('[timestamp]', time(), $item)) !!}");
         @endforeach
     @endif
+    if (typeof _YoImp != 'undefined' && avlHelperModule.validateUrl(_YoImp)) {
+    	avlHelperModule.embedTracking(_YoImp);
+    }
 }
 
 function clickTrackingYomedia_{!! $data['zid'] !!}() {
@@ -172,6 +175,9 @@ function clickTrackingYomedia_{!! $data['zid'] !!}() {
         	@endif
         @endforeach
     @endif
+    if (typeof _YoClick != 'undefined' && avlHelperModule.validateUrl(_YoClick)) {
+    	avlHelperModule.embedTracking(_YoClick);
+    }
 	window.open(clickTag);
 }
 
