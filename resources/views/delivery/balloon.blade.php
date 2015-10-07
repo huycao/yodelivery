@@ -225,7 +225,7 @@ function addAnEventListener_{!! $data['zid'] !!}(obj,evt,func){
 
 function iFrameListener_{!! $data['zid'] !!}(event){
      fn_{!! $data['zid'] !!} = event.data;
-     if (fn_{!! $data['zid'] !!}.indexOf("Yomedia") >= 0) {
+     if (fn_{!! $data['zid'] !!}.toLowerCase().indexOf("yomedia") >= 0) {
     	 eval(fn_{!! $data['zid'] !!});
      }
 }
