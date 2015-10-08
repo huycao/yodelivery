@@ -44,36 +44,43 @@ function onLinearAdSkipped() {
 }
 
 function loadAds{!! $data['zid'] !!}() {
-	var domWrapPlayer = domManipulate.create('div', el{!! $data['zid'] !!}, 'position:relative;top:0;bottom:0;');
-
-	if(playerId{!! $data['zid'] !!} ===''){
-		pid = "YoMediaDiv"+el{!! $data['zid'] !!};
-		document.body.innerHTML += '<div id="'+playerId{!! $data['zid'] !!}+'"></div>';
-	}
-
-	var domPlayerInner = domManipulate.getElid(playerId{!! $data['zid'] !!});
-	var domPlayerAds = domManipulate.create('div', 'inner' + el{!! $data['zid'] !!}, 'position:relative;width:' + elWidth{!! $data['zid'] !!} + 'px;height:' + elHeight{!! $data['zid'] !!} + 'px;', '<div id="' + avlConfig.get('ICW') + el{!! $data['zid'] !!} + '"><video id="yomedia-video-104" class="video-js vjs-default-skin" width="'+elWidth{!! $data['zid'] !!}+'" height="'+elHeight{!! $data['zid'] !!}+'" src="{!! $data['ad']->source_url !!}"></video></div>');
-    domManipulate.append(domWrapPlayer, domPlayerInner);
-    domWrapPlayer.appendChild(domPlayerAds);
-    domWrapPlayer.appendChild(domPlayerInner);
-    var styleDomPlayerInner = domPlayerInner.getAttribute('style');
-    if (styleDomPlayerInner == null) styleDomPlayerInner = '';
-    styleDomPlayerInner = 'display: none;' + styleDomPlayerInner;
-    domPlayerInner.setAttribute('style', styleDomPlayerInner);
-    
+	if ('' != playerId{!! $data['zid'] !!}) {
+		var domPlayerInner = domManipulate.getElid(playerId{!! $data['zid'] !!});
+		if (domPlayerInner) {
+        	var domWrapPlayer = domManipulate.create('div', el{!! $data['zid'] !!}, 'position:relative;top:0;bottom:0;');
+        
+        	if(playerId{!! $data['zid'] !!} ===''){
+        		pid = "YoMediaDiv"+el{!! $data['zid'] !!};
+        		document.body.innerHTML += '<div id="'+playerId{!! $data['zid'] !!}+'"></div>';
+        	}
+        
+        	
+        	
+        	var domPlayerAds = domManipulate.create('div', 'inner' + el{!! $data['zid'] !!}, 'position:relative;width:' + elWidth{!! $data['zid'] !!} + 'px;height:' + elHeight{!! $data['zid'] !!} + 'px;', '<div id="' + avlConfig.get('ICW') + el{!! $data['zid'] !!} + '"><video id="yomedia-video-{!! $data['zid'] !!}" class="video-js vjs-default-skin" width="'+elWidth{!! $data['zid'] !!}+'" height="'+elHeight{!! $data['zid'] !!}+'" src="{!! $data['ad']->source_url !!}"></video></div>');
+            domManipulate.append(domWrapPlayer, domPlayerInner);
+            domWrapPlayer.appendChild(domPlayerAds);
+            domWrapPlayer.appendChild(domPlayerInner);
+            var styleDomPlayerInner = domPlayerInner.getAttribute('style');
+            if (styleDomPlayerInner == null) styleDomPlayerInner = '';
+            styleDomPlayerInner = 'display: none;' + styleDomPlayerInner;
+            domPlayerInner.setAttribute('style', styleDomPlayerInner);
+        }
+    }
 }
 
 loadAds{!! $data['zid'] !!}();
 document.onreadystatechange = function () {
     if (document.readyState == "complete") {
-    	vjs_yomedia_{!! $data['zid'] !!}=videojs("yomedia-video-104", {hls: {withCredentials: false},"controls": false,"autoplay": false, "preload": "false" });							
-		vjs_yomedia_{!! $data['zid'] !!}.vastClient({
-   			url: "{!! AD_SERVER_FILE !!}/vast?ec=0&wid={!! $data['wid'] !!}&zid={!! $data['zid'] !!}&fpid={!! $data['fpid'] !!}",
-       		playAdAlways: true 
-   		});
- 		vjs_yomedia_{!! $data['zid'] !!}.play();
- 		 vjs_yomedia_{!! $data['zid'] !!}.on('ended', function(evt) {
-           onLinearAdFinish();
-       });
+    	if (domManipulate.getElid("yomedia-video-{!! $data['zid'] !!}")) {
+        	vjs_yomedia_{!! $data['zid'] !!}=videojs("yomedia-video-{!! $data['zid'] !!}", {hls: {withCredentials: false},"controls": false,"autoplay": false, "preload": "false" });							
+    		vjs_yomedia_{!! $data['zid'] !!}.vastClient({
+       			url: "{!! AD_SERVER_FILE !!}/vast?ec=0&wid={!! $data['wid'] !!}&zid={!! $data['zid'] !!}&fpid={!! $data['fpid'] !!}",
+           		playAdAlways: true 
+       		});
+     		vjs_yomedia_{!! $data['zid'] !!}.play();
+     		 vjs_yomedia_{!! $data['zid'] !!}.on('ended', function(evt) {
+               onLinearAdFinish();
+           });
+       }
     }
 }
