@@ -56,7 +56,7 @@ function loadAds{!! $data['zid'] !!}() {
         
         	
         	
-        	var domPlayerAds = domManipulate.create('div', 'inner' + el{!! $data['zid'] !!}, 'position:relative;width:' + elWidth{!! $data['zid'] !!} + 'px;height:' + elHeight{!! $data['zid'] !!} + 'px;', '<div id="' + avlConfig.get('ICW') + el{!! $data['zid'] !!} + '"><video id="yomedia-video-{!! $data['zid'] !!}" class="video-js vjs-default-skin" width="'+elWidth{!! $data['zid'] !!}+'" height="'+elHeight{!! $data['zid'] !!}+'" src="{!! $data['ad']->source_url !!}" ></video></div>');
+        	var domPlayerAds = domManipulate.create('div', 'inner' + el{!! $data['zid'] !!}, 'position:relative;width:' + elWidth{!! $data['zid'] !!} + 'px;height:' + elHeight{!! $data['zid'] !!} + 'px;', '<div id="' + avlConfig.get('ICW') + el{!! $data['zid'] !!} + '"><video id="yomedia-video-{!! $data['zid'] !!}" class="video-js vjs-default-skin" width="'+elWidth{!! $data['zid'] !!}+'" height="'+elHeight{!! $data['zid'] !!}+'" src="http://static.yomedia.vn/public/video/yo.mp4" ></video></div>');
             domManipulate.append(domWrapPlayer, domPlayerInner);
             domWrapPlayer.appendChild(domPlayerAds);
             domWrapPlayer.appendChild(domPlayerInner);
@@ -76,10 +76,13 @@ document.onreadystatechange = function () {
     		vjs_yomedia_{!! $data['zid'] !!}.vastClient({
        			url: "{!! AD_SERVER_FILE !!}vast?ec=0&wid={!! $data['wid'] !!}&zid={!! $data['zid'] !!}&fpid={!! $data['fpid'] !!}",
            		playAdAlways: true,
-           		adCancelTimeout: 10000 
+           		adCancelTimeout: 5000 
        		});
      		vjs_yomedia_{!! $data['zid'] !!}.play();
      		vjs_yomedia_{!! $data['zid'] !!}.on('ended', function(evt) {
+               onLinearAdFinish();
+           	});
+           	vjs_yomedia_{!! $data['zid'] !!}.on('error', function(evt) {
                onLinearAdFinish();
            	});
        }

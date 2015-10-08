@@ -119,7 +119,7 @@ class DeliveryController extends Controller
 											$deliveryStatus = $deliveryModel->deliveryAd($ad, $flightWebsite, $flight, $flightDates);
 											if($deliveryStatus == Delivery::DELIVERY_STATUS_OK || $deliveryStatus == Delivery::DELIVERY_STATUS_OVER_REPORT){
 											    
-										        if (!empty($ad->vast_include) && !empty($ad->video_wrapper_tag)) {
+										        if (empty($data['ec']) && !empty($ad->vast_include) && !empty($ad->video_wrapper_tag)) {
 										            try {
     											        $xmlVastTag = file_get_contents($this->replaceParam($ad->video_wrapper_tag));
     											        if(!empty($xmlVastTag)) {                    
