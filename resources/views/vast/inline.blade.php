@@ -24,7 +24,7 @@ if(!isset($_GET['v']) || $_GET['v'] != 3){
                 <Creatives>
                     <Creative sequence="1" AdID="">
                         @if($ad->linear == 'linear')
-                            <Linear @if ($ad->skipads)skipoffset="00:00:{!! trim($ad->skipads)  !!}"@endif>
+                            <Linear @if ($ad->skipads)skipoffset="00:00:{!! sprintf('%02d', $ad->skipads)  !!}"@endif>
                                 {!! $ad->linearTracks !!}
                                 <Duration>{!! $ad->durationText !!}</Duration>
                                 <VideoClicks>
