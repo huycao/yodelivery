@@ -274,6 +274,14 @@ var avlHelperModule  = new function(){
 			}else{
 				return true;
 			}
+		},
+		embedCss: function(varObj){
+			var css = document.createElement('link'), html_doc = document.getElementsByTagName('head')[0];
+			css.rel = 'stylesheet';
+			css.rev = 'stylesheet';
+			css.type = 'text/css';
+			css.href = varObj;
+			html_doc.appendChild(css);
 		}
 	}
 
