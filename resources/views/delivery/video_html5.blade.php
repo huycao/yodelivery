@@ -56,7 +56,7 @@ function loadAds{!! $data['zid'] !!}() {
         
         	
         	
-        	var domPlayerAds = domManipulate.create('div', 'inner' + el{!! $data['zid'] !!}, 'position:relative;width:' + elWidth{!! $data['zid'] !!} + 'px;height:' + elHeight{!! $data['zid'] !!} + 'px;', '<div id="' + avlConfig.get('ICW') + el{!! $data['zid'] !!} + '"><video id="yomedia-video-{!! $data['zid'] !!}" class="video-js vjs-default-skin" width="'+elWidth{!! $data['zid'] !!}+'" height="'+elHeight{!! $data['zid'] !!}+'" src="{!! $data['ad']->source_url !!}"></video></div>');
+        	var domPlayerAds = domManipulate.create('div', 'inner' + el{!! $data['zid'] !!}, 'position:relative;width:' + elWidth{!! $data['zid'] !!} + 'px;height:' + elHeight{!! $data['zid'] !!} + 'px;', '<div id="' + avlConfig.get('ICW') + el{!! $data['zid'] !!} + '"><video id="yomedia-video-{!! $data['zid'] !!}" class="video-js vjs-default-skin" width="'+elWidth{!! $data['zid'] !!}+'" height="'+elHeight{!! $data['zid'] !!}+'" src="{!! $data['ad']->source_url !!}" ></video></div>');
             domManipulate.append(domWrapPlayer, domPlayerInner);
             domWrapPlayer.appendChild(domPlayerAds);
             domWrapPlayer.appendChild(domPlayerInner);
@@ -72,15 +72,16 @@ loadAds{!! $data['zid'] !!}();
 document.onreadystatechange = function () {
     if (document.readyState == "complete") {
     	if (domManipulate.getElid("yomedia-video-{!! $data['zid'] !!}")) {
-        	vjs_yomedia_{!! $data['zid'] !!}=videojs("yomedia-video-{!! $data['zid'] !!}", {hls: {withCredentials: false},"controls": false,"autoplay": false, "preload": "false" });							
+        	vjs_yomedia_{!! $data['zid'] !!}=videojs("yomedia-video-{!! $data['zid'] !!}", {hls: {withCredentials: true},"controls": false,"autoplay": false, "preload": "false" });							
     		vjs_yomedia_{!! $data['zid'] !!}.vastClient({
-       			url: "{!! AD_SERVER_FILE !!}/vast?ec=0&wid={!! $data['wid'] !!}&zid={!! $data['zid'] !!}&fpid={!! $data['fpid'] !!}",
-           		playAdAlways: true 
+       			url: "{!! AD_SERVER_FILE !!}vast?ec=0&wid={!! $data['wid'] !!}&zid={!! $data['zid'] !!}&fpid={!! $data['fpid'] !!}",
+           		playAdAlways: true,
+           		adCancelTimeout: 10000 
        		});
      		vjs_yomedia_{!! $data['zid'] !!}.play();
-     		 vjs_yomedia_{!! $data['zid'] !!}.on('ended', function(evt) {
+     		vjs_yomedia_{!! $data['zid'] !!}.on('ended', function(evt) {
                onLinearAdFinish();
-           });
+           	});
        }
     }
 }

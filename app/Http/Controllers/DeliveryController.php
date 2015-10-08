@@ -593,6 +593,7 @@ class DeliveryController extends Controller
     public function getVastTag()
 	{
 		$vastTag = Input::get('vast_tag');
+		$skip = Input::get('skip', 0);
 		
 	    $hostReferer = '*';
         if (!empty($_SERVER['HTTP_REFERER'])) {
@@ -613,6 +614,11 @@ class DeliveryController extends Controller
                 $xmlVastTag = file_get_contents(urldecode($vastTag));
                 if(!empty($xmlVastTag)) {                    
                     if(strpos($xmlVastTag, '<MediaFiles>') !== FALSE && strpos($xmlVastTag, '</MediaFiles>') !== FALSE){
+                        if(!empty($skip)){
+                            $skipoffset= '<Linear '. 'skipoffset="00:00:' . sprintf('%02d', $skip) . '"' . '>';
+                            $xmlVastTag = str_replace('<Linear>', $skipoffset, $xmlVastTag);
+                        }
+                        
                         $xml = simplexml_load_string($xmlVastTag);
                         if (!$xml) {
                             return response('<VAST version="2.0"></VAST>', 200, $header);
