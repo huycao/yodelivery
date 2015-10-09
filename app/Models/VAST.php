@@ -182,7 +182,7 @@ class VAST extends Eloquent {
                 $this->wrapper_tag        = $this->replaceParam($ad->video_wrapper_tag);
             } else {
                 $vastTagUrl = urlencode($this->replaceParam($ad->video_wrapper_tag));
-                $this->wrapper_tag        = AD_SERVER_FILE . 'get-vast-tag?vast_tag=' . $vastTagUrl . '&skip=' . $ad->skipads;
+                $this->wrapper_tag        = AD_SERVER_FILE . 'get-vast-tag?vast_tag=' . $vastTagUrl . '&skip=' . $ad->skipads . '&aid=' . $ad->id;
             }
             $this->bitrate                = $ad->video_bitrate;
             $this->url                    = $ad->destination_url;

@@ -5,6 +5,7 @@ use App\Models\Tracking;
 use App\Models\RawTrackingSummary;
 use App\Models\VAST;
 use RedisHelper;
+use App\Models\RedisBaseModel;
 use Input;
 
 class DeliveryController extends Controller
@@ -120,17 +121,24 @@ class DeliveryController extends Controller
 											if($deliveryStatus == Delivery::DELIVERY_STATUS_OK || $deliveryStatus == Delivery::DELIVERY_STATUS_OVER_REPORT){
 											    
 										        if (empty($data['ec']) && !empty($ad->vast_include) && !empty($ad->video_wrapper_tag)) {
-										            try {
-    											        $xmlVastTag = file_get_contents($this->replaceParam($ad->video_wrapper_tag));
-    											        if(!empty($xmlVastTag)) {                    
-                                                            if(strpos($xmlVastTag, '<MediaFiles>') === FALSE && strpos($xmlVastTag, '</MediaFiles>') === FALSE){
-                                                                 continue;           
+										            $redis = new RedisBaseModel(env('REDIS_HOST', '127.0.0.1'), env('REDIS_PORT_5', '6379'), false);
+										            $cacheKey = "VASTAdTagURI_{$ad->id}";
+										            $xmlVastTag = $redis->get($cacheKey);
+										            if (empty($xmlVastTag)) {
+    										            try {
+        											        $xmlVastTag = file_get_contents($this->replaceParam($ad->video_wrapper_tag));
+        											        if(!empty($xmlVastTag)) {                    
+                                                                if(strpos($xmlVastTag, '<MediaFiles>') === FALSE && strpos($xmlVastTag, '</MediaFiles>') === FALSE){
+                                                                     continue;           
+                                                                } else {
+                                                                    $redis->set($cacheKey, $xmlVastTag, 1);
+                                                                }
+                                                            } else {
+                                                                continue;
                                                             }
-                                                        } else {
-                                                            continue;
-                                                        }
-										            } catch (\Exception $e) {
-										                continue;
+    										            } catch (\Exception $e) {
+    										                continue;
+    										            }
 										            }
 										        }
 												//trả về ad này
@@ -594,6 +602,7 @@ class DeliveryController extends Controller
 	{
 		$vastTag = Input::get('vast_tag');
 		$skip = Input::get('skip', 0);
+		$adID = Input::get('aid', 0);
 		
 	    $hostReferer = '*';
         if (!empty($_SERVER['HTTP_REFERER'])) {
@@ -611,7 +620,13 @@ class DeliveryController extends Controller
         
 		if (!empty($vastTag)) {
             try {
-                $xmlVastTag = file_get_contents(urldecode($vastTag));
+                $redis = new RedisBaseModel(env('REDIS_HOST', '127.0.0.1'), env('REDIS_PORT_5', '6379'), false);
+	            $cacheKey = "VASTAdTagURI_{$adID}";
+	            $xmlVastTag = $redis->get($cacheKey);
+	            if(empty($xmlVastTag)) {
+	                $xmlVastTag = file_get_contents(urldecode($vastTag));
+	            }
+                
                 if(!empty($xmlVastTag)) {                    
                     if(strpos($xmlVastTag, '<MediaFiles>') !== FALSE && strpos($xmlVastTag, '</MediaFiles>') !== FALSE){
                         if(!empty($skip)){
@@ -623,7 +638,7 @@ class DeliveryController extends Controller
                         if (!$xml) {
                             return response('<VAST version="2.0"></VAST>', 200, $header);
                         }            
-                        
+                        $redis->set($cacheKey, $xmlVastTag, 1);
                         return response($xml->asXML(), 200, $header);
                     } else {
                         return response('<VAST version="2.0"></VAST>', 200, $header);
