@@ -121,7 +121,7 @@ class DeliveryController extends Controller
 											if($deliveryStatus == Delivery::DELIVERY_STATUS_OK || $deliveryStatus == Delivery::DELIVERY_STATUS_OVER_REPORT){
 											    
 										        if (empty($data['ec']) && !empty($ad->vast_include) && !empty($ad->video_wrapper_tag)) {
-										            $redis = new RedisBaseModel(env('REDIS_HOST', '127.0.0.1'), env('REDIS_PORT', '6379'));
+										            $redis = new RedisBaseModel(env('REDIS_HOST', '127.0.0.1'), env('REDIS_PORT_1', '6379'));
 										            $cacheKey = "VASTAdTagURI_{$ad->id}";
 										            $xmlVastTag = $redis->get($cacheKey);
 										            if (empty($xmlVastTag)) {
@@ -620,7 +620,7 @@ class DeliveryController extends Controller
         
 		if (!empty($vastTag)) {
             try {
-                $redis = new RedisBaseModel(env('REDIS_HOST', '127.0.0.1'), env('REDIS_PORT', '6379'));
+                $redis = new RedisBaseModel(env('REDIS_HOST', '127.0.0.1'), env('REDIS_PORT_1', '6379'));
 	            $cacheKey = "VASTAdTagURI_{$adID}";
 	            $xmlVastTag = $redis->get($cacheKey);
 	            if(empty($xmlVastTag)) {
