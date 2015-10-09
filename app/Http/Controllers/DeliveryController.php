@@ -20,8 +20,10 @@ class DeliveryController extends Controller
      */
     public function makeOva(){
 		$data = Input::all();
-
+		$deliveryModel   = new Delivery;
+        
 		if( (new MakeOvaHandle())->checkInputValid( $data ) ){
+		    $this->data['ad'] = $deliveryModel->getAd($data['aid']);
 			\View::addLocation(base_path() . '/resources/views/delivery');
 			if(Input::get('wid') != 99999999){
 				$this->data['vast'] = url()."/make-vast?" . $_SERVER['QUERY_STRING'];

@@ -15,7 +15,7 @@
         "pauseOnClickThrough": false,
         "skipAd": {
             "enabled": "true",
-            "showAfterSeconds": 5
+            "showAfterSeconds": @if(!empty($ad->skipads)){!! $ad->skipads !!} @else 5 @endif
         },
         "hideLogoOnLinearPlayback": true,
         "schedule": [
