@@ -646,7 +646,7 @@ class DeliveryController extends Controller
             $cacheKey = "VASTAdTagURI_{$adID}";
             $xmlVastTag = $redis->get($cacheKey);
             if(empty($xmlVastTag)) {
-                $xmlVastTag = file_get_contents($url);
+                $xmlVastTag = $this->curlGetContents($url);
                 if(strpos($xmlVastTag, '<MediaFiles>') !== FALSE && strpos($xmlVastTag, '</MediaFiles>') !== FALSE){
                     $redis->set($cacheKey, $xmlVastTag, 1);
                 }
@@ -657,5 +657,16 @@ class DeliveryController extends Controller
             pr($e);
             return FALSE;
         }
+    }
+    
+    function curlGetContents($url){
+      $ch = curl_init($url);
+      curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+      curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+      curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+      curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+      $data = curl_exec($ch);
+      curl_close($ch);
+      return $data;
     }
 }
