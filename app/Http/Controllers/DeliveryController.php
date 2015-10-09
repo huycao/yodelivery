@@ -121,24 +121,9 @@ class DeliveryController extends Controller
 											if($deliveryStatus == Delivery::DELIVERY_STATUS_OK || $deliveryStatus == Delivery::DELIVERY_STATUS_OVER_REPORT){
 											    
 										        if (empty($data['ec']) && !empty($ad->vast_include) && !empty($ad->video_wrapper_tag)) {
-										            $redis = new RedisBaseModel(env('REDIS_HOST', '127.0.0.1'), env('REDIS_PORT_5', '6379'), false);
-										            $cacheKey = "VASTAdTagURI_{$ad->id}";
-										            $xmlVastTag = $redis->get($cacheKey);
+										            $xmlVastTag = $this->getVastAdTagUri($ad->id, $this->replaceParam($ad->video_wrapper_tag));
 										            if (empty($xmlVastTag)) {
-    										            try {
-        											        $xmlVastTag = file_get_contents($this->replaceParam($ad->video_wrapper_tag));
-        											        if(!empty($xmlVastTag)) {                    
-                                                                if(strpos($xmlVastTag, '<MediaFiles>') === FALSE && strpos($xmlVastTag, '</MediaFiles>') === FALSE){
-                                                                     continue;           
-                                                                } else {
-                                                                    $redis->set($cacheKey, $xmlVastTag, 1);
-                                                                }
-                                                            } else {
-                                                                continue;
-                                                            }
-    										            } catch (\Exception $e) {
-    										                continue;
-    										            }
+    										            continue;
 										            }
 										        }
 												//trả về ad này
@@ -620,32 +605,21 @@ class DeliveryController extends Controller
         
 		if (!empty($vastTag)) {
             try {
-                $redis = new RedisBaseModel(env('REDIS_HOST', '127.0.0.1'), env('REDIS_PORT_5', '6379'), false);
-	            $cacheKey = "VASTAdTagURI_{$adID}";
-	            $xmlVastTag = $redis->get($cacheKey);
-	            if(empty($xmlVastTag)) {
-	                $xmlVastTag = file_get_contents(urldecode($vastTag));
-	            }
+	            $xmlVastTag = $this->getVastAdTagUri($adID, urldecode($vastTag));
                 
-                if(!empty($xmlVastTag)) {                    
-                    if(strpos($xmlVastTag, '<MediaFiles>') !== FALSE && strpos($xmlVastTag, '</MediaFiles>') !== FALSE){
-                        if(!empty($skip)){
-                            $skipoffset= '<Linear '. 'skipoffset="00:00:' . sprintf('%02d', $skip) . '"' . '>';
-                            $xmlVastTag = str_replace('<Linear>', $skipoffset, $xmlVastTag);
-                        }
-                        
-                        $xml = simplexml_load_string($xmlVastTag);
-                        if (!$xml) {
-                            return response('<VAST version="2.0"></VAST>', 200, $header);
-                        }            
-                        $redis->set($cacheKey, $xmlVastTag, 1);
-                        return response($xml->asXML(), 200, $header);
-                    } else {
-                        return response('<VAST version="2.0"></VAST>', 200, $header);
+                if(!empty($xmlVastTag)) {  
+                    if(!empty($skip)){
+                        $skipoffset= '<Linear '. 'skipoffset="00:00:' . sprintf('%02d', $skip) . '"' . '>';
+                        $xmlVastTag = str_replace('<Linear>', $skipoffset, $xmlVastTag);
                     }
-                }
-                
-                
+                    
+                    $xml = simplexml_load_string($xmlVastTag);
+                    if (!$xml) {
+                        return response('<VAST version="2.0"></VAST>', 200, $header);
+                    }            
+                    
+                    return response($xml->asXML(), 200, $header);
+                }   
             } catch (\Exception $e) {
                 pr($e);
                 return response('<VAST version="2.0"></VAST>', 200, $header);
@@ -664,5 +638,24 @@ class DeliveryController extends Controller
         $hostReferer = !empty($_SERVER['HTTP_REFERER']) ? urlencode($_SERVER['HTTP_REFERER']) : '';
         $url = str_replace('[yomedia_referer]', $hostReferer,$url);
         return $url;
+    }
+    
+    function getVastAdTagUri($adID, $url) {
+        try {
+            $redis = new RedisBaseModel(env('REDIS_HOST', '127.0.0.1'), env('REDIS_PORT_5', '6379'), false);
+            $cacheKey = "VASTAdTagURI_{$adID}";
+            $xmlVastTag = $redis->get($cacheKey);
+            if(empty($xmlVastTag)) {
+                $xmlVastTag = file_get_contents($url);
+                if(strpos($xmlVastTag, '<MediaFiles>') !== FALSE && strpos($xmlVastTag, '</MediaFiles>') !== FALSE){
+                    $redis->set($cacheKey, $xmlVastTag, 1);
+                }
+            }
+            
+            return $xmlVastTag;
+        } catch (\Exception $e) {
+            pr($e);
+            return FALSE;
+        }
     }
 }
