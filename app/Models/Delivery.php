@@ -37,6 +37,7 @@ class Delivery extends Eloquent{
 	const DELIVERY_STATUS_OK                          = 'ready_to_deliver';
 	const RESPONSE_TYPE_CHECKSUM_ERROR                = 'checksum_error';
 	const DELIVERY_STATUS_OVER_REPORT                 = 'delivery_over_report';
+	const PLATFORM_TYPE_INVALID                       = 'invalid_platform';
 	const ANTI_CHEAT_MAX_REQUEST_PER_1MIN             = 500;
 	const ANTI_CHEAT_MAX_REQUEST_PER_5MIN             = 2000;
 
@@ -652,5 +653,25 @@ class Delivery extends Eloquent{
 	    }
 	    
 	    return $retval;
+	}
+	
+	public function checkPlatform($ad) {
+        if (empty($ad) || empty($ad->platform)) {
+            return self::PLATFORM_TYPE_INVALID;
+        }
+        $detect = new MobileDetect();
+        $arrPlatform = json_decode($ad->platform);
+        $type = '';
+        if ($detect->isMobile() || $detect->isTablet()) {
+            $type = 'mobile';
+        } else {
+            $type = 'pc';
+        }
+        
+        if (!empty($arrPlatform) && in_array($type, $arrPlatform)) {
+            return TRUE;
+        } else {
+            return self::PLATFORM_TYPE_INVALID;
+        }                
 	}
 }
