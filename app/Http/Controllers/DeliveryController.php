@@ -116,36 +116,40 @@ class DeliveryController extends Controller
 										$flightDates = $deliveryInfo['flightDates'][$flightWebsite->flight_id];
 										$flight      = $deliveryInfo['flights'][$flightWebsite->flight_id];
 										$ad          = $deliveryInfo['ads'][$flight->ad_id];
-										$checkFlightDate = $deliveryModel->checkFlightDate($flightDates, $flight);
-										//flight date ok
-										if($checkFlightDate){
-											$deliveryStatus = $deliveryModel->deliveryAd($ad, $flightWebsite, $flight, $flightDates);
-											if($deliveryStatus == Delivery::DELIVERY_STATUS_OK || $deliveryStatus == Delivery::DELIVERY_STATUS_OVER_REPORT){
-											    
-										        if (empty($data['ec']) && !empty($ad->vast_include) && !empty($ad->video_wrapper_tag)) {
-										            $xmlVastTag = $this->getVastAdTagUri($ad->id, $this->replaceParam($ad->video_wrapper_tag));
-										            if (empty($xmlVastTag)) {
-    										            continue;
-										            }
-										        }
-												//trả về ad này
-												pr($flightWebsite);
-												$serveAd      = $ad;
-												$data['ad']   = $ad;
-												$data['aid']  = $ad->id;
-												$data['fpid'] = $flightWebsite->id;
-												$data['flight'] = $flight;
-												//over report
-												if($deliveryStatus == Delivery::DELIVERY_STATUS_OVER_REPORT){
-													$data['ovr'] = $isOverReport = true;
-												}
-												$responseType = Delivery::RESPONSE_TYPE_ADS_SUCCESS;
-											    
-												break;
-											}
-										}
-										else{
-											$deliveryStatus = Delivery::RESPONSE_TYPE_FLIGHTDATE_NOT_AVAILABLE;
+										if ($deliveryModel->checkPlatform($ad) === TRUE) {
+    										$checkFlightDate = $deliveryModel->checkFlightDate($flightDates, $flight);
+    										//flight date ok
+    										if($checkFlightDate){
+    											$deliveryStatus = $deliveryModel->deliveryAd($ad, $flightWebsite, $flight, $flightDates);
+    											if($deliveryStatus == Delivery::DELIVERY_STATUS_OK || $deliveryStatus == Delivery::DELIVERY_STATUS_OVER_REPORT){
+    											    
+    										        if (empty($data['ec']) && !empty($ad->vast_include) && !empty($ad->video_wrapper_tag)) {
+    										            $xmlVastTag = $this->getVastAdTagUri($ad->id, $this->replaceParam($ad->video_wrapper_tag));
+    										            if (empty($xmlVastTag)) {
+        										            continue;
+    										            }
+    										        }
+    												//trả về ad này
+    												pr($flightWebsite);
+    												$serveAd      = $ad;
+    												$data['ad']   = $ad;
+    												$data['aid']  = $ad->id;
+    												$data['fpid'] = $flightWebsite->id;
+    												$data['flight'] = $flight;
+    												//over report
+    												if($deliveryStatus == Delivery::DELIVERY_STATUS_OVER_REPORT){
+    													$data['ovr'] = $isOverReport = true;
+    												}
+    												$responseType = Delivery::RESPONSE_TYPE_ADS_SUCCESS;
+    											    
+    												break;
+    											}
+    										}
+    										else{
+    											$deliveryStatus = Delivery::RESPONSE_TYPE_FLIGHTDATE_NOT_AVAILABLE;
+    										}
+										} else {
+										    $deliveryStatus = Delivery::PLATFORM_TYPE_INVALID;
 										}
 									}
 								}
