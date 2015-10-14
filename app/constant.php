@@ -21,7 +21,7 @@ define('CACHE_2H', 7200);
 define('KEY_TRACKING_ZONE_TOTAL_INVENTORY', 'Tracking:total_zone_inventory:');
 define('KEY_TRACKING_TOTAL_INVENTORY', 'Tracking:total_inventory:');
 //STATIC URL
-define('STATIC_URL', 'http://local.yomedia.com/public/images/');
+define('STATIC_URL', 'http://static.yomedia.vn/');
 define('DEBUG_ERROR', 'DebugError');
 define('DEBUG_CONTENT', 'DebugContent');
 define('SHOW_BANNER', 'ShowBanner');

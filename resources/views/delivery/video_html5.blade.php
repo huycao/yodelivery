@@ -1,15 +1,3 @@
-avlHelperModule.embedCss('http://static.yomedia.vn/public/styles/ads-label.css');
-avlHelperModule.embedCss('http://static.yomedia.vn/public/styles/black-poster.css');
-avlHelperModule.embedCss('http://static.yomedia.vn/public/styles/videojs.vast.css');
-avlHelperModule.embedCss('http://static.yomedia.vn/public/styles/video-js.css');
-avlHelperModule.embedCss('http://static.yomedia.vn/public/styles/videojs.vpaid.css');
-
-avlHelperModule.embedJs('http://static.yomedia.vn/public/js/videojs/video.js');
-avlHelperModule.embedJs('http://static.yomedia.vn/public/js/videojs/es5-shim.js');
-avlHelperModule.embedJs('http://static.yomedia.vn/public/js/videojs/ie8fix.js');
-avlHelperModule.embedJs('http://static.yomedia.vn/public/js/videojs/swfobject.js');
-avlHelperModule.embedJs('http://static.yomedia.vn/public/js/videojs/videojs-vast-vpaid.js');
-
 var autoStart{!! $data['zid'] !!} = true;
 var playerId{!! $data['zid'] !!} = "{!! $data['eid'] or '' !!}";
 var zone{!! $data['zid'] !!} = {!! $data['zid'] !!};
@@ -21,42 +9,62 @@ var elWidth{!! $data['zid'] !!} = {!! $data['ew'] or ''  !!};
 var elHeight{!! $data['zid'] !!} = {!! $data['eh'] or ''  !!};
 var InlineVideo{!! $data['zid'] !!} = new Array();
 
-function prerollComplete() {
-    setTimeout("avlInteractModule.removeVideoInline(playerId{!! $data['zid'] !!}, el{!! $data['zid'] !!})", 1);
+function prerollCompleteYomedia() {
+    setTimeout("avlInteractModule.removeVideoInline(playerId{!! $data['zid'] !!}, el{!! $data['zid'] !!})", 500);
 }
 
-function onAdSchedulingComplete(ads) {
+function onAdSchedulingCompleteYomedia(ads) {
     if (!ads.length ) {
-	    prerollComplete();
+	    prerollCompleteYomedia();
     }
 }
 
-function onVPAIDAdComplete() {
-    prerollComplete();
+function onVPAIDAdCompleteYomedia() {
+    prerollCompleteYomedia();
 }
 
-function onLinearAdFinish() {
-    prerollComplete();
+function onLinearAdFinishYomedia() {
+    prerollCompleteYomedia();
 }
 
-function onLinearAdSkipped() {
-    prerollComplete();
+function onLinearAdSkippedYomedia() {
+    prerollCompleteYomedia();
 }
 
-function loadAds{!! $data['zid'] !!}() {
+function loadAds{!! $data['zid'] !!}() {	
 	if ('' != playerId{!! $data['zid'] !!}) {
+		if (!document.getElementById(playerId{!! $data['zid'] !!})){
+			if (document.getElementsByClassName(playerId{!! $data['zid'] !!})[0]) {
+				document.getElementsByClassName(playerId{!! $data['zid'] !!})[0].setAttribute('id', playerId{!! $data['zid'] !!});
+			}
+		}
+		
 		var domPlayerInner = domManipulate.getElid(playerId{!! $data['zid'] !!});
 		if (domPlayerInner) {
+			if(avlInteractModule.isMobile() == true){
+				elWidth{!! $data['zid'] !!} = domPlayerInner.clientWidth;
+				elHeight{!! $data['zid'] !!} = domPlayerInner.clientHeight;
+				var plf = 'mobile';
+			} else {
+				var plf = 'pc';
+			}
         	var domWrapPlayer = domManipulate.create('div', el{!! $data['zid'] !!}, 'position:relative;top:0;bottom:0;');
         
         	if(playerId{!! $data['zid'] !!} ===''){
         		pid = "YoMediaDiv"+el{!! $data['zid'] !!};
         		document.body.innerHTML += '<div id="'+playerId{!! $data['zid'] !!}+'"></div>';
-        	}
-        
-        	
-        	
-        	var domPlayerAds = domManipulate.create('div', 'inner' + el{!! $data['zid'] !!}, 'position:relative;width:' + elWidth{!! $data['zid'] !!} + 'px;height:' + elHeight{!! $data['zid'] !!} + 'px;', '<div id="' + avlConfig.get('ICW') + el{!! $data['zid'] !!} + '"><video id="yomedia-video-{!! $data['zid'] !!}" class="video-js vjs-default-skin" width="'+elWidth{!! $data['zid'] !!}+'" height="'+elHeight{!! $data['zid'] !!}+'" src="http://static.yomedia.vn/public/video/yo.mp4" ></video></div>');
+        	}      
+        	<?php 
+        	    $ovr = 0;
+                if (!empty($data['ovr'])) {
+                    $ovr = 1;
+                }
+                $source_2 = '';
+                if (!empty($data['ad']->source_url2)) {
+                    $source_2 = urlencode($data['ad']->source_url2);
+                }
+        	?>
+        	var domPlayerAds = domManipulate.create('div', 'inner' + el{!! $data['zid'] !!}, 'position:relative;width:' + elWidth{!! $data['zid'] !!} + 'px;height:' + elHeight{!! $data['zid'] !!} + 'px;', '<iframe id="' + avlConfig.get('ICW') + el{!! $data['zid'] !!} + '" name="perrier" src="{!! STATIC_URL !!}public/source/videojs/ova_html.html?aid={!! $data['aid'] !!}&fpid={!! $data['fpid'] !!}&zid={!! $data['zid'] !!}&rt=1&cs={!! $data['checksum'] !!}&ovr={!! $ovr !!}&ref={!! $data['ref'] !!}&yw='+elWidth{!! $data['zid'] !!}+'&yh='+elHeight{!! $data['zid'] !!}+'&poster={!! $source_2 !!}&plf='+plf+'&ord={!! time() !!}" style="display:block;overflow:hidden;z-index:1000!important;border:0;position:relative;width:100%;height:100%;"></iframe>');
             domManipulate.append(domWrapPlayer, domPlayerInner);
             domWrapPlayer.appendChild(domPlayerAds);
             domWrapPlayer.appendChild(domPlayerInner);
@@ -69,22 +77,22 @@ function loadAds{!! $data['zid'] !!}() {
 }
 
 loadAds{!! $data['zid'] !!}();
-document.onreadystatechange = function () {
-    if (document.readyState == "complete") {
-    	if (domManipulate.getElid("yomedia-video-{!! $data['zid'] !!}")) {
-        	vjs_yomedia_{!! $data['zid'] !!}=videojs("yomedia-video-{!! $data['zid'] !!}", {hls: {withCredentials: true},"controls": false,"autoplay": false, "preload": "false" });							
-    		vjs_yomedia_{!! $data['zid'] !!}.vastClient({
-       			url: "{!! AD_SERVER_FILE !!}vast?ec=0&wid={!! $data['wid'] !!}&zid={!! $data['zid'] !!}&fpid={!! $data['fpid'] !!}",
-           		playAdAlways: true,
-           		adCancelTimeout: 5000 
-       		});
-     		vjs_yomedia_{!! $data['zid'] !!}.play();
-     		vjs_yomedia_{!! $data['zid'] !!}.on('ended', function(evt) {
-               onLinearAdFinish();
-           	});
-           	vjs_yomedia_{!! $data['zid'] !!}.on('error', function(evt) {
-               onLinearAdFinish();
-           	});
-       }
+
+
+function addAnEventListener_{!! $data['zid'] !!}(obj,evt,func){
+    if ('addEventListener' in obj){
+        obj.addEventListener(evt,func, false);
+    } else if ('attachEvent' in obj){//IE
+        obj.attachEvent('on'+evt,func);
     }
 }
+
+function iFrameListener_{!! $data['zid'] !!}(event){
+     fn_{!! $data['zid'] !!} = event.data;
+     if ('string' == typeof fn_{!! $data['zid'] !!} &&  fn_{!! $data['zid'] !!}.toLowerCase().indexOf("yomedia") >= 0) {
+    	 eval(fn_{!! $data['zid'] !!});
+     }
+}
+
+var fn_{!! $data['zid'] !!}='';
+addAnEventListener_{!! $data['zid'] !!}(window,'message',iFrameListener_{!! $data['zid'] !!});

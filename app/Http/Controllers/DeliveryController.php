@@ -88,6 +88,7 @@ class DeliveryController extends Controller
 			//pre validate ok
 			if(empty($responseType)){
 				//read redis 1
+				$data['ref'] = $hostReferer;
 				$adZone = $deliveryModel->getAdzone($zoneID);
 				if($adZone && !empty($adZone->site)){
 					$expandFields['ad_format_id'] = $adZone->ad_format_id;
@@ -116,7 +117,7 @@ class DeliveryController extends Controller
 										$flightDates = $deliveryInfo['flightDates'][$flightWebsite->flight_id];
 										$flight      = $deliveryInfo['flights'][$flightWebsite->flight_id];
 										$ad          = $deliveryInfo['ads'][$flight->ad_id];
-										if ($deliveryModel->checkPlatform($ad) === TRUE) {
+										if ($deliveryModel->checkPlatform($ad) === TRUE || isLocal()) {
     										$checkFlightDate = $deliveryModel->checkFlightDate($flightDates, $flight);
     										//flight date ok
     										if($checkFlightDate){
@@ -291,7 +292,7 @@ class DeliveryController extends Controller
 		$isOverReport 	 = Input::get('ovr');
 		$platform        = Input::get('plf', '');
 		$beacon          = Input::get('bc', '');
-		$hostReferer     = Input::get('yoref', '');
+		$hostReferer     = Input::get('ref', '');
 
 		//custom code for VIB 068 Relaunch form complete tracking
 		if(Input::get('wid') == 48 && $event == 'complete' ){
