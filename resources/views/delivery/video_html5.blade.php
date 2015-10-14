@@ -1,15 +1,3 @@
-avlHelperModule.embedCss('http://static.yomedia.vn/public/styles/ads-label.css');
-avlHelperModule.embedCss('http://static.yomedia.vn/public/styles/black-poster.css');
-avlHelperModule.embedCss('http://static.yomedia.vn/public/styles/videojs.vast.css');
-avlHelperModule.embedCss('http://static.yomedia.vn/public/styles/video-js.css');
-avlHelperModule.embedCss('http://static.yomedia.vn/public/styles/videojs.vpaid.css');
-
-avlHelperModule.embedJs('http://static.yomedia.vn/public/js/videojs/video.js');
-avlHelperModule.embedJs('http://static.yomedia.vn/public/js/videojs/es5-shim.js');
-avlHelperModule.embedJs('http://static.yomedia.vn/public/js/videojs/ie8fix.js');
-avlHelperModule.embedJs('http://static.yomedia.vn/public/js/videojs/swfobject.js');
-avlHelperModule.embedJs('http://static.yomedia.vn/public/js/videojs/videojs-vast-vpaid.js');
-
 var autoStart{!! $data['zid'] !!} = true;
 var playerId{!! $data['zid'] !!} = "{!! $data['eid'] or '' !!}";
 var zone{!! $data['zid'] !!} = {!! $data['zid'] !!};
