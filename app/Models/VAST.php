@@ -14,7 +14,7 @@ class VAST extends Eloquent {
             return '';
         }
         $tag = '';
-        $tag .= '<Impression><![CDATA['.urlTracking('impression', $this->id, $this->flight_publisher_id, $this->publisher_ad_zone_id, $this->checksum, '', $this->ovr ).']]></Impression>';
+        $tag .= '<Impression><![CDATA['.urlTracking('impression', $this->id, $this->flight_publisher_id, $this->publisher_ad_zone_id, $this->checksum, '', $this->ovr, $this->referrer  ).']]></Impression>';
         if ($this->third_impression_track != '') {
             $thirdImpressionTrackArr = explode("\n", $this->third_impression_track);
             if (!empty($thirdImpressionTrackArr)) {
@@ -71,7 +71,7 @@ class VAST extends Eloquent {
     }
 
     public function getTrackClickAttribute(){
-        return urlTracking('click', $this->id, $this->flight_publisher_id, $this->publisher_ad_zone_id, $this->checksum, $this->url, $this->ovr);
+        return urlTracking('click', $this->id, $this->flight_publisher_id, $this->publisher_ad_zone_id, $this->checksum, $this->url, $this->ovr, $this->referrer);
     }
     
     public function getTrackClick3rdAttribute(){
