@@ -144,6 +144,5 @@ function clickTrackingYomedia_{!! $data['zid'] !!}() {
 	window.open(clickTag);
 }
 
-function testTracking(){}
 // Include footer html
 @include("footer")
