@@ -429,7 +429,10 @@ class DeliveryController extends Controller
 			    multipleThreadsRequest($arrCurl);
 			}
 			$conversionModel   = new Conversion;
-			$conversionCampaign = $conversionModel->getCampaignConversion($expandFields['campaign_id']);
+			$conversionCampaign = array();
+			if(!empty($expandFields['campaign_id'])) {
+			    $conversionCampaign = $conversionModel->getCampaignConversion($expandFields['campaign_id']);
+			}
 			
 			if (!empty($conversionCampaign)) {
 			    $infoConversion = array('wid' => $expandFields['website_id'],'bid'=>$expandFields['ad_id']);
