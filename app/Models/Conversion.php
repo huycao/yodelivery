@@ -33,4 +33,37 @@ class Conversion extends Eloquent{
 		}
 		return $retval;
 	}
+	
+	function getCampaignConversion($campaignID, $conversionID = '', $renewCache = false) {
+	    $redis = new RedisBaseModel(env('REDIS_HOST', '127.0.0.1'), env('REDIS_PORT_2', '6379'), false);
+	    $cacheKey = "CampConv_{$campaignID}";
+	    if (!empty($cacheField)) {
+	        $cacheField = $campaignID;
+	        $retval = $redis->hMget($cacheKey, array($cacheField));
+		} else {
+		    $retval = $redis->hGetAll($cacheKey);
+		}
+	    
+		if(Input::get('cleared') || $renewCache){
+		    $redis->hDel($cacheKey, $cacheField);
+			$retval = 0;
+		}
+		if(!$retval){
+			$retval = DB::table('campaign')
+		                    ->join('conversion', 'conversion.campaign_id', '=', 'campaign.id')
+			                ->where('campaign.id', $campaignID)
+			                ->where('conversion.status', 1)
+			                ->select('conversion.id', 'conversion.campaign_id')
+			                ->first();
+		    if (!empty($retval)) {
+			    foreach ($retval as $conversion) {
+			        if (!empty($conversion) && !empty($conversion->id)) {
+			            $cacheField = $conversion->id;
+			            $redis->hSet($cacheKey, $cachField, $conversion->id);
+			        }
+			    }
+			}
+		}
+		return $retval;
+	}
 }

@@ -1,12 +1,14 @@
 <?php namespace App\Http\Controllers;
 
 use App\Models\Delivery;
+use App\Models\Conversion;
 use App\Models\Tracking;
 use App\Models\RawTrackingSummary;
 use App\Models\VAST;
 use RedisHelper;
 use App\Models\RedisBaseModel;
 use Input;
+use Cookie;
 
 class DeliveryController extends Controller
 {
@@ -426,7 +428,16 @@ class DeliveryController extends Controller
 			    }
 			    multipleThreadsRequest($arrCurl);
 			}
-			return redirect(urldecode(Input::get('to')));
+			$conversionModel   = new Conversion;
+			$conversionCampaign = $conversionModel->getCampaignConversion($expandFields['campaign_id']);
+			
+			if (!empty($conversionCampaign)) {
+			    $infoConversion = array('wid' => $expandFields['website_id'],'bid'=>$expandFields['ad_id']);
+			    $cookieKey = "Conv_{$expandFields['campaign_id']}";
+			    return redirect(urldecode(Input::get('to')))->withCookie(cookie($cookieKey, json_encode($infoConversion), 60));
+			} else {
+			    return redirect(urldecode(Input::get('to')));
+			}
 		}
 		else{
 			//return 1x1 transparent GIF
