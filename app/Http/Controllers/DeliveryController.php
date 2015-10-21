@@ -430,7 +430,6 @@ class DeliveryController extends Controller
 			}
 			$conversionModel   = new Conversion;
 			$conversionCampaign = $conversionModel->getCampaignConversion($expandFields['campaign_id']);
-			pr($conversionCampaign);
 			
 			if (!empty($conversionCampaign)) {
 			    $infoConversion = array('wid' => $expandFields['website_id'],'bid'=>$expandFields['ad_id']);

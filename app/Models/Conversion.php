@@ -36,7 +36,7 @@ class Conversion extends Eloquent{
 	
 	function getCampaignConversion($campaignID, $conversionID = '', $renewCache = false) {
 	    $redis = new RedisBaseModel(env('REDIS_HOST', '127.0.0.1'), env('REDIS_PORT_2', '6379'), false);
-	    $cacheKey = "CaimpConv_{$campaignID}";
+	    $cacheKey = "CampConv_{$campaignID}";
 	    if (!empty($cacheField)) {
 	        $cacheField = $campaignID;
 	        $retval = $redis->hMget($cacheKey, array($cacheField));
