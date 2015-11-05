@@ -15,6 +15,11 @@
         "pauseOnClickThrough": false,
         "skipAd": {
             "enabled": "true",
+            @if(!empty($ad->source_url2))
+            "image": "{!! $ad->source_url2 !!}",
+            "width": {!! $ad->width_2 !!},
+            "height": {!! $ad->height_2 !!},
+            @endif
             "showAfterSeconds": @if(!empty($ad->skipads)){!! $ad->skipads !!} @else 5 @endif
         },
         "hideLogoOnLinearPlayback": true,
