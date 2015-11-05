@@ -97,7 +97,7 @@ class DeliveryController extends Controller
 					if($adZone->publisher_site_id == $websiteID){
 						//kiểm tra referrer đúng với site đã đăng ký
 						// if(1){//test only
-						if( isSameDomain($hostReferer, getWebDomain($adZone->site->url) ) || Input::get('ec') == 0 || isLocal() ){
+						if( isSameDomain($hostReferer, getWebDomain($adZone->site->url) ) || isLocal() ){
 						 	//    if ($platform == '') {
 							//     $platform = $deliveryModel->getPlatform();
 							// }
