@@ -394,6 +394,12 @@ var avlInteractModule = new function(){
 			if(pid ===''){
 				pid = "YoMediaDiv"+el;
 				document.body.innerHTML += '<div id="'+pid+'"></div>';
+			} else {
+				if (!document.getElementById(pid)){
+					if (document.getElementsByClassName(pid)[0]) {
+						document.getElementsByClassName(pid)[0].setAttribute('id', pid);
+					}
+				}
 			}
 
 			var domPlayerInner = domManipulate.getElid(pid);
