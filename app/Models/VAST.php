@@ -218,7 +218,7 @@ class VAST extends Eloquent {
         $hostReferer = '*';
         if (!empty($_SERVER['HTTP_REFERER'])) {
             $url = $_SERVER['HTTP_REFERER'];
-            $hostReferer = parse_url($url, PHP_URL_SCHEME) . '://' . getWebDomain($url);
+            $hostReferer = parse_url($url, PHP_URL_SCHEME) . '://' . parse_url($url, PHP_URL_HOST);
         }
         
         $this->header['Content-Type']                     = 'application/xml';
