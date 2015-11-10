@@ -122,10 +122,10 @@ class VAST extends Eloquent {
         $adZone = $deliveryModel->getAdzone($publisherAdZoneID);
         if($adZone){
             $flightWebsite = $deliveryModel->getFullFlightWebsite($flightPublisherID, $adZone->publisher_site_id, $adZone->ad_format_id, '');
-            if ($flightWebsite) {
+            /*if ($flightWebsite) {
                 $rawTrackingSummary = new RawTrackingSummary();
                 $rawTrackingSummary->addSummary('ads_request', $flightWebsite->website_id, $adZone->id, $adZone->ad_format_id, $flightWebsite->flight_id, $flightWebsite->id, $flightWebsite->flight->ad_id, $flightWebsite->flight->campaign_id, $flightWebsite->publisher_base_cost, $isOverReport);
-            }
+            }*/
             
         }
         if($ad && $flightPublisherID && $publisherAdZoneID){
