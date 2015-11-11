@@ -76,14 +76,17 @@ function loadAds{!! $data['zid'] !!}() {
             domWrapPlayer.appendChild(domPlayerAds);
             domWrapPlayer.appendChild(domPlayerInner);
             var styleDomPlayerInner = domPlayerInner.getAttribute('style');
-            if (styleDomPlayerInner == null) styleDomPlayerInner = '';
-            styleDomPlayerInner = 'display: none;' + styleDomPlayerInner;
-            domPlayerInner.setAttribute('style', styleDomPlayerInner);
+            
+            domPlayerInner.style.display = "none";
         }
     }
 }
 
-loadAds{!! $data['zid'] !!}();
+document.onreadystatechange = function () {
+    if (document.readyState == "complete") {
+        loadAds{!! $data['zid'] !!}();
+    }
+}
 
 
 function addAnEventListener_{!! $data['zid'] !!}(obj,evt,func){
