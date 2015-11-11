@@ -89,13 +89,6 @@ document.onreadystatechange = function () {
 }
 
 function removeVideoInlineYomedia(playerInnerId, playerAdsId) {
-            if(playerInnerId == ''){
-                playerInnerId = "YoMediaDiv"+playerAdsId;
-            }
-            var playerInnerHtml = domManipulate.getElid(playerInnerId).innerHTML;
-            var playerInnerStyle = domManipulate.getElid(playerInnerId).getAttribute('style');
-           
-            //domManipulate.append(newPlayerInner, domPlayerAds);
             domManipulate.getElid(playerInnerId).style.display = "block";
             domManipulate.remove("inner" + playerAdsId)
         }
