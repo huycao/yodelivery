@@ -71,7 +71,7 @@ function loadAds{!! $data['zid'] !!}() {
                 }
         	?>
 
-        	var domPlayerAds = domManipulate.create('div', 'inner' + el{!! $data['zid'] !!}, 'position:relative;width:' + elWidth{!! $data['zid'] !!} + 'px;height:' + elHeight{!! $data['zid'] !!} + 'px;', '<iframe id="' + avlConfig.get('ICW') + el{!! $data['zid'] !!} + '" name="yo_iframe_{!! $data['zid'] !!}" src="{!! $template_video_url !!}?aid={!! $data['aid'] !!}&fpid={!! $data['fpid'] !!}&zid={!! $data['zid'] !!}&rt=1&cs={!! $data['checksum'] !!}&ovr={!! $ovr !!}&ref={!! $data['ref'] !!}&yw='+elWidth{!! $data['zid'] !!}+'&yh='+elHeight{!! $data['zid'] !!}+'&poster={!! $source_2 !!}&plf='+plf+'&ord={!! time() !!}" style="display:block;overflow:hidden;z-index:1000!important;border:0;position:relative;width:100%;height:100%;"></iframe>');
+        	var domPlayerAds = domManipulate.create('div', 'inner' + el{!! $data['zid'] !!}, 'position:absolute;width:' + elWidth{!! $data['zid'] !!} + 'px;height:' + elHeight{!! $data['zid'] !!} + 'px;', '<iframe id="' + avlConfig.get('ICW') + el{!! $data['zid'] !!} + '" name="yo_iframe_{!! $data['zid'] !!}" src="{!! $template_video_url !!}?aid={!! $data['aid'] !!}&fpid={!! $data['fpid'] !!}&zid={!! $data['zid'] !!}&rt=1&cs={!! $data['checksum'] !!}&ovr={!! $ovr !!}&ref={!! $data['ref'] !!}&yw='+elWidth{!! $data['zid'] !!}+'&yh='+elHeight{!! $data['zid'] !!}+'&poster={!! $source_2 !!}&plf='+plf+'&ord={!! time() !!}" style="display:block;overflow:hidden;z-index:1000!important;border:0;position:relative;width:100%;height:100%;"></iframe>');
             domManipulate.append(domWrapPlayer, domPlayerInner);
             domWrapPlayer.appendChild(domPlayerAds);
             domWrapPlayer.appendChild(domPlayerInner);
