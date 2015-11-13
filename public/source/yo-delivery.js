@@ -407,10 +407,11 @@ var avlInteractModule = new function(){
             domManipulate.append(domWrapPlayer, domPlayerInner);
             domWrapPlayer.appendChild(domPlayerAds);
             domWrapPlayer.appendChild(domPlayerInner);
-            var styleDomPlayerInner = domPlayerInner.getAttribute('style');
-            if (styleDomPlayerInner == null) styleDomPlayerInner = '';
-            styleDomPlayerInner = 'display: none;' + styleDomPlayerInner;
-            domPlayerInner.setAttribute('style', styleDomPlayerInner);
+            //var styleDomPlayerInner = domPlayerInner.getAttribute('style');
+            //if (styleDomPlayerInner == null) styleDomPlayerInner = '';
+            //styleDomPlayerInner = 'display: none;' + styleDomPlayerInner;
+            //domPlayerInner.setAttribute('style', styleDomPlayerInner);
+        	domPlayerInner.style.display = "none";
 
             var varObj={};
             varObj['wid'] = w;
