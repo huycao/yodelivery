@@ -31,14 +31,17 @@ class ConversionController extends Controller
                     $arrParam->wid = $arrInfoConversion->wid;
                     $arrParam->bid = $arrInfoConversion->bid;
                     $param = json_encode($arrParam);
-                }
-                
-                if ($rawTrackingConversionModel->addConversion($conversionID, $objConversion->campaign_id, $param)) {
-                    $responseType = Conversion::RESPONSE_TYPE_CONVERSION_SUCCESS;
-                    return response('')->withCookie(cookie($cookieKey));
+
+                    if ($rawTrackingConversionModel->addConversion($conversionID, $objConversion->campaign_id, $param)) {
+                        $responseType = Conversion::RESPONSE_TYPE_CONVERSION_SUCCESS;
+                        return response('')->withCookie(cookie($cookieKey));
+                    } else {
+                        $responseType = Conversion::RESPONSE_TYPE_CONVERSION_ERROR;
+                    }
                 } else {
-                    $responseType = Conversion::RESPONSE_TYPE_CONVERSION_ERROR;
-                }
+                    $responseType = Conversion::RESPONSE_TYPE_CONVERSION_NOT_INVALID;
+                }                
+                
             } else {
                 $responseType = Conversion::RESPONSE_TYPE_CONVERSION_NOT_FOUND;
             }
