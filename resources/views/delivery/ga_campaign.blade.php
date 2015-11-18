@@ -7,4 +7,5 @@
     $rd = $data['rd'];    
 ?>
 
-avlHelperModule.embedTrackingIframe("GA","http://static.yomedia.vn/campaigns.html?utm_medium={!! $ad_format !!}&utm_content={!! $banner !!}&utm_campaign={!! $flight !!}&utm_term={!! $effect !!}&utm_source={!! $publisher_domain !!}&rd={!! $rd !!}");
+//avlHelperModule.embedTrackingIframe("GA","http://static.yomedia.vn/campaigns.html?utm_medium={!! $ad_format !!}&utm_content={!! $banner !!}&utm_campaign={!! $flight !!}&utm_term={!! $effect !!}&utm_source={!! $publisher_domain !!}&rd={!! $rd !!}");
+avlHelperModule.embedTrackingIframe("AI","http://demo.yomedia.vn/analytics/index.php?count=ad_impression&rd={!! $rd !!}");

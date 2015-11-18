@@ -1,3 +1,4 @@
+@include("footer")
 <?php
     $wrapperAds = 'YoMediaBalloon_'.$data['zid'];
     $elAds = "YoMediaBalloon_".$data['zid'];
@@ -167,6 +168,7 @@ function impressionTrackingYomedia() {
 }
 
 function clickTrackingYomedia_{!! $data['zid'] !!}() {
+    @include("ga_click")
 	var clickTag = '{!! $clickTag !!}';
 	@if(!empty($thirdClickTrackArr))
         @foreach( $thirdClickTrackArr as $item )
@@ -293,5 +295,3 @@ function {!! $event !!}YomediaVideo_{{ $data['zid'] }}(){
     @endif
 }
 @endforeach
-
-@include("footer")

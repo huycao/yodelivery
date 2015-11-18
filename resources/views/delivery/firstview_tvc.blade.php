@@ -1,3 +1,4 @@
+@include("footer")
 <?php
 $source          = "";
 $destination_url = $data['ad']->destination_url;
@@ -245,6 +246,7 @@ showYoMediaPopupAd_{!! $data['zid'] !!}(1);
 window.onclick = function(event) {
     var checkID = 'image_{!! $data['zid'] !!}';
     if (checkID == event.target.id) {
+        @include("ga_click")
         @if(!empty($thirdClickTrackArr))
             @foreach( $thirdClickTrackArr as $item )
                 avlHelperModule.embedTracking("{!! trim(str_replace('[timestamp]', time(), $item)) !!}");
@@ -502,7 +504,3 @@ adsRequest.adTagUrl = '{!! route('makeVast', ['aid'=> $data['ad']->id,'fpid'=>$d
         adContainer.innerHTML = '';
 
     }
-
-@include("footer")
-
-
