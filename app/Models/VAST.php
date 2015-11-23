@@ -24,8 +24,10 @@ class VAST extends Eloquent {
             }
         }
         
-        $tag .= '<Impression><![CDATA[http://demo.yomedia.vn/analytics/index.php?count=ad_request&rd='.str_random(40).']]></Impression>';
-        $tag .= '<Impression><![CDATA[http://demo.yomedia.vn/analytics/index.php?count=ad_impression&rd='.str_random(40).']]></Impression>';
+        $tag .= '<Impression><![CDATA[http://static.yomedia.vn/analytics.html?utm_campaign=Yomedia&utm_source='.$this->category_name.'&utm_medium='.$this->publisher_domain.'&utm_content='.$this->ad_format_name.'&rd='.str_random(40).']]></Impression>';
+        $tag .= '<Impression><![CDATA[http://static.yomedia.vn/campaigns.html?utm_medium='.$this->ad_format_name.'&utm_content='.$this->name.'&utm_campaign='.$this->flight_name.'&utm_term=Video&utm_source='.$this->publisher_domain.'&rd='.str_random(40).']]></Impression>';
+        $tag .= '<Impression><![CDATA['. AD_SERVER_FILE .'analytics/index.php?count=ad_request&rd='.str_random(40).']]></Impression>';
+        $tag .= '<Impression><![CDATA['. AD_SERVER_FILE .'analytics/index.php?count=ad_impression&rd='.str_random(40).']]></Impression>';
         
         return $tag;
     }
@@ -76,7 +78,7 @@ class VAST extends Eloquent {
     
     public function getTrackClick3rdAttribute(){
         $tag = '';
-        $tag .= "<ClickTracking><![CDATA[http://demo.yomedia.vn/analytics/index.php?count=ad_click&rd=".str_random(40)."]]></ClickTracking>";
+        $tag .= "<ClickTracking><![CDATA['. AD_SERVER_FILE .'analytics/index.php?count=ad_click&rd=".str_random(40)."]]></ClickTracking>";
         if ($this->third_click_track != '') {
             $thirdClickTrackArr = explode("\n", $this->third_click_track);
             if (!empty($thirdClickTrackArr)) {
