@@ -1,4 +1,4 @@
 <?php 
     $rd = $data['rd'];    
 ?>
-avlHelperModule.embedTrackingIframe("AC","http://demo.yomedia.vn/analytics/index.php?count=ad_click&rd={!! $rd !!}");
+avlHelperModule.embedTrackingIframe("YO_AC","{!! AD_SERVER_FILE !!}analytics/index.php?count=ad_click&rd={!! $rd !!}");

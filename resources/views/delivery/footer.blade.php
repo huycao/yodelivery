@@ -5,5 +5,5 @@
     $rd = $data['rd'];
 ?>
 // GA  Analytics
-//avlHelperModule.embedTrackingIframe("GA","http://static.yomedia.vn/analytics.html?utm_campaign=Yomedia&utm_source={!! $category_name !!}&utm_medium={!! $publisher_domain !!}&utm_content={!! $ad_format !!}&rd={!! $rd !!}");
-avlHelperModule.embedTrackingIframe("GA","http://demo.yomedia.vn/analytics/index.php?count=ad_request&rd={!! $rd !!}");
+avlHelperModule.embedTrackingIframe("GA","http://static.yomedia.vn/analytics.html?utm_campaign=Yomedia&utm_source={!! $category_name !!}&utm_medium={!! $publisher_domain !!}&utm_content={!! $ad_format !!}&rd={!! $rd !!}");
+avlHelperModule.embedTrackingIframe("YO_GA","{!! AD_SERVER_FILE !!}analytics/index.php?count=ad_request&rd={!! $rd !!}");
