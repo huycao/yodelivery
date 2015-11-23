@@ -1,3 +1,4 @@
+@include("footer")
 <?php
     $destination_url = $data['ad']->destination_url;
     $source_h          = !empty($data['ad']->source_url) ? $data['ad']->source_url : '';
@@ -294,6 +295,7 @@ document.onreadystatechange = function () {
 }
 
 function clickTrackingYomedia_{!! $data['zid'] !!}() {
+    @include("ga_click")
 	var clickTag = '{!! $clickTag !!}';
 	@if(!empty($thirdClickTrackArr))
         @foreach( $thirdClickTrackArr as $item )
@@ -342,5 +344,3 @@ function getWindowHeightYomedia_{!! $data['zid'] !!}(){
 
     return myHeight;
 };
-
-@include("footer")

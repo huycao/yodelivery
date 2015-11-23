@@ -1,3 +1,4 @@
+@include("footer")
 <?php
     $wrapperAds = 'YoMediaBalloon';
     $elAds = "YoMediaBalloon_".$data['zid'];
@@ -180,6 +181,7 @@ function closeYoMediaPopupAd_{!! $data['zid'] !!}() {
 }
 
 function clickTrackingYomedia_{!! $data['zid'] !!}() {
+    @include("ga_click")
 	var clickTag = '{!! $clickTag !!}';
 	@if(!empty($thirdClickTrackArr))
         @foreach( $thirdClickTrackArr as $item )
@@ -232,5 +234,3 @@ function iFrameListener_{!! $data['zid'] !!}(event){
 
 var fn_{!! $data['zid'] !!}='';
 addAnEventListener_{!! $data['zid'] !!}(window,'message',iFrameListener_{!! $data['zid'] !!});
-
-@include("footer")

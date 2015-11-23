@@ -1,3 +1,4 @@
+@include("footer")
 <?php
 $source          = "";
 $destination_url = $data['ad']->destination_url;
@@ -175,6 +176,7 @@ document.onreadystatechange = function () {
             var checkID = 'yomedia-destination-{!! $data['zid'] !!}';
             var checkID2 = 'yomedia-inpage-banner';
             if (checkID == event.target.id || checkID2 == event.target.id) {
+                @include("ga_click")
                 @if(!empty($thirdClickTrackArr))
                     @foreach( $thirdClickTrackArr as $item )
                         avlHelperModule.embedTracking("{!! trim(str_replace('[timestamp]', time(), $item)) !!}");
@@ -237,4 +239,3 @@ function wdHeight(){
 
     return myHeight;
 };
-@include("footer")

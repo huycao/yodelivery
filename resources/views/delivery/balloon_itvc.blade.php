@@ -142,7 +142,5 @@ function {!! $event !!}YomediaVideo_{{ $data['zid'] }}(){
 }
 @endforeach
 
-
-showYoMediaPopupAd_{!! $data['zid'] !!}(1);
-
 @include("footer")
+showYoMediaPopupAd_{!! $data['zid'] !!}(1);
