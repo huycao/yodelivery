@@ -244,22 +244,28 @@ class Tracking extends Moloquent{
     		$visitorId = $this->makeVisitorId();
     		$this->visitor_id = $visitorId;
     	}
-    	return Cookie::make('Tracking:VisitorId', $visitorId, \Config::get('cache_time.dayInSeconds'));
+        
+        if(!isset($_COOKIE['uuid'])){
+            setcookie('uuid', $visitorId, time()+(86400*365), '/', getWebDomain(AD_SERVER_FILE));            
+        }
+        return $visitorId;
     }
 
     public function getVisitorId(){
-    	if(empty($this->visitor_id)){
-    		$this->setVisitorId();
-    	}
-    	return $this->visitor_id;
+    	if(!isset($_COOKIE['uuid'])){
+    		return $this->setVisitorId();
+    	} else {
+            return $_COOKIE['uuid'];
+        }
     }
     /**
      * make unique visitor id base on client IP and client Browser User Agent
      */
     public function makeVisitorId($userAgent = '', $clientIp = ''){	
-		$userAgent = $userAgent ? $userAgent : $_SERVER['HTTP_USER_AGENT'];
+		/*$userAgent = $userAgent ? $userAgent : $_SERVER['HTTP_USER_AGENT'];
 		$clientIp  = $clientIp ? $clientIp : getClientIp();
-    	return md5( $userAgent . $clientIp);
+    	return md5( $userAgent . $clientIp);*/
+        return makeUuid();
     }
 
     public function makeUserAgentHash($userAgent = ''){
@@ -294,6 +300,13 @@ class Tracking extends Moloquent{
     		return true;
     	}
     	return false;
+    }
+
+    public function isUniqueVisitor() {
+        if (isset($_COOKIE['uuid'])) {
+            return true;
+        }
+        return false;
     }
 
     /*public function incFreCap($flightId){
