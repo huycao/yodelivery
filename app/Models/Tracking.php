@@ -246,7 +246,7 @@ class Tracking extends Moloquent{
     	}
         
         if(!isset($_COOKIE['uuid'])){
-            setcookie('uuid', $visitorId, time()+(86400*365), '/', getWebDomain(AD_SERVER_FILE));            
+            setcookie('uuid', $visitorId, time()+(86400*365), '/', getWebDomain(DOMAIN_COOKIE));            
         }
         return $visitorId;
     }

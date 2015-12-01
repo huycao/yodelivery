@@ -399,7 +399,7 @@ class DeliveryController extends Controller
 		        	if (!empty($flightWebsite->ad->audience_id)) {
 		        		$audience_id = $flightWebsite->ad->audience_id;
 		        		if (empty($_COOKIE["yoAu_{$audience_id}"])) {
-			        		setcookie("yoAu_{$audience_id}", 1, time()+(86400*365), '/', getWebDomain(AD_SERVER_FILE));
+			        		setcookie("yoAu_{$audience_id}", 1, time()+(86400*365), '/', getWebDomain(DOMAIN_COOKIE));
 
 			        	}
 	        			$redis = new RedisBaseModel(env('REDIS_HOST', '127.0.0.1'), env('REDIS_PORT_6', '6379'), false);
