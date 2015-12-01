@@ -81,6 +81,7 @@ class DeliveryController extends Controller
 		if ($showBanner !== FALSE) {
 		    $flightWebsiteID = $showBanner;
 		}
+		$uuid = $trackingModel->getVisitorId();
 
 		//ghi log trước khi xử lý
 		//$logPreProcess = $trackingModel->logPreProcess($requestType, $data);
@@ -108,13 +109,14 @@ class DeliveryController extends Controller
 							//read redis 1
 							$flightWebsites = $deliveryModel->getAvailableAds($adZone->publisher_site_id, $adZone->ad_format_id, $flightWebsiteID, $platform);
 							pr($flightWebsites);
-							if($flightWebsites){
+							if($flightWebsites){								
 								//sort available flights base on priority and retargeting
 								//TO DO retargeting
 								$flightWebsites = $deliveryModel->sortAvailableFlightWebsites($flightWebsites);
 								//lấy ad từ list thỏa điều kiện để trả về
 								$deliveryInfo = $deliveryModel->getFullFlightInfo($flightWebsites, $adZone->publisher_site_id, $adZone->ad_format_id);
 								pr($deliveryInfo);
+								$redis = new RedisBaseModel(env('REDIS_HOST', '127.0.0.1'), env('REDIS_PORT_6', '6379'), false);
 								foreach ($flightWebsites as $k => $flightWebsite) {
 									if(!empty($flightWebsite) && !empty($deliveryInfo['flightDates'][$flightWebsite->flight_id]) && !empty($deliveryInfo['flights'][$flightWebsite->flight_id])){
 
@@ -141,7 +143,9 @@ class DeliveryController extends Controller
 									        			$audience = json_decode($flight->audience, true);
 									        			if (!empty ($audience['audience_id'])) {
 								        					if (!empty($_COOKIE["yoAu_{$audience['audience_id']}"])) {
-									        					$check = true;
+								        						if (!$redis->pfadd("au.{$audience['audience_id']}", array($uuid))){
+								        							$check = true;
+								        						}									        					
 									        				}
 
 									        				if ($audience['operator'] === 'not in') {
