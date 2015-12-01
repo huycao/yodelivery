@@ -1,5 +1,5 @@
 <?php
-
+use Webpatser\Uuid\Uuid;
 /**
  * Dump helper. Functions to dump variables to the screen, in a nicley formatted manner.
  * @author Joost van Veen
@@ -805,5 +805,11 @@ if (!function_exists('multipleThreadsRequest')) {
             curl_multi_remove_handle($mh, $curl_array[$i]); 
         } 
         curl_multi_close($mh); 
+    } 
+}
+
+if (!function_exists('makeUuid')) {
+    function makeUuid(){ 
+        return str_replace('-', '', Uuid::generate(4));
     } 
 }

@@ -9,6 +9,7 @@ use RedisHelper;
 use App\Models\RedisBaseModel;
 use Input;
 use Cookie;
+use App\Models\RawTrackingAudience;
 
 class DeliveryController extends Controller
 {
@@ -80,6 +81,7 @@ class DeliveryController extends Controller
 		if ($showBanner !== FALSE) {
 		    $flightWebsiteID = $showBanner;
 		}
+
 		//ghi log trước khi xử lý
 		//$logPreProcess = $trackingModel->logPreProcess($requestType, $data);
 		
@@ -132,6 +134,27 @@ class DeliveryController extends Controller
         										            continue;
     										            }
     										        }
+
+										        	//Check retargeting
+										        	if (!empty($flight->audience)) {
+										        		$check = false;
+									        			$audience = json_decode($flight->audience, true);
+									        			if (!empty ($audience['audience_id'])) {
+								        					if (!empty($_COOKIE["yoAu_{$audience['audience_id']}"])) {
+									        					$check = true;
+									        				}
+
+									        				if ($audience['operator'] === 'not in') {
+								        						$check = !$check;
+								        					}
+								        				}
+								        				
+								        				if ($check === false) {
+								        					$deliveryStatus == Delivery::RESPONSE_TYPE_AUDIENCE_LIMIT;
+								        					continue;
+								        				}
+										        	}
+
     												//trả về ad này
     												pr($flightWebsite);
     												$serveAd      = $ad;
@@ -369,7 +392,29 @@ class DeliveryController extends Controller
     			    multipleThreadsRequest($arrCurl);
 				}
 				$rawTrackingSummary->addSummary($event, $flightWebsite->website_id, $adZone->id, $adZone->ad_format_id, $flightWebsite->flight_id, $flightWebsite->id, $flightWebsite->flight->ad_id, $flightWebsite->flight->campaign_id, $flightWebsite->publisher_base_cost, $isOverReport);
-				
+
+				$uuid = $trackingModel->getVisitorId();
+				if ('impression' === $event) {
+					//Collection data
+		        	if (!empty($flightWebsite->ad->audience_id)) {
+		        		$audience_id = $flightWebsite->ad->audience_id;
+		        		if (!empty($_COOKIE["yoAu_{$audience_id}"])) {
+			        		setcookie("yoAu_{$audience_id}", 1, time()+(86400*365), '/', getWebDomain(AD_SERVER_FILE));
+			        	}
+	        			
+	        			$redis = new RedisBaseModel(env('REDIS_HOST', '127.0.0.1'), env('REDIS_PORT_6', '6379'), false);
+	        			$redis->pfadd("au.$audience_id", array($uuid));
+		        	}
+		        }
+
+		        //Tracking audience
+		        if ('impression' === $event || 'click' === $event) {
+		        	if (!empty($flightWebsite->flight->audience)) {
+		        		$rawTrackingAudience= new RawTrackingAudience();
+		        		$rawTrackingAudience->addAudience($uuid, $flightWebsite->ad->id, $event);
+		        	}
+		        }
+
 				//udpate inventory
 				//$inventoryMetric = $trackingModel->getTrackingEventType($flightWebsite->flight->cost_type);
 				$inventoryMetric = $trackingModel->getTrackingEventType($flightWebsite->flight->cost_type);
