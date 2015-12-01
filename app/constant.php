@@ -25,3 +25,4 @@ define('STATIC_URL', 'http://static.yomedia.vn/');
 define('DEBUG_ERROR', 'DebugError');
 define('DEBUG_CONTENT', 'DebugContent');
 define('SHOW_BANNER', 'ShowBanner');
+define('DOMAIN_COOKIE', '.yomedia.vn');
