@@ -1,5 +1,5 @@
 <?php
-
+use Webpatser\Uuid\Uuid;
 /**
  * Dump helper. Functions to dump variables to the screen, in a nicley formatted manner.
  * @author Joost van Veen
@@ -558,14 +558,11 @@ if (!function_exists('getCost')) {
 }
 if (!function_exists('getIP')) {
 function getIP() {
-    if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
-        $ip = $_SERVER['HTTP_CLIENT_IP'];
+    if (!empty($_SERVER['REMOTE_ADDR'])) {
+        $ip = $_SERVER['REMOTE_ADDR'];
     } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
         $ip = $_SERVER['HTTP_X_FORWARDED_FOR']; 
-    } else {
-        $ip = $_SERVER['REMOTE_ADDR'];
     }
-    $_SERVER['REMOTE_ADDR'] = $ip;
     return $ip;
 }
 }
@@ -807,3 +804,10 @@ if (!function_exists('multipleThreadsRequest')) {
         curl_multi_close($mh); 
     } 
 }
+
+if (!function_exists('makeUuid')) {
+    function makeUuid(){ 
+        return str_replace('-', '', Uuid::generate(4));
+    } 
+}
+
