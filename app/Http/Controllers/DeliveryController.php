@@ -398,10 +398,10 @@ class DeliveryController extends Controller
 					//Collection data
 		        	if (!empty($flightWebsite->ad->audience_id)) {
 		        		$audience_id = $flightWebsite->ad->audience_id;
-		        		if (!empty($_COOKIE["yoAu_{$audience_id}"])) {
+		        		if (empty($_COOKIE["yoAu_{$audience_id}"])) {
 			        		setcookie("yoAu_{$audience_id}", 1, time()+(86400*365), '/', getWebDomain(AD_SERVER_FILE));
+
 			        	}
-	        			
 	        			$redis = new RedisBaseModel(env('REDIS_HOST', '127.0.0.1'), env('REDIS_PORT_6', '6379'), false);
 	        			$redis->pfadd("au.$audience_id", array($uuid));
 		        	}
@@ -409,7 +409,7 @@ class DeliveryController extends Controller
 
 		        //Tracking audience
 		        if ('impression' === $event || 'click' === $event) {
-		        	if (!empty($flightWebsite->flight->audience)) {
+		        	if (!empty($flightWebsite->flight->audience) || !empty($flightWebsite->ad->audience_id)) {
 		        		$rawTrackingAudience= new RawTrackingAudience();
 		        		$rawTrackingAudience->addAudience($uuid, $flightWebsite->ad->id, $event);
 		        	}
@@ -419,7 +419,7 @@ class DeliveryController extends Controller
 				//$inventoryMetric = $trackingModel->getTrackingEventType($flightWebsite->flight->cost_type);
 				$inventoryMetric = $trackingModel->getTrackingEventType($flightWebsite->flight->cost_type);
 				if($event == $inventoryMetric){
-					$trackingModel->updateInventory($flightWebsite->flight->id, $flightWebsite->id, $inventoryMetric, $isOverReport);
+					//$trackingModel->updateInventory($flightWebsite->flight->id, $flightWebsite->id, $inventoryMetric, $isOverReport);
 					$rawTrackingSummary->updateInventory($flightWebsite->flight->id, $flightWebsite->id, $inventoryMetric, $isOverReport);
 				}
 			    if (isset($flightWebsite->flight->event) && $flightWebsite->flight->event != '') {
