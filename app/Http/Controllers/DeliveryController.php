@@ -142,8 +142,10 @@ class DeliveryController extends Controller
 										        		$check = false;
 									        			$audience = json_decode($flight->audience, true);
 									        			if (!empty ($audience['audience_id'])) {
-								        					if (!empty($_COOKIE["yoAu_{$audience['audience_id']}"]) && !empty($_COOKIE["uuid"])) {
-								        						$check = true;						        					
+								        					if (isset($_COOKIE["yoAu_{$audience['audience_id']}"]) && !empty($_COOKIE["uuid"])) {
+								        						if (substr($_COOKIE["yoAu_{$audience['audience_id']}"], 0, 1) == 1){
+								        							$check = true;						        					
+								        						}								        						
 									        				}
 
 									        				if ($audience['operator'] === 'not in') {
