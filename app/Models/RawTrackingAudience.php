@@ -8,11 +8,11 @@ class RawTrackingAudience extends Moloquent {
     public $timestamps    = false;
 
 
-    public function addAudience($uuid, $bid, $time, $event) {
+    public function addAudience($uuid, $bid, $event) {
         $data = [
             'uuid' => $uuid,
             'bid'  => intval($bid),
-            'time' => intval($time)
+            'time' => intval(time())
         ];
 
         return $this->incrementUpsert($event, 1, $data, $data);
@@ -21,10 +21,21 @@ class RawTrackingAudience extends Moloquent {
     public function incrementUpsert($column, $amount = 1, array $where = array(), array $extra = array())
     {   
         $db = \DB::connection('mongodb')->collection($this->table);
+        $db1 = \DB::connection('mongodb')->collection($this->table);
+        $tmp = $extra;
+        if (isset($tmp['time'])) {
+            unset($tmp['time']);
+        }
+        unset($where['time']);
+        $a = $db1->where($tmp)->where('time', 'exists', true)->get();        
+        if (!empty($a)) {
+            unset($extra['time']);
+        }   
+
         $query = array('$inc' => array($column => $amount));
 
         if ( ! empty($extra))
-        {
+        {            
             $query['$set'] = $extra;
         }
        
