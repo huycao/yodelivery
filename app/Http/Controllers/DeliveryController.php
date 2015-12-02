@@ -420,7 +420,7 @@ class DeliveryController extends Controller
 		        		$audience = json_decode($flightWebsite->flight->audience, true);
 		        		if ($audience['operator'] == 'not in'){
 		        			if (isset($_COOKIE["yoAu_{$audience_id}"])){
-		        				if substr($_COOKIE["yoAu_{$audience_id}"], 0, 1) == 0){
+		        				if (substr($_COOKIE["yoAu_{$audience_id}"], 0, 1) == 0){
 									$time = substr($_COOKIE["yoAu_{$audience_id}"], 2);
 								}
 		        			}
