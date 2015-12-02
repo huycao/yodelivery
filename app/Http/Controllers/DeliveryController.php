@@ -414,7 +414,7 @@ class DeliveryController extends Controller
 		        	}
 
 		        	//Tracking audience
-		        	if (!empty($flightWebsite->flight->audience) {
+		        	if (!empty($flightWebsite->flight->audience)) {
 		        		$audience = json_decode($flightWebsite->flight->audience, true);
 		        		if ($audience['operator'] == 'not in'){
 		        			setcookie("yoAu_{$audience['audience_id']}", "0." . $time, $time+(86400*365), '/', getWebDomain(DOMAIN_COOKIE));	
