@@ -81,7 +81,7 @@ class DeliveryController extends Controller
 		if ($showBanner !== FALSE) {
 		    $flightWebsiteID = $showBanner;
 		}
-		$uuid = $trackingModel->getVisitorId();
+		//$uuid = $trackingModel->getVisitorId();
 
 		//ghi log trước khi xử lý
 		//$logPreProcess = $trackingModel->logPreProcess($requestType, $data);
@@ -142,10 +142,8 @@ class DeliveryController extends Controller
 										        		$check = false;
 									        			$audience = json_decode($flight->audience, true);
 									        			if (!empty ($audience['audience_id'])) {
-								        					if (!empty($_COOKIE["yoAu_{$audience['audience_id']}"])) {
-								        						if (!$redis->pfadd("au.{$audience['audience_id']}", array($uuid))){
-								        							$check = true;
-								        						}									        					
+								        					if (!empty($_COOKIE["yoAu_{$audience['audience_id']}"]) && !empty($_COOKIE["uuid"])) {
+								        						$check = true;						        					
 									        				}
 
 									        				if ($audience['operator'] === 'not in') {
@@ -398,22 +396,30 @@ class DeliveryController extends Controller
 				$rawTrackingSummary->addSummary($event, $flightWebsite->website_id, $adZone->id, $adZone->ad_format_id, $flightWebsite->flight_id, $flightWebsite->id, $flightWebsite->flight->ad_id, $flightWebsite->flight->campaign_id, $flightWebsite->publisher_base_cost, $isOverReport);
 
 				$uuid = $trackingModel->getVisitorId();
-				if ('impression' === $event) {
-					//Collection data
+						        
+		        if ('impression' === $event || 'click' === $event) {
+		        	//Collection data
 		        	if (!empty($flightWebsite->ad->audience_id)) {
 		        		$audience_id = $flightWebsite->ad->audience_id;
-		        		if (empty($_COOKIE["yoAu_{$audience_id}"])) {
+		        		if (!isset($_COOKIE["yoAu_{$audience_id}"])) {
 			        		setcookie("yoAu_{$audience_id}", 1, time()+(86400*365), '/', getWebDomain(DOMAIN_COOKIE));
+		        			$redis = new RedisBaseModel(env('REDIS_HOST', '127.0.0.1'), env('REDIS_PORT_6', '6379'), false);
+	        				$redis->pfadd("au.$audience_id", array($uuid));	        				
 
-			        	}
-	        			$redis = new RedisBaseModel(env('REDIS_HOST', '127.0.0.1'), env('REDIS_PORT_6', '6379'), false);
-	        			$redis->pfadd("au.$audience_id", array($uuid));
+	        				$rawTrackingAudience= new RawTrackingAudience();
+		        			$rawTrackingAudience->addAudience($uuid, $flightWebsite->ad->id, $event);
+			        	}elseif ($_COOKIE["yoAu_{$audience_id}"] == 1){
+			        		$rawTrackingAudience= new RawTrackingAudience();
+		        			$rawTrackingAudience->addAudience($uuid, $flightWebsite->ad->id, $event);
+			        	}		        	
 		        	}
-		        }
 
-		        //Tracking audience
-		        if ('impression' === $event || 'click' === $event) {
-		        	if (!empty($flightWebsite->flight->audience) || !empty($flightWebsite->ad->audience_id)) {
+		        	//Tracking audience
+		        	if (!empty($flightWebsite->flight->audience)) {
+		        		$audience = json_decode($flightWebsite->flight->audience, true);
+	        			if ($audience['operator'] === 'not in') {
+    						setcookie("yoAu_{$audience['audience_id']}", 0, time()+(86400*365), '/', getWebDomain(DOMAIN_COOKIE));
+    					}
 		        		$rawTrackingAudience= new RawTrackingAudience();
 		        		$rawTrackingAudience->addAudience($uuid, $flightWebsite->ad->id, $event);
 		        	}
