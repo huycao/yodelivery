@@ -12,7 +12,7 @@ class RawTrackingAudience extends Moloquent {
         $data = [
             'uuid' => $uuid,
             'bid'  => intval($bid),
-            'time' => $time
+            'time' => intval($time)
         ];
 
         return $this->incrementUpsert($event, 1, $data, $data);
