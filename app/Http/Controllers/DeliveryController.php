@@ -419,9 +419,9 @@ class DeliveryController extends Controller
 		        	if (!empty($flightWebsite->flight->audience)) {
 		        		$audience = json_decode($flightWebsite->flight->audience, true);
 		        		if ($audience['operator'] == 'not in'){
-		        			if (isset($_COOKIE["yoAu_{$audience_id}"])){
-		        				if (substr($_COOKIE["yoAu_{$audience_id}"], 0, 1) == 0){
-									$time = substr($_COOKIE["yoAu_{$audience_id}"], 2);
+		        			if (isset($_COOKIE["yoAu_{$audience['audience_id']}"])){
+		        				if (substr($_COOKIE["yoAu_{$audience['audience_id']}"], 0, 1) == 0){
+									$time = substr($_COOKIE["yoAu_{$audience['audience_id']}"], 2);
 								}
 		        			}
 		        			setcookie("yoAu_{$audience['audience_id']}", "0." . $time, $time+(86400*365), '/', getWebDomain(DOMAIN_COOKIE));	
