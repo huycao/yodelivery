@@ -399,29 +399,28 @@ class DeliveryController extends Controller
 						        
 		        if ('impression' === $event || 'click' === $event) {
 		        	//Collection data
+		        	$time = time();
 		        	if (!empty($flightWebsite->ad->audience_id)) {
 		        		$audience_id = $flightWebsite->ad->audience_id;
-		        		if (!isset($_COOKIE["yoAu_{$audience_id}"])) {
-			        		setcookie("yoAu_{$audience_id}", 1, time()+(86400*365), '/', getWebDomain(DOMAIN_COOKIE));
+		        		if (!isset($_COOKIE["yoAu_{$audience_id}"]) || substr($_COOKIE["yoAu_{$audience_id}"], 0, 1) == 0) {
+			        		setcookie("yoAu_{$audience_id}", "1." . $time, $time+(86400*365), '/', getWebDomain(DOMAIN_COOKIE));
 		        			$redis = new RedisBaseModel(env('REDIS_HOST', '127.0.0.1'), env('REDIS_PORT_6', '6379'), false);
-	        				$redis->pfadd("au.$audience_id", array($uuid));	        				
-
-	        				$rawTrackingAudience= new RawTrackingAudience();
-		        			$rawTrackingAudience->addAudience($uuid, $flightWebsite->ad->id, $event);
-			        	}elseif ($_COOKIE["yoAu_{$audience_id}"] == 1){
-			        		$rawTrackingAudience= new RawTrackingAudience();
-		        			$rawTrackingAudience->addAudience($uuid, $flightWebsite->ad->id, $event);
-			        	}		        	
+	        				$redis->pfadd("au.$audience_id", array($uuid));
+			        	}else{
+			        		$time = substr($_COOKIE["yoAu_{$audience_id}"], 2);			        		
+			        	}
+			        	$rawTrackingAudience= new RawTrackingAudience();
+		        		$rawTrackingAudience->addAudience($uuid, $flightWebsite->ad->id, $time, $event);
 		        	}
 
 		        	//Tracking audience
-		        	if (!empty($flightWebsite->flight->audience)) {
+		        	if (!empty($flightWebsite->flight->audience) {
 		        		$audience = json_decode($flightWebsite->flight->audience, true);
-	        			if ($audience['operator'] === 'not in') {
-    						setcookie("yoAu_{$audience['audience_id']}", 0, time()+(86400*365), '/', getWebDomain(DOMAIN_COOKIE));
-    					}
+		        		if ($audience['operator'] == 'not in'){
+		        			setcookie("yoAu_{$audience['audience_id']}", "0." . $time, $time+(86400*365), '/', getWebDomain(DOMAIN_COOKIE));	
+		        		}
 		        		$rawTrackingAudience= new RawTrackingAudience();
-		        		$rawTrackingAudience->addAudience($uuid, $flightWebsite->ad->id, $event);
+		        		$rawTrackingAudience->addAudience($uuid, $flightWebsite->ad->id, $time, $event);
 		        	}
 		        }
 
