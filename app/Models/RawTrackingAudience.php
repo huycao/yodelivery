@@ -8,13 +8,13 @@ class RawTrackingAudience{
    
     public function addAudience($uuid, $audience_id, $bid, $time, $event){
         $info = [
-            '_id' => $uuid,
+            '_id' => $uuid . $time,
+            'uuid'=> $uuid,
             'time'=> intval($time)
         ];
 
         $where = [
-            '_id'   =>  $uuid,
-            'time'  =>  intval($time)
+            '_id'   =>  $uuid . $time            
         ];
         $table = "{$this->table}_{$bid}_{$audience_id}";
 
