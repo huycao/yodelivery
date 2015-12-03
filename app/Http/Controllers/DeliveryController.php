@@ -399,11 +399,11 @@ class DeliveryController extends Controller
 				$uuid = $trackingModel->getVisitorId();				
 				
 		        if ('impression' === $event || 'click' === $event) {
-		        	$time = time();
-		        	$cookie = $_COOKIE["yoAu_{$audience_id}"];
+		        	$time = time();		        	
 		        	//Collection data
 		        	if (!empty($flightWebsite->ad->audience_id)) {
 		        		$audience_id = $flightWebsite->ad->audience_id;		        		
+		        		$cookie = $_COOKIE["yoAu_{$audience_id}"];
 		        		if (!isset($cookie) || substr($cookie, 0, 2) == "0." || $cookie == '1') {
 			        		setcookie("yoAu_{$audience_id}", "1." .$time, $time+(86400*365), '/', getWebDomain(DOMAIN_COOKIE));
 		        			$redis = new RedisBaseModel(env('REDIS_HOST', '127.0.0.1'), env('REDIS_PORT_6', '6379'), false);
@@ -418,6 +418,7 @@ class DeliveryController extends Controller
 		        	//Tracking audience
 		        	if (!empty($flightWebsite->flight->audience)) {
 		        		$audience = json_decode($flightWebsite->flight->audience, true);
+		        		$cookie = $_COOKIE["yoAu_{$audience['audience_id']}"];
 		        		if ($cookie == '1') {
 		        			setcookie("yoAu_{$audience['audience_id']}", "1." .$time, $time+(86400*365), '/', getWebDomain(DOMAIN_COOKIE));
 		        		}
