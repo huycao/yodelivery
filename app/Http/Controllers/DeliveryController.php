@@ -419,16 +419,15 @@ class DeliveryController extends Controller
 		        	if (!empty($flightWebsite->flight->audience)) {
 		        		$audience = json_decode($flightWebsite->flight->audience, true);
 		        		$cookie = isset($_COOKIE["yoAu_{$audience['audience_id']}"]) ? $_COOKIE["yoAu_{$audience['audience_id']}"] : '';
+		        		if (substr($cookie, 0, 2) === '1.' || substr($cookie, 0, 2) === '0.'){
+			        		$time = substr($cookie, 2);
+			        	}
 		        		if ($cookie === '1') {
 		        			setcookie("yoAu_{$audience['audience_id']}", "1." .$time, $time+(86400*365), '/', getWebDomain(DOMAIN_COOKIE));
 		        		}
 		        		if ($audience['operator'] == 'not in'){		        			
 		        			setcookie("yoAu_{$audience['audience_id']}", "0." .$time, $time+(86400*365), '/', getWebDomain(DOMAIN_COOKIE));	
-		        		}
-
-		        		if (substr($cookie, 0, 2) === '1.' || substr($cookie, 0, 2) === '0.'){
-			        		$time = substr($cookie, 2);
-			        	}
+		        		}		        		
 		        		$rawTrackingAudience= new RawTrackingAudience();
 		        		$rawTrackingAudience->addAudience($uuid, $audience['audience_id'], $flightWebsite->ad->id, $time, $event);
 		        	}		        	
