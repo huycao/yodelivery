@@ -404,33 +404,33 @@ class DeliveryController extends Controller
 		        	if (!empty($flightWebsite->ad->audience_id)) {
 		        		$audience_id = $flightWebsite->ad->audience_id;		        		
 		        		$cookie = $_COOKIE["yoAu_{$audience_id}"];
-		        		if (!isset($cookie) || substr($cookie, 0, 2) == "0." || $cookie == '1') {
+		        		if (!isset($cookie) || substr($cookie, 0, 2) === "0." || $cookie === '1') {
 			        		setcookie("yoAu_{$audience_id}", "1." .$time, $time+(86400*365), '/', getWebDomain(DOMAIN_COOKIE));
 		        			$redis = new RedisBaseModel(env('REDIS_HOST', '127.0.0.1'), env('REDIS_PORT_6', '6379'), false);
 	        				$redis->pfadd("au.$audience_id", array($uuid));	        				
-			        	}        	
-			        	if (subtr($cookie, 0, 2) == '1.'){			        		
+			        	}     	
+			        	if (substr($cookie, 0, 2) === '1.'){			        		
 			        		$time = substr($cookie, 2);
 			        	}
 			        	$rawTrackingAudience= new RawTrackingAudience();
-		        		$rawTrackingAudience->addAudience($uuid, $audience_id, $time, $flightWebsite->ad->id, $event);
+		        		$rawTrackingAudience->addAudience($uuid, $audience_id, $flightWebsite->ad->id, $time, $event);
 		        	}
 		        	//Tracking audience
 		        	if (!empty($flightWebsite->flight->audience)) {
 		        		$audience = json_decode($flightWebsite->flight->audience, true);
 		        		$cookie = $_COOKIE["yoAu_{$audience['audience_id']}"];
-		        		if ($cookie == '1') {
+		        		if ($cookie === '1') {
 		        			setcookie("yoAu_{$audience['audience_id']}", "1." .$time, $time+(86400*365), '/', getWebDomain(DOMAIN_COOKIE));
 		        		}
 		        		if ($audience['operator'] == 'not in'){		        			
 		        			setcookie("yoAu_{$audience['audience_id']}", "0." .$time, $time+(86400*365), '/', getWebDomain(DOMAIN_COOKIE));	
 		        		}
 
-		        		if (subtr($cookie, 0, 2) == '1.' || subtr($cookie, 0, 2) == '0.'){			        		
+		        		if (subtr($cookie, 0, 2) === '1.' || subtr($cookie, 0, 2) === '0.'){			        		
 			        		$time = substr($cookie, 2);
 			        	}
 		        		$rawTrackingAudience= new RawTrackingAudience();
-		        		$rawTrackingAudience->addAudience($uuid, $audience['audience_id'], $time, $flightWebsite->ad->id, $event);
+		        		$rawTrackingAudience->addAudience($uuid, $audience['audience_id'], $flightWebsite->ad->id, $time, $event);
 		        	}		        	
 		        }
 
