@@ -143,7 +143,7 @@ class DeliveryController extends Controller
 									        			$audience = json_decode($flight->audience, true);
 									        			if (!empty ($audience['audience_id'])) {
 								        					if (isset($_COOKIE["yoAu_{$audience['audience_id']}"]) && !empty($_COOKIE["uuid"])) {
-								        						if ($_COOKIE["yoAu_{$audience['audience_id']}"] == '1' || subtr($_COOKIE["yoAu_{$audience['audience_id']}"], 0, 2) == '1.'){
+								        						if ($_COOKIE["yoAu_{$audience['audience_id']}"] === '1' || substr($_COOKIE["yoAu_{$audience['audience_id']}"], 0, 2) === '1.'){
 								        							$check = true;						        					
 								        						}								        						
 									        				}
@@ -403,8 +403,8 @@ class DeliveryController extends Controller
 		        	//Collection data
 		        	if (!empty($flightWebsite->ad->audience_id)) {
 		        		$audience_id = $flightWebsite->ad->audience_id;		        		
-		        		$cookie = $_COOKIE["yoAu_{$audience_id}"];
-		        		if (!isset($cookie) || substr($cookie, 0, 2) === "0." || $cookie === '1') {
+		        		$cookie = isset($_COOKIE["yoAu_{$audience_id}"]) ? $_COOKIE["yoAu_{$audience_id}"] : '';
+		        		if (!$cookie || substr($cookie, 0, 2) === "0." || $cookie === '1') {
 			        		setcookie("yoAu_{$audience_id}", "1." .$time, $time+(86400*365), '/', getWebDomain(DOMAIN_COOKIE));
 		        			$redis = new RedisBaseModel(env('REDIS_HOST', '127.0.0.1'), env('REDIS_PORT_6', '6379'), false);
 	        				$redis->pfadd("au.$audience_id", array($uuid));	        				
@@ -418,7 +418,7 @@ class DeliveryController extends Controller
 		        	//Tracking audience
 		        	if (!empty($flightWebsite->flight->audience)) {
 		        		$audience = json_decode($flightWebsite->flight->audience, true);
-		        		$cookie = $_COOKIE["yoAu_{$audience['audience_id']}"];
+		        		$cookie = isset($_COOKIE["yoAu_{$audience['audience_id']}"]) ? $_COOKIE["yoAu_{$audience['audience_id']}"] : '';
 		        		if ($cookie === '1') {
 		        			setcookie("yoAu_{$audience['audience_id']}", "1." .$time, $time+(86400*365), '/', getWebDomain(DOMAIN_COOKIE));
 		        		}
@@ -426,7 +426,7 @@ class DeliveryController extends Controller
 		        			setcookie("yoAu_{$audience['audience_id']}", "0." .$time, $time+(86400*365), '/', getWebDomain(DOMAIN_COOKIE));	
 		        		}
 
-		        		if (subtr($cookie, 0, 2) === '1.' || subtr($cookie, 0, 2) === '0.'){			        		
+		        		if (substr($cookie, 0, 2) === '1.' || substr($cookie, 0, 2) === '0.'){
 			        		$time = substr($cookie, 2);
 			        	}
 		        		$rawTrackingAudience= new RawTrackingAudience();
