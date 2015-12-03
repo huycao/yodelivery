@@ -6,13 +6,15 @@ class RawTrackingAudience{
     protected $connection = 'mongodb';
     public $timestamps    = false;
    
-    public function addAudience($uuid, $audience_id, $bid, $event){
+    public function addAudience($uuid, $audience_id, $bid, $time, $event){
         $info = [
-            '_id' => $uuid
+            '_id' => $uuid,
+            'time'=> $time
         ];
 
         $where = [
-            '_id'   =>  $uuid
+            '_id'   =>  $uuid,
+            'time'  =>  $time
         ];
         $table = "{$this->table}_{$bid}_{$audience_id}";
 
