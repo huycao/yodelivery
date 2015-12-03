@@ -81,6 +81,7 @@ class DeliveryController extends Controller
 		if ($showBanner !== FALSE) {
 		    $flightWebsiteID = $showBanner;
 		}
+		//$uuid = $trackingModel->getVisitorId();
 
 		//ghi log trước khi xử lý
 		//$logPreProcess = $trackingModel->logPreProcess($requestType, $data);
@@ -108,13 +109,14 @@ class DeliveryController extends Controller
 							//read redis 1
 							$flightWebsites = $deliveryModel->getAvailableAds($adZone->publisher_site_id, $adZone->ad_format_id, $flightWebsiteID, $platform);
 							pr($flightWebsites);
-							if($flightWebsites){
+							if($flightWebsites){								
 								//sort available flights base on priority and retargeting
 								//TO DO retargeting
 								$flightWebsites = $deliveryModel->sortAvailableFlightWebsites($flightWebsites);
 								//lấy ad từ list thỏa điều kiện để trả về
 								$deliveryInfo = $deliveryModel->getFullFlightInfo($flightWebsites, $adZone->publisher_site_id, $adZone->ad_format_id);
 								pr($deliveryInfo);
+								$redis = new RedisBaseModel(env('REDIS_HOST', '127.0.0.1'), env('REDIS_PORT_6', '6379'), false);
 								foreach ($flightWebsites as $k => $flightWebsite) {
 									if(!empty($flightWebsite) && !empty($deliveryInfo['flightDates'][$flightWebsite->flight_id]) && !empty($deliveryInfo['flights'][$flightWebsite->flight_id])){
 
@@ -135,15 +137,16 @@ class DeliveryController extends Controller
     										            }
     										        }
 
-										        	//Check retargeting
+    										        //Check retargeting
 										        	if (!empty($flight->audience)) {
 										        		$check = false;
 									        			$audience = json_decode($flight->audience, true);
 									        			if (!empty ($audience['audience_id'])) {
-								        					if (!empty($_COOKIE["yoAu_{$audience['audience_id']}"])) {
-									        					$check = true;
+								        					if (isset($_COOKIE["yoAu_{$audience['audience_id']}"]) && !empty($_COOKIE["uuid"])) {
+								        						if ($_COOKIE["yoAu_{$audience['audience_id']}"] === '1' || substr($_COOKIE["yoAu_{$audience['audience_id']}"], 0, 2) === '1.'){
+								        							$check = true;						        					
+								        						}								        						
 									        				}
-
 									        				if ($audience['operator'] === 'not in') {
 								        						$check = !$check;
 								        					}
@@ -153,7 +156,7 @@ class DeliveryController extends Controller
 								        					$deliveryStatus == Delivery::RESPONSE_TYPE_AUDIENCE_LIMIT;
 								        					continue;
 								        				}
-										        	}
+										        	}										        	
 
     												//trả về ad này
     												pr($flightWebsite);
@@ -393,26 +396,41 @@ class DeliveryController extends Controller
 				}
 				$rawTrackingSummary->addSummary($event, $flightWebsite->website_id, $adZone->id, $adZone->ad_format_id, $flightWebsite->flight_id, $flightWebsite->id, $flightWebsite->flight->ad_id, $flightWebsite->flight->campaign_id, $flightWebsite->publisher_base_cost, $isOverReport);
 
-				$uuid = $trackingModel->getVisitorId();
-				if ('impression' === $event) {
-					//Collection data
-		        	if (!empty($flightWebsite->ad->audience_id)) {
-		        		$audience_id = $flightWebsite->ad->audience_id;
-		        		if (empty($_COOKIE["yoAu_{$audience_id}"])) {
-			        		setcookie("yoAu_{$audience_id}", 1, time()+(86400*365), '/', getWebDomain(AD_SERVER_FILE));
-
-			        	}
-	        			$redis = new RedisBaseModel(env('REDIS_HOST', '127.0.0.1'), env('REDIS_PORT_6', '6379'), false);
-	        			$redis->pfadd("au.$audience_id", array($uuid));
-		        	}
-		        }
-
-		        //Tracking audience
+				$uuid = $trackingModel->getVisitorId();				
+				
 		        if ('impression' === $event || 'click' === $event) {
-		        	if (!empty($flightWebsite->flight->audience) || !empty($flightWebsite->ad->audience_id)) {
-		        		//$rawTrackingAudience= new RawTrackingAudience();
-		        		//$rawTrackingAudience->addAudience($uuid, $flightWebsite->ad->id, $event);
+		        	$time = time();		        	
+		        	//Collection data
+		        	if (!empty($flightWebsite->ad->audience_id)) {
+		        		$audience_id = $flightWebsite->ad->audience_id;		        		
+		        		$cookie = isset($_COOKIE["yoAu_{$audience_id}"]) ? $_COOKIE["yoAu_{$audience_id}"] : '';
+		        		if (!$cookie || substr($cookie, 0, 2) === "0." || $cookie === '1') {
+			        		setcookie("yoAu_{$audience_id}", "1." .$time, $time+(86400*365), '/', getWebDomain(DOMAIN_COOKIE));
+		        			$redis = new RedisBaseModel(env('REDIS_HOST', '127.0.0.1'), env('REDIS_PORT_6', '6379'), false);
+	        				$redis->pfadd("au.$audience_id", array($uuid));	        				
+			        	}     	
+			        	if (substr($cookie, 0, 2) === '1.'){			        		
+			        		$time = substr($cookie, 2);
+			        	}
+			        	$rawTrackingAudience= new RawTrackingAudience();
+		        		$rawTrackingAudience->addAudience($uuid, $audience_id, $flightWebsite->ad->id, $time, $event);
 		        	}
+		        	//Tracking audience
+		        	if (!empty($flightWebsite->flight->audience)) {
+		        		$audience = json_decode($flightWebsite->flight->audience, true);
+		        		$cookie = isset($_COOKIE["yoAu_{$audience['audience_id']}"]) ? $_COOKIE["yoAu_{$audience['audience_id']}"] : '';
+		        		if (substr($cookie, 0, 2) === '1.' || substr($cookie, 0, 2) === '0.'){
+			        		$time = substr($cookie, 2);
+			        	}
+		        		if ($cookie === '1') {
+		        			setcookie("yoAu_{$audience['audience_id']}", "1." .$time, $time+(86400*365), '/', getWebDomain(DOMAIN_COOKIE));
+		        		}
+		        		if ($audience['operator'] == 'not in'){		        			
+		        			setcookie("yoAu_{$audience['audience_id']}", "0." .$time, $time+(86400*365), '/', getWebDomain(DOMAIN_COOKIE));	
+		        		}		        		
+		        		$rawTrackingAudience= new RawTrackingAudience();
+		        		$rawTrackingAudience->addAudience($uuid, $audience['audience_id'], $flightWebsite->ad->id, $time, $event);
+		        	}		        	
 		        }
 
 				//udpate inventory
