@@ -212,6 +212,12 @@ function showBannerYomedia_{!! $data['zid'] !!}() {
                 document.getElementById('yomedia-play-h-{!! $data['zid'] !!}').style.visibility = 'hidden';
                 document.getElementById('yomedia-play-w-{!! $data['zid'] !!}').style.visibility = 'visible';
             }
+            if (document.getElementById('yomedia-border-h-{!! $data['zid'] !!}')) {
+                document.getElementById('yomedia-border-h-{!! $data['zid'] !!}').style.visibility = 'hidden';
+            }
+            if (document.getElementById('yomedia-border-w-{!! $data['zid'] !!}')) {
+                document.getElementById('yomedia-border-w-{!! $data['zid'] !!}').style.visibility = 'visible';
+            }
             play_button_{!! $data['zid'] !!} = "yomedia-play-w-{!! $data['zid'] !!}";
         } else {
             document.getElementById('yomedia-inpage-banner-w-{!! $data['zid'] !!}').style.display = 'none';
@@ -228,6 +234,12 @@ function showBannerYomedia_{!! $data['zid'] !!}() {
             if (lVideo == null || (lVideo && lVideo.ended == true)) {
                 document.getElementById('yomedia-play-w-{!! $data['zid'] !!}').style.visibility = 'hidden';
                 document.getElementById('yomedia-play-h-{!! $data['zid'] !!}').style.visibility = 'visible';
+            }
+            if (document.getElementById('yomedia-border-w-{!! $data['zid'] !!}')) {
+                document.getElementById('yomedia-border-w-{!! $data['zid'] !!}').style.visibility = 'hidden';
+            }
+            if (document.getElementById('yomedia-border-h-{!! $data['zid'] !!}')) {
+                document.getElementById('yomedia-border-h-{!! $data['zid'] !!}').style.visibility = 'visible';
             }
             play_button_{!! $data['zid'] !!} = "yomedia-play-h-{!! $data['zid'] !!}";
         }
@@ -438,15 +450,48 @@ function playVideoYomedia_{!! $data['zid'] !!}(type) {
         var lVideo = document.createElement("video");
         lVideo.id = "yomedia-video-{!! $data['zid'] !!}";
         lVideo.src = _yomediaAds_{!! $data['zid'] !!}.video_url;
-        innerVideo_{!! $data['zid'] !!}.appendChild(lVideo);
-        lVideo.hidden = false;
 
-        lVideo.style.cssText = "min-height:0px !important;z-index:1;"
         if (play_button_{!! $data['zid'] !!} == "yomedia-play-h-{!! $data['zid'] !!}") {
             lVideo.poster = _yomediaAds_{!! $data['zid'] !!}.video_poster_h;
         } else {
             lVideo.poster = _yomediaAds_{!! $data['zid'] !!}.video_poster_w;
         }
+
+        if (typeof _yomediaAds_{!! $data['zid'] !!}.border_h != 'undefined' && _yomediaAds_{!! $data['zid'] !!}.border_h != '') {
+            var border_h = document.createElement("IMG");
+            border_h.setAttribute("id", "yomedia-border-h-{!! $data['zid'] !!}");
+            border_h.src = _yomediaAds_{!! $data['zid'] !!}.border_h;
+            innerVideo_{!! $data['zid'] !!}.appendChild(border_h);
+            border_h.style.cssText = "position:absolute;width:100%;z-index:0;max-width: 100%;";
+            if (play_button_{!! $data['zid'] !!} == "yomedia-play-h-{!! $data['zid'] !!}") {
+                border_h.style.visibility = "visible";
+                lVideo.style.cssText = "min-height:0px;z-index:1;margin-left:"+_yomediaAds_{!! $data['zid'] !!}.border_left_h+"; margin-top: "+_yomediaAds_{!! $data['zid'] !!}.border_top_h+"; width: "+_yomediaAds_{!! $data['zid'] !!}.border_width_h+";";
+            } else {
+                border_h.style.visibility = "hidden";
+            }
+        } else {
+            lVideo.style.cssText = "min-height:0px;z-index:1;"
+        }
+
+        if (typeof _yomediaAds_{!! $data['zid'] !!}.border_w != 'undefined' && _yomediaAds_{!! $data['zid'] !!}.border_w != '') {
+            var border_w = document.createElement("IMG");
+            border_w.setAttribute("id", "yomedia-border-w-{!! $data['zid'] !!}");
+            border_w.src = _yomediaAds_{!! $data['zid'] !!}.border_w;
+            innerVideo_{!! $data['zid'] !!}.appendChild(border_w);
+            border_w.style.cssText = "position:absolute;width:100%;z-index:0;max-width: 100%;";
+            if (play_button_{!! $data['zid'] !!} == "yomedia-play-w-{!! $data['zid'] !!}") {
+                border_w.style.visibility = "visible";
+                lVideo.style.cssText = "min-height:0px;z-index:1;margin-left:"+_yomediaAds_{!! $data['zid'] !!}.border_left_w+"; margin-top: "+_yomediaAds_{!! $data['zid'] !!}.border_top_w+"; width: "+_yomediaAds_{!! $data['zid'] !!}.border_width_w+";";
+            } else {
+                border_w.style.visibility = "hidden";
+            }
+        } else {
+            lVideo.style.cssText = "min-height:0px;z-index:1;"
+        }
+
+        innerVideo_{!! $data['zid'] !!}.appendChild(lVideo);
+        lVideo.hidden = false;
+
         // Lets set the volume
         lVideo.muted = _yomediaAds_{!! $data['zid'] !!}.muted;
         //lVideo.controls = true;
