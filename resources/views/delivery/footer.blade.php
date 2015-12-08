@@ -1,7 +1,7 @@
 <?php 
-    $category_name = $data['category_name'];
-    $publisher_domain = $data['publisher_domain'];
-    $ad_format = $data['ad_format'];
+    $category_name = urlencode($data['category_name']);
+    $publisher_domain = urlencode($data['publisher_domain']);
+    $ad_format = urlencode($data['ad_format']);
     $rd = $data['rd'];
 ?>
 // GA  Analytics

@@ -211,6 +211,8 @@ function showBannerYomedia_{!! $data['zid'] !!}() {
             if (lVideo == null || (lVideo && lVideo.ended == true)) {
                 document.getElementById('yomedia-play-h-{!! $data['zid'] !!}').style.visibility = 'hidden';
                 document.getElementById('yomedia-play-w-{!! $data['zid'] !!}').style.visibility = 'visible';
+            } else {
+                lVideo.style.cssText = "min-height:0px;z-index:1;margin-left:"+_yomediaAds_{!! $data['zid'] !!}.border_left_w+"; margin-top: "+_yomediaAds_{!! $data['zid'] !!}.border_top_w+"; width: "+_yomediaAds_{!! $data['zid'] !!}.border_width_w+";";
             }
             if (document.getElementById('yomedia-border-h-{!! $data['zid'] !!}')) {
                 document.getElementById('yomedia-border-h-{!! $data['zid'] !!}').style.visibility = 'hidden';
@@ -234,6 +236,8 @@ function showBannerYomedia_{!! $data['zid'] !!}() {
             if (lVideo == null || (lVideo && lVideo.ended == true)) {
                 document.getElementById('yomedia-play-w-{!! $data['zid'] !!}').style.visibility = 'hidden';
                 document.getElementById('yomedia-play-h-{!! $data['zid'] !!}').style.visibility = 'visible';
+            } else {
+                lVideo.style.cssText = "min-height:0px;z-index:1;margin-left:"+_yomediaAds_{!! $data['zid'] !!}.border_left_h+"; margin-top: "+_yomediaAds_{!! $data['zid'] !!}.border_top_h+"; width: "+_yomediaAds_{!! $data['zid'] !!}.border_width_h+";";
             }
             if (document.getElementById('yomedia-border-w-{!! $data['zid'] !!}')) {
                 document.getElementById('yomedia-border-w-{!! $data['zid'] !!}').style.visibility = 'hidden';

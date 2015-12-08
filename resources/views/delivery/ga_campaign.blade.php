@@ -1,8 +1,8 @@
 <?php 
-    $publisher_domain = $data['publisher_domain'];
-    $ad_format = $data['ad_format'];
-    $banner = str_replace(' ', '_', $data['ad']->name);
-    $flight = $data['flight_name'];
+    $publisher_domain = urlencode($data['publisher_domain']);
+    $ad_format = urlencode($data['ad_format']);
+    $banner = urlencode(str_replace(' ', '_', $data['ad']->name));
+    $flight = urlencode($data['flight_name']);
     $effect = isset($data['effect']) ? $data['effect'] : '';
     $rd = $data['rd'];    
 ?>
