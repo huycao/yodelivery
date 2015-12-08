@@ -495,6 +495,9 @@ function playVideoYomedia_{!! $data['zid'] !!}(type) {
         // Lets set the volume
         lVideo.muted = _yomediaAds_{!! $data['zid'] !!}.muted;
         //lVideo.controls = true;
+        lVideo.oncanplay = function() {
+            play.style.visibility = "hidden";
+        };
         lVideo.play();
     } else {
         var lVideo = document.getElementById("yomedia-video-{!! $data['zid'] !!}");
