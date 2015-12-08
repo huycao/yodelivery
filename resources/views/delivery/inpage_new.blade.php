@@ -93,7 +93,7 @@ function showYoMediaPopupAd_{!! $data['zid'] !!}(s) {
     var rs = '';
     if(avlInteractModule.isMobile() == true){
     	rs = '<div id="YomediaInpageContent_{!! $data['zid'] !!}" style="display: block; opacity: 0; background: transparent; overflow: hidden; margin: 0px auto; position: fixed; z-index: 1; bottom: 0px; max-width: 100%; height: 332px;"><a onclick="clickTrackingYomedia_{!! $data['zid'] !!}();"><img id="yomedia-inpage-banner-h" style="margin: 0px auto;display: block;width:100%;max-width: 100%" src="{!! $source_h !!}"></a><a onclick="clickTrackingYomedia_{!! $data['zid'] !!}();"><img id="yomedia-inpage-banner-w" style="margin: 0px auto;display: none;height:100%;width: 100%;" src="{!! $source_w !!}"></a><input type="hidden" value="0" name="hid_height" id="hid_height" /><input type="hidden" value="0" name="hid_width" id="hid_width" /></div>';
-    	rs += '<div id="more-view_{!! $data['zid'] !!}" style="opacity: 1; float: right; z-index: 3; clear: both; position: fixed; bottom: 0px; margin-bottom:5px !important; left: 0px; width: 100%; text-align: center; background: transparent;height: 30px;"><a style="color:#FFF;font-size: 14px;background: #CCC;padding: 5px 13px;border-radius: 10px;margin: 5px;height: 18px;">Đọc tiếp</a></div>';
+    	rs += '</div>';
     	domManipulate.getElid('YomediaInpage_{!! $data['zid'] !!}').innerHTML = rs;
     
     	var height_body = document.body.offsetHeight;

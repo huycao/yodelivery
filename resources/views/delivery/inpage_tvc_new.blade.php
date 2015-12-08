@@ -115,7 +115,7 @@ function showPopupAdYomedia_{!! $data['zid'] !!}(s) {
         rs += '<img onclick="playVideoYomedia_{!! $data['zid'] !!}(\'yomedia-play-h-{!! $data['zid'] !!}\');" id="yomedia-play-h-{!! $data['zid'] !!}" style="position:absolute; z-index:1" src="' + _yomediaAds_{!! $data['zid'] !!}.video_poster_h + '" />';
         rs += '<img onclick="playVideoYomedia_{!! $data['zid'] !!}(\'yomedia-play-w-{!! $data['zid'] !!}\');" id="yomedia-play-w-{!! $data['zid'] !!}" style="position:absolute;visibility: hidden;z-index:1" src="' + _yomediaAds_{!! $data['zid'] !!}.video_poster_w + '" />';
         rs += '</div>';
-        rs += '<div id="more-view-{!! $data['zid'] !!}" style="opacity: 1; float: right; z-index: 3; clear: both; position: fixed; bottom: 0px; margin-bottom:5px !important; left: 0px; width: 100%; text-align: center; background: transparent;height: 30px;"><a style="color:#FFF;font-size: 14px;background: #CCC;padding: 5px 13px;border-radius: 10px;margin: 5px;height: 18px;">Đọc tiếp</a></div>';
+        //rs += '<div id="more-view-{!! $data['zid'] !!}" style="opacity: 1; float: right; z-index: 3; clear: both; position: fixed; bottom: 0px; margin-bottom:5px !important; left: 0px; width: 100%; text-align: center; background: transparent;height: 30px;"><a style="color:#FFF;font-size: 14px;background: #CCC;padding: 5px 13px;border-radius: 10px;margin: 5px;height: 18px;">Đọc tiếp</a></div>';
         rs += '</div>';
         domManipulate.getElid('YomediaInpage_{!! $data['zid'] !!}').innerHTML = rs;
 
@@ -289,7 +289,7 @@ function showBannerYomedia_{!! $data['zid'] !!}() {
                 adContainer_{!! $data['zid'] !!}.style.background = 'transparent';
                 adContainer_{!! $data['zid'] !!}.style.visibility = 'visible';
                 inpageContent_{!! $data['zid'] !!}.style.opacity = '1';
-                document.getElementById('more-view-{!! $data['zid'] !!}').style.opacity = '1';
+                //document.getElementById('more-view-{!! $data['zid'] !!}').style.opacity = '1';
                 innerVideo_{!! $data['zid'] !!}.style.visibility = 'visible';
                 if (video_{!! $data['zid'] !!}) {
                     video_{!! $data['zid'] !!}.style.visibility = 'visible';
@@ -298,7 +298,7 @@ function showBannerYomedia_{!! $data['zid'] !!}() {
             } else {
                 adContainer_{!! $data['zid'] !!}.style.visibility = 'hidden';
                 inpageContent_{!! $data['zid'] !!}.style.opacity = '0';
-                document.getElementById('more-view-{!! $data['zid'] !!}').style.opacity = '0';
+                //document.getElementById('more-view-{!! $data['zid'] !!}').style.opacity = '0';
                 innerVideo_{!! $data['zid'] !!}.style.visibility = 'hidden';
                 if (video_{!! $data['zid'] !!}) {
                     video_{!! $data['zid'] !!}.style.visibility = 'hidden';
