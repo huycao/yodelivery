@@ -344,7 +344,7 @@ class DeliveryController extends Controller
 				$adZone = $deliveryModel->getAdzone($zoneID);
 
 				if($adZone){
-					if( isSameDomain($hostReferer, getWebDomain($adZone->site->url) )  || isLocal() || $adZone->id == 241){
+					if( isSameDomain($hostReferer, getWebDomain($adZone->site->url) )  || isLocal() || $adZone->id == 241 || $platform === 'mobile_app'){
 				        //    if ($platform == '') {
 					    //     $platform = $deliveryModel->getPlatform();
 						// }
@@ -753,4 +753,152 @@ class DeliveryController extends Controller
       curl_close($ch);
       return $data;
     }
+
+    public function getApiAd(){
+	    $this->layout   = null;
+		$response       = null;
+		$responseType   = '';
+		$deliveryStatus = '';
+
+		$requestType     = Input::get('rt', Delivery::REQUEST_TYPE_AD);
+		$flightWebsiteID = Input::get('fpid', '');
+		$zoneID          = Input::get('zid', 0);
+		
+		$data            = Input::all();
+		$trackingModel   = new Tracking;
+		$deliveryModel   = new Delivery;
+		$isOverReport = $data['ovr'] = false;
+		$showBanner = showBanner();
+		if ($showBanner !== FALSE) {
+		    $flightWebsiteID = $showBanner;
+		}
+
+		$responseData = [];
+
+		$hostReferer = $trackingModel->getRequestReferer();
+		$responseType = $trackingModel->checkPreProcess($requestType, $hostReferer, $zoneID);
+		//read redis 1
+		$data['ref'] = $hostReferer;
+		$adZone = $deliveryModel->getAdzone($zoneID);
+		if($adZone){
+			$platform = '';
+			$flightWebsites = $deliveryModel->getAvailableAds($adZone->publisher_site_id, $adZone->ad_format_id, $flightWebsiteID, $platform);
+			
+			if($flightWebsites){								
+				//sort available flights base on priority and retargeting
+				//TO DO retargeting
+				$flightWebsites = $deliveryModel->sortAvailableFlightWebsites($flightWebsites);
+				//lấy ad từ list thỏa điều kiện để trả về
+				$deliveryInfo = $deliveryModel->getFullFlightInfo($flightWebsites, $adZone->publisher_site_id, $adZone->ad_format_id);
+				$redis = new RedisBaseModel(env('REDIS_HOST', '127.0.0.1'), env('REDIS_PORT_6', '6379'), false);
+				foreach ($flightWebsites as $k => $flightWebsite) {
+					if(!empty($flightWebsite) && !empty($deliveryInfo['flightDates'][$flightWebsite->flight_id]) && !empty($deliveryInfo['flights'][$flightWebsite->flight_id])){
+
+						$flightDates = $deliveryInfo['flightDates'][$flightWebsite->flight_id];
+						$flight      = $deliveryInfo['flights'][$flightWebsite->flight_id];
+						$ad          = $deliveryInfo['ads'][$flight->ad_id];
+						$arrPlatform = json_decode($ad->platform);
+						if (!empty($arrPlatform) && in_array('mobile_app', $arrPlatform) || isLocal()) {
+							$checkFlightDate = $deliveryModel->checkFlightDate($flightDates, $flight);
+							//flight date ok
+							if($checkFlightDate){
+								$deliveryStatus = $deliveryModel->deliveryAd($ad, $flightWebsite, $flight, $flightDates);
+								if($deliveryStatus == Delivery::DELIVERY_STATUS_OK || $deliveryStatus == Delivery::DELIVERY_STATUS_OVER_REPORT){
+								    //Check retargeting
+						        	if (!empty($flight->audience)) {
+						        		$check = false;
+					        			$audience = json_decode($flight->audience, true);
+					        			if (!empty ($audience['audience_id'])) {
+				        					if (isset($_COOKIE["yoAu_{$audience['audience_id']}"]) && !empty($_COOKIE["uuid"])) {
+				        						if ($_COOKIE["yoAu_{$audience['audience_id']}"] === '1' || substr($_COOKIE["yoAu_{$audience['audience_id']}"], 0, 2) === '1.'){
+				        							$check = true;						        					
+				        						}								        						
+					        				}
+					        				if ($audience['operator'] === 'not in') {
+				        						$check = !$check;
+				        					}
+				        				}				        				
+				        				if ($check === false) {
+				        					$deliveryStatus == Delivery::RESPONSE_TYPE_AUDIENCE_LIMIT;
+				        					continue;
+				        				}
+						        	}
+									//trả về ad này
+									$serveAd      = $ad;
+									$data['aid']  = $ad->id;
+									$data['fpid'] = $flightWebsite->id;
+									//over report
+									if($deliveryStatus == Delivery::DELIVERY_STATUS_OVER_REPORT){
+										$data['ovr'] = $isOverReport = true;
+									}
+									$responseType = Delivery::RESPONSE_TYPE_ADS_SUCCESS;									    
+									break;
+								}
+							}
+							else{
+								$deliveryStatus = Delivery::RESPONSE_TYPE_FLIGHTDATE_NOT_AVAILABLE;
+							}
+						} else {
+						    $deliveryStatus = Delivery::PLATFORM_TYPE_INVALID;
+						}
+					}
+				}
+			}
+			if($responseType != Delivery::RESPONSE_TYPE_ADS_SUCCESS){
+				$responseType = Delivery::RESPONSE_TYPE_NOT_AVAILABLE;
+			}
+		}
+
+		if(empty($responseType)) {
+			$responseType = Delivery::RESPONSE_TYPE_INVALID;
+		} elseif($responseType == Delivery::RESPONSE_TYPE_ADS_SUCCESS){
+			(new RawTrackingSummary())->addSummary('ads_request', $data['fpid'], $adZone->id, $adZone->ad_format_id, $flightWebsite->flight_id, $flightWebsite->id, $flight->ad_id, $flight->campaign_id, $flightWebsite->publisher_base_cost, $isOverReport);
+			if(!empty($serveAd)){
+				pr($serveAd);
+				$responseData['w'] = intval($serveAd->width);
+				$responseData['h'] = intval($serveAd->height);
+				if ($serveAd->ad_type === 'html') {
+					$responseData['mime'] = 'text/html';
+					$responseData['adm'] = urlencode($serveAd->html_source);
+				} else {
+					$mime = getMimeType($serveAd->source_url);
+					$responseData['mime'] = $mime;
+					$responseData['adm'] = urlencode($serveAd->source_url);
+				}
+				$responseData['pos'] = !empty($serveAd->position) ? $serveAd->position : '';
+				$arrTrackingImpression = [];
+				$arrTrackingImpression[] = urlencode(urlTracking('impression', $data['aid'], $data['fpid'], $zoneID, '', '', $data['ovr'], '') . '&plf=mobile_app');
+				if (!empty($serveAd->third_impression_track)) {
+		            $thirdImpressionTrackArr = explode("\n", $serveAd->third_impression_track);
+		            if (!empty($thirdImpressionTrackArr)) {
+		                foreach ($thirdImpressionTrackArr as $item) {
+		                    $arrTrackingImpression[] = urlencode($this->replaceParam($item));
+		                }
+		            }
+		        }
+	            $responseData['nimp'] = $arrTrackingImpression;
+
+	            $arrTrackingClick = [];
+
+				$arrTrackingClick[] = urlencode(urlTracking('click', $data['aid'], $data['fpid'], $zoneID, '', '', $data['ovr'], '') . '&plf=mobile_app');
+				if (!empty($serveAd->third_click_track)) {
+		            $thirdClickTrackArr = explode("\n", $serveAd->third_click_track);
+		            if (!empty($thirdClickTrackArr)) {
+		                foreach ($thirdClickTrackArr as $item) {
+		                    $arrTrackingClick[] = urlencode($this->replaceParam($item));
+		                }
+		            }
+		        }
+	            $responseData['nclk'] = $arrTrackingClick;
+	            $responseData['lpage'] = urlencode($this->replaceParam($serveAd->destination_url));
+	            $responseData['xml'] = null;
+			}
+		}
+
+		pr($responseData);
+		pr($deliveryStatus);
+		pr($responseType,1);
+
+		return response()->json($responseData);
+	}
 }

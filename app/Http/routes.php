@@ -68,6 +68,7 @@ $app->get('render-vast', 'App\Http\Controllers\DeliveryController@renderVast');
 $app->get('get-vast-tag', 'App\Http\Controllers\DeliveryController@getVastTag');
 
 $app->get('conversion', 'App\Http\Controllers\ConversionController@trackingConversion');
+$app->get('mapp', 'App\Http\Controllers\DeliveryController@getApiAd');
 // use Jenssegers\Mongodb\Model as Moloquent;
 // class RT extends Moloquent{
 //     protected $table = 'trackings_2015_07';

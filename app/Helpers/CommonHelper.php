@@ -810,3 +810,93 @@ if (!function_exists('makeUuid')) {
         return str_replace('-', '', Uuid::generate(4));
     } 
 }
+
+if(!function_exists('getMimeType')) {
+
+    function getMimeType($filename) {
+
+        $mime_types = array(
+                        // Image formats
+                        'jpg'                          => 'image/jpeg',
+                        'jpeg'                         => 'image/jpeg',
+                        'jpe'                          => 'image/jpeg',
+                        'gif'                          => 'image/gif',
+                        'png'                          => 'image/png',
+                        'bmp'                          => 'image/bmp',
+                        'tif'                          => 'image/tiff',
+                        'tiff'                         => 'image/tiff',
+                        'ico'                          => 'image/x-icon',
+
+                        // Video formats
+                        'asf'                          => 'video/x-ms-asf',
+                        'asx'                          => 'video/x-ms-asf',
+                        'wmv'                          => 'video/x-ms-wmv',
+                        'wmx'                          => 'video/x-ms-wmx',
+                        'wm'                           => 'video/x-ms-wm',
+                        'avi'                          => 'video/avi',
+                        'divx'                         => 'video/divx',
+                        'flv'                          => 'video/x-flv',
+                        'mov'                          => 'video/quicktime',
+                        'qt'                           => 'video/quicktime',
+                        'mpeg'                         => 'video/mpeg',
+                        'mpg'                          => 'video/mpeg',
+                        'mpe'                          => 'video/mpeg',
+                        'mp4'                          => 'video/mp4',
+                        'm4v'                          => 'video/mp4',
+                        'ogv'                          => 'video/ogg',
+                        'webm'                         => 'video/webm',
+                        'mkv'                          => 'video/x-matroska',
+                        
+                        // Text formats
+                        'txt'                          => 'text/plain',
+                        'asc'                          => 'text/plain',
+                        'c'                            => 'text/plain',
+                        'cc'                           => 'text/plain',
+                        'h'                            => 'text/plain',
+                        'csv'                          => 'text/csv',
+                        'tsv'                          => 'text/tab-separated-values',
+                        'ics'                          => 'text/calendar',
+                        'rtx'                          => 'text/richtext',
+                        'css'                          => 'text/css',
+                        'htm'                          => 'text/html',
+                        'html'                         => 'text/html',
+                        
+                        // Audio formats
+                        'mp3'                          => 'audio/mpeg',
+                        'm4a'                          => 'audio/mpeg',
+                        'm4b'                          => 'audio/mpeg',
+                        'ra'                           => 'audio/x-realaudio',
+                        'ram'                          => 'audio/x-realaudio',
+                        'wav'                          => 'audio/wav',
+                        'ogg'                          => 'audio/ogg',
+                        'oga'                          => 'audio/ogg',
+                        'mid'                          => 'audio/midi',
+                        'midi'                         => 'audio/midi',
+                        'wma'                          => 'audio/x-ms-wma',
+                        'wax'                          => 'audio/x-ms-wax',
+                        'mka'                          => 'audio/x-matroska',
+                        
+                        // Misc application formats
+                        'rtf'                          => 'application/rtf',
+                        'js'                           => 'application/javascript',
+                        'pdf'                          => 'application/pdf',
+                        'swf'                          => 'application/x-shockwave-flash',
+                        'class'                        => 'application/java',
+                        'tar'                          => 'application/x-tar',
+                        'zip'                          => 'application/zip',
+                        'gz'                           => 'application/x-gzip',
+                        'gzip'                         => 'application/x-gzip',
+                        'rar'                          => 'application/rar',
+                        '7z'                           => 'application/x-7z-compressed',
+                        'exe'                          => 'application/x-msdownload',
+                    );
+
+        $ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+        if (array_key_exists($ext, $mime_types)) {
+            return $mime_types[$ext];
+        } else {
+            return '';
+        }
+    }
+}
+
