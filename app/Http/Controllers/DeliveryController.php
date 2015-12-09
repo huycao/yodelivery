@@ -857,12 +857,10 @@ class DeliveryController extends Controller
 				pr($serveAd);
 				$responseData['w'] = intval($serveAd->width);
 				$responseData['h'] = intval($serveAd->height);
+				$responseData['mime'] = !empty($serveAd->mime) ? $serveAd->mime : '';
 				if ($serveAd->ad_type === 'html') {
-					$responseData['mime'] = 'text/html';
 					$responseData['adm'] = urlencode($serveAd->html_source);
 				} else {
-					$mime = getMimeType($serveAd->source_url);
-					$responseData['mime'] = $mime;
 					$responseData['adm'] = urlencode($serveAd->source_url);
 				}
 				$responseData['pos'] = !empty($serveAd->position) ? $serveAd->position : '';
