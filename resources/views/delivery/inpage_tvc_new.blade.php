@@ -76,7 +76,7 @@ function showPopupAdYomedia_{!! $data['zid'] !!}(s) {
         return false;
     }
 
-    a_{!! $data['zid'] !!}.style.cssText = "display: block; opacity: 0.45; overflow: hidden; position: relative; z-index: 20; width: 100%; background: transparent; visibility: hidden;";
+    a_{!! $data['zid'] !!}.style.cssText = "display: block; opacity: 0.45; overflow: hidden; position: relative; z-index: 99999; width: 100%; background: transparent; visibility: hidden;";
     var previousElement = a_{!! $data['zid'] !!}.previousElementSibling;
     var nextElement = a_{!! $data['zid'] !!}.nextElementSibling;
 
