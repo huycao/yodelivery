@@ -76,7 +76,7 @@ function showPopupAdYomedia_{!! $data['zid'] !!}(s) {
         return false;
     }
 
-    a_{!! $data['zid'] !!}.style.cssText = "display: block; opacity: 0.45; overflow: hidden; position: relative; z-index: 2; width: 100%; background: transparent; visibility: hidden;";
+    a_{!! $data['zid'] !!}.style.cssText = "display: block; opacity: 0.45; overflow: hidden; position: relative; z-index: 20; width: 100%; background: transparent; visibility: hidden;";
     var previousElement = a_{!! $data['zid'] !!}.previousElementSibling;
     var nextElement = a_{!! $data['zid'] !!}.nextElementSibling;
 
@@ -112,8 +112,8 @@ function showPopupAdYomedia_{!! $data['zid'] !!}(s) {
         rs += '<input type="hidden" value="0" name="hid_height" id="hid_height" />';
         rs += '<input type="hidden" value="0" name="hid_width" id="hid_width" />';
         rs += '<div id="innerVideo-{!! $data['zid'] !!}" style="top:' + top + ';left:' + _yomediaAds_{!! $data['zid'] !!}.video_left_h + ';right:' + _yomediaAds_{!! $data['zid'] !!}.video_right_h + ';margin-left:auto;margin-right:auto;position:absolute;width:' + _yomediaAds_{!! $data['zid'] !!}.video_width_h + ';height:' + _yomediaAds_{!! $data['zid'] !!}.video_height_h + ';z-index:1">';
-        rs += '<img onclick="playVideoYomedia_{!! $data['zid'] !!}(\'yomedia-play-h-{!! $data['zid'] !!}\');" id="yomedia-play-h-{!! $data['zid'] !!}" style="position:absolute; z-index:1" src="' + _yomediaAds_{!! $data['zid'] !!}.video_poster_h + '" />';
-        rs += '<img onclick="playVideoYomedia_{!! $data['zid'] !!}(\'yomedia-play-w-{!! $data['zid'] !!}\');" id="yomedia-play-w-{!! $data['zid'] !!}" style="position:absolute;visibility: hidden;z-index:1" src="' + _yomediaAds_{!! $data['zid'] !!}.video_poster_w + '" />';
+        rs += '<img onclick="playVideoYomedia_{!! $data['zid'] !!}(\'yomedia-play-h-{!! $data['zid'] !!}\');" id="yomedia-play-h-{!! $data['zid'] !!}" style="position:absolute; z-index:1; width:100%;" src="' + _yomediaAds_{!! $data['zid'] !!}.video_poster_h + '" />';
+        rs += '<img onclick="playVideoYomedia_{!! $data['zid'] !!}(\'yomedia-play-w-{!! $data['zid'] !!}\');" id="yomedia-play-w-{!! $data['zid'] !!}" style="position:absolute;visibility: hidden;z-index:1; width:100%;" src="' + _yomediaAds_{!! $data['zid'] !!}.video_poster_w + '" />';
         rs += '</div>';
         //rs += '<div id="more-view-{!! $data['zid'] !!}" style="opacity: 1; float: right; z-index: 3; clear: both; position: fixed; bottom: 0px; margin-bottom:5px !important; left: 0px; width: 100%; text-align: center; background: transparent;height: 30px;"><a style="color:#FFF;font-size: 14px;background: #CCC;padding: 5px 13px;border-radius: 10px;margin: 5px;height: 18px;">Đọc tiếp</a></div>';
         rs += '</div>';
