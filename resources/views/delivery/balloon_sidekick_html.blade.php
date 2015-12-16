@@ -1,4 +1,5 @@
 @include("footer")
+@include("url_track_ga")
 <?php
     $wrapperAds = 'YoMediaBalloon_'.$data['zid'];
     $elAds = "YoMediaBalloon_".$data['zid'];

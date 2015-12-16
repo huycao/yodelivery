@@ -1,4 +1,5 @@
 @include("footer")
+@include("url_track_ga")
 <?php
     $destination_url = $data['ad']->destination_url;
     $source_h          = !empty($data['ad']->source_url) ? $data['ad']->source_url : '';

@@ -886,7 +886,10 @@ var avlInitModule = new function(){
 						"zid": initVar[lastIndexInitVar][1],
 						"eid": initVar[lastIndexInitVar][3],
 						"ew": initVar[lastIndexInitVar][4],
-						"eh": initVar[lastIndexInitVar][5]
+						"eh": initVar[lastIndexInitVar][5],
+					}
+					if (typeof _avlTag == 'string' && _avlTag != '') {
+						varObj.tag = encodeURIComponent(_avlTag);
 					}
 			    	avlDeliveryModule.init(varObj);
 			    	initVar.pop();
@@ -899,5 +902,4 @@ var avlInitModule = new function(){
 if( typeof _avlDemo == 'undefined' ){
 	avlInitModule.init(_avlVar);
 }
-
 

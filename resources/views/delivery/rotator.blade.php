@@ -1,3 +1,4 @@
+@include("url_track_ga")
 <?php if( count($listAlternateAd) > 0 ){ ?>
 
 <?php
