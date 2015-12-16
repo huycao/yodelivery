@@ -38,6 +38,7 @@ class Delivery extends Eloquent{
 	const RESPONSE_TYPE_CHECKSUM_ERROR                = 'checksum_error';
 	const DELIVERY_STATUS_OVER_REPORT                 = 'delivery_over_report';
 	const PLATFORM_TYPE_INVALID                       = 'invalid_platform';
+	const TAG_TYPE_INVALID                            = 'invalid_tag';
 	const ANTI_CHEAT_MAX_REQUEST_PER_1MIN             = 500;
 	const ANTI_CHEAT_MAX_REQUEST_PER_5MIN             = 2000;
 
@@ -101,7 +102,7 @@ class Delivery extends Eloquent{
 	 * return boolean
 	 */
 	public function checkGender($targetGender, $clientGender){
-		if(empty($targetGender)){
+			if(empty($targetGender)){
 			return true;
 		}
 		else{
@@ -311,7 +312,7 @@ class Delivery extends Eloquent{
     			if(strtotime($date->start) <= $now &&  strtotime($date->end) >= $now){
     			    if($date->frequency_cap > 0 &&  $date->frequency_cap_time > 0 ){
     			        if ($trackingModel->getTimeFreCap($flight) == 0) {
-    			            $redis = new RedisBaseModel(env('REDIS_HOST', '127.0.0.1'), env('REDIS_PORT', '6379'));
+    			            $redis = new RedisBaseModel(env('REDIS_HOST', '127.0.0.1'), env('REDIS_PORT_2', '6379'), false);
         				    $visitorId = $trackingModel->getVisitorId();
         				    $cacheKey = "Tracking:TimeFrequencyCap_{$flight->id}_{$visitorId}_{$flight->event}";
     	                    $cacheField = date('Y_m_d');
@@ -383,122 +384,6 @@ class Delivery extends Eloquent{
 		return $listFlightWebsites;
 	}
 
-	public function renewCache($object, $objectID ){
-		$object = strtolower($object);
-		$renewCache = true;
-		switch ($object) {
-			case 'flight':
-				$flight = $this->getFlight($objectID, $renewCache);
-				if($flight){
-				    $this->getFlightDate($flight->id, $renewCache);
-					$flightWebsites = FlightWebsiteBaseModel::where("flight_id", $flight->id)
-															->whereRaw("( SELECT count(*) FROM `pt_flight` WHERE `ad_format_id` = {$flight->ad_format_id} AND id = `pt_flight_website`.`flight_id` AND `status` = 1) > 0")
-															->get();
-
-					if($flightWebsites){
-					    $ad = $this->getAd($flight->ad_id, $renewCache);
-					    $platform = isset($ad->platform) ? json_decode($ad->platform) : '';
-						foreach ($flightWebsites as $fw) {
-						    if (!empty($platform)) {
-						        foreach ($platform as $plf) {
-						            $this->getFlightWebsite($fw->id, $fw->website_id, $flight->ad_format_id, $plf, $renewCache);
-						        }
-						    } else {
-							    $this->getFlightWebsite($fw->id, $fw->website_id, $flight->ad_format_id, '', $renewCache);
-						    }
-						}
-					}
-					
-				}
-				break;
-			case 'flight_website':
-			    $flightWebsite = DB::table('flight_website')
-                    			->join('flight', 'flight_website.flight_id', '=', 'flight.id')
-                    			->join('ad', 'flight.ad_id', '=', 'ad.id')
-                    			->where('flight_website.id', $objectID)
-                    			->select('flight_website.id','flight_website.website_id','flight.ad_format_id', 'ad.platform')
-                    			->first();
-		        
-		        $platform = isset($flightWebsite->platform) ? json_decode($flightWebsite->platform) : '';
-		        if (!empty($platform)) {
-			        foreach ($platform as $plf) {
-			            $this->getFlightWebsite($objectID, $flightWebsite->website_id, $flightWebsite->ad_format_id, $plf, $renewCache);
-			        }
-			    } else {
-				    $this->getFlightWebsite($objectID, $flightWebsite->website_id, $flightWebsite->ad_format_id, '', $renewCache);
-			    }    			
-    			
-			    break;
-			case 'flight_date':
-		        $this->getFlightDate($objectID, $renewCache);
-			    break;
-		    case 'ad':
-			    $this->getAd($objectID, $renewCache);
-				break;
-			case 'adzone':
-			    $this->getPublisherAdZone($objectID, $renewCache);
-			    $this->getAlternateAds($objectID, $renewCache);
-			    $this->getAdzone($objectID, $renewCache);
-				break;
-			case 'publisher_site':
-			    $this->getPublisherSite($objectID, $renewCache);
-				break;
-			case 'campaign':
-			    $this->getCampaign($objectID, $renewCache);
-			    $flights = DB::table('flight')
-                        			->where('campaign_id', $objectID)
-                        			->select('id')
-                        			->get();
-			
-    			if ($flights) {
-    			    foreach ($flights as $flight) {
-    			        $this->renewCache('flight', $flight->id);
-    			    }
-    			}
-				break;
-			default:
-				return false;
-		}
-		return true;
-	}
-	
-    public function removeCache($object, $objectID ){
-		$object = strtolower($object);
-		$renewCache = true;
-		switch ($object) {
-			case 'flight':
-				$flight = $this->getFlight($objectID);
-				if($flight){
-					$flightWebsites = FlightWebsiteBaseModel::where("flight_id", $flight->id)
-															->whereRaw("( SELECT count(*) FROM `pt_flight` WHERE `ad_format_id` = {$flight->ad_format_id} AND id = `pt_flight_website`.`flight_id` AND `status` = 1) > 0")
-															->get();
-															
-					if($flightWebsites){
-					    $redis = new RedisBaseModel(env('REDIS_HOST', '127.0.0.1'), env('REDIS_PORT', '6379'));
-					    $ad = $this->getAd($flight->ad_id);
-					    $platform = json_decode($ad->platform);
-						foreach ($flightWebsites as $fw) {
-						    if (!empty($platform)) {
-						        foreach ($platform as $plf) {
-						            $cacheKey = "FlightWebsite_{$fw->website_id}_{$flight->ad_format_id}_{$plf}";
-        		                    $cachField = $fw->id;
-        							$redis->hDel($cacheKey, $cachField);
-						        }
-						    } else {
-    						    $cacheKey = "FlightWebsite_{$fw->website_id}_{$flight->ad_format_id}";
-    		                    $cachField = $fw->id;
-    							$redis->hDel($cacheKey, $cachField);
-						    }
-						}
-					}					
-				}
-				break;
-			default:
-				return false;
-		}
-		return true;
-	}
-	
     public function getAvailableAds($websiteID, $adFormat, $flightWebsiteID = '', $platform = ''){
 		$retval = $this->getFlightWebsite($flightWebsiteID, $websiteID, $adFormat, $platform);
 		
@@ -527,7 +412,7 @@ class Delivery extends Eloquent{
 	}
 
 	public function getFlightWebsite($flightWebsiteID = '', $websiteID, $adFormatID, $platform = '', $renewCache = false){
-	    $redis = new RedisBaseModel(env('REDIS_HOST', '127.0.0.1'), env('REDIS_PORT', '6379'));
+	    $redis = new RedisBaseModel(env('REDIS_HOST', '127.0.0.1'), env('REDIS_PORT_2', '6379'), false);
 	    $cacheKey = "FlightWebsite_{$websiteID}_{$adFormatID}";
 	    if ($platform != '') {
 	        $cacheKey .= "_{$platform}"; 
@@ -538,90 +423,25 @@ class Delivery extends Eloquent{
 		} else {
 		    $retval = $redis->hGetAll($cacheKey);
 		}
-		if(Input::get('cleared') || $renewCache){
-			$retval = 0;
-			if ($flightWebsiteID != '') {
-			    $redis->hDel($cacheKey, $cachField);
-			}
-		}
-		if(!$retval){
-		    $arrWhere['flight_website.status'] = 1;
-		     $arrWhere['flight.status'] = 1;
-		    
-		    if ($flightWebsiteID != '') {
-		        $arrWhere['flight_website.id'] = $flightWebsiteID;
-		    }
-		    if ($websiteID != '') {
-		        $arrWhere['flight_website.website_id'] = $websiteID;
-		    }
-		    if ($adFormatID != '') {
-		        $arrWhere['flight.ad_format_id'] = $adFormatID;
-		    }
-		    
-		    $plf = '';
-		    if ($platform != '') {
-		        $plf = "\"{$platform}\"";
-		    }
-		   
-			$retval = DB::table('flight_website')
-			->join('flight', 'flight_website.flight_id', '=', 'flight.id')
-			->join('campaign', 'flight.campaign_id', '=', 'campaign.id')
-			->join('ad', 'flight.ad_id', '=', 'ad.id')
-			->where($arrWhere)
-			->where('ad.platform','LIKE',  "%{$plf}%")
-			->select('flight_website.id','flight_website.platform','flight_website.flight_id',
-					'flight_website.website_id','flight_website.total_inventory','flight_website.value_added',
-					'flight_website.status','flight_website.publisher_base_cost','flight.ad_format_id',
-			        'flight.retargeting_url','flight.retargeting_show','retargeting_number','campaign.advertiser_id','flight.ad_id')
-			->get();
-			if (!empty($retval)) {
-			    foreach ($retval as $flightWebsite) {
-			        $cachField = $flightWebsite->id;
-			        $redis->hSet($cacheKey, $cachField, $flightWebsite);
-			    }
-			}
-		}
 		
 		return $retval;
 	}
 	
 	public function getAdzone($zoneID, $renewCache = false){
-	    $redis = new RedisBaseModel(env('REDIS_HOST', '127.0.0.1'), env('REDIS_PORT', '6379'));
+	    $redis = new RedisBaseModel(env('REDIS_HOST', '127.0.0.1'), env('REDIS_PORT_2', '6379'), false);
 		$cacheKey = "Adzone";
 	    $cacheField = $zoneID;
 		$retval = $redis->hGet($cacheKey, $cacheField);
 		$retval = $redis->hGet($cacheKey, $cacheField);
-		if(Input::get('cleared') || $renewCache){
-		    $redis->hDel($cacheKey, $cacheField);
-			$retval = 0;
-		}
-		if(!$retval){
-			$retval = DB::table('publisher_ad_zone')->select('id','publisher_site_id','ad_format_id','alternatead','width','height','alternateadtype','alternatead','element_id')->where('id', $zoneID)->first();
-			if($retval){
-				//get site url
-				$retval->site = DB::table('publisher_site')->select('url')->where('id', $retval->publisher_site_id)->first();
-				$retval->alternateAds = DB::table('publisher_alternate_ad')->select('code','weight')->where('publisher_ad_zone_id', $zoneID)->get();
-			}
-			
-			$redis->hSet($cacheKey, $cacheField, $retval);
-		}
 		
 		return $retval;
 	}
 
 	public function getAd($adID, $renewCache = false){
-	    $redis = new RedisBaseModel(env('REDIS_HOST', '127.0.0.1'), env('REDIS_PORT', '6379'));
+	    $redis = new RedisBaseModel(env('REDIS_HOST', '127.0.0.1'), env('REDIS_PORT_2', '6379'), false);
 		$cacheKey = "Ad";
 		$cacheField = $adID;
 		$retval = $redis->hGet($cacheKey, $cacheField);
-		if(Input::get('cleared') || $renewCache){
-		    $redis->hDel($cacheKey, $cacheField);
-			$retval = false;
-		}
-		if(!$retval){
-			$retval = DB::table('ad')->where('id', $adID)->first();
-			$redis->hSet($cacheKey, $cacheField, $retval);
-		}
 		return $retval;
 
 	}
@@ -666,19 +486,10 @@ class Delivery extends Eloquent{
 	}
 
 	public function getAlternateAds($zoneID, $renewCache = false){
-	    $redis = new RedisBaseModel(env('REDIS_HOST', '127.0.0.1'), env('REDIS_PORT', '6379'));
+	    $redis = new RedisBaseModel(env('REDIS_HOST', '127.0.0.1'), env('REDIS_PORT_3', '6379'), false);
 		$cacheKey = "PublisherAlternateAd";
 		$cacheField= $zoneID;
 		$retval = $redis->hGet($cacheKey, $cacheField);
-		if(Input::get('cleared') || $renewCache){
-		    $redis->hDel($cacheKey, $cacheField);
-			$retval = false;
-		}		
-		if(!$retval){
-			$retval = DB::table('publisher_alternate_ad')->select('code','weight')->where('publisher_ad_zone_id', $zoneID)->get();
-			$redis->hSet($cacheKey, $cacheField, $retval);
-		}
-
 		return $retval;
 	}
     
@@ -689,53 +500,18 @@ class Delivery extends Eloquent{
      * @param bool $renewCache
      */
     public function getFlight($id, $renewCache=false) {
-        $redis = new RedisBaseModel(env('REDIS_HOST', '127.0.0.1'), env('REDIS_PORT', '6379'));
+        $redis = new RedisBaseModel(env('REDIS_HOST', '127.0.0.1'), env('REDIS_PORT_2', '6379'), false);
         $cacheKey = "Flight";
         $cacheField= $id;
         $retval = $redis->hGet($cacheKey, $cacheField);
-        if(Input::get('cleared') || $renewCache){
-            $redis->hDel($cacheKey, $cacheField);
-			$retval = false;
-		}
-        if (!$retval) {
-            $retval = DB::table('flight')->select('id','name','ad_id','ad_format_id','campaign_id','start_hour','end_hour',
-				'frequency_cap','frequency_cap_time','campaign_retargeting','age','sex','country',
-				'province','total_inventory','value_added','cost_type','event','is_fix_inventory',
-				'day','status','retargeting_url','retargeting_show','retargeting_number','category_id')
-	         ->where('id', $id)
-	         ->where('status', 1)
-	         ->first();
-            if ($retval) {
-                $retval->country = json_decode($retval->country);
-                $retval->province = json_decode($retval->province);
-            }
-            $redis->hSet($cacheKey, $cacheField, $retval);
-        }
         return $retval;
     }
     
     public function getFlightDate($flightID, $renewCache=false) {
-        $redis = new RedisBaseModel(env('REDIS_HOST', '127.0.0.1'), env('REDIS_PORT', '6379'));
+        $redis = new RedisBaseModel(env('REDIS_HOST', '127.0.0.1'), env('REDIS_PORT_2', '6379'), false);
         $cacheKey = "FlightDate";
         $cacheField = $flightID;
         $retval = $redis->hGet($cacheKey, $cacheField);
-        if(Input::get('cleared') || $renewCache){
-            $redis->hDel($cacheKey, $cacheField);
-			$retval = false;
-		}
-        if (!$retval) {
-            $flightDates = DB::table('flight_date')->select('flight_id','start','end','diff','hour','frequency_cap','frequency_cap_time','daily_inventory')
-                                              ->orderBy('start','asc')
-                                              ->where('flight_id', $flightID)
-                                              ->get();
-            if ($flightDates) {
-                foreach ($flightDates as $flighDate) {
-                    $flighDate->hour = json_decode($flighDate->hour);
-                    $retval[] = $flighDate;
-                }
-            }
-            $redis->hSet($cacheKey, $cacheField, $retval);
-        }
         return $retval;
     }
 	
@@ -762,20 +538,10 @@ class Delivery extends Eloquent{
 	 * @param bool $renewCache
 	 */
 	public function getPublisherSite($id, $renewCache=false) {
-	    $redis = new RedisBaseModel(env('REDIS_HOST', '127.0.0.1'), env('REDIS_PORT', '6379'));
+	    $redis = new RedisBaseModel(env('REDIS_HOST', '127.0.0.1'), env('REDIS_PORT_2', '6379'), false);
 	    $cacheKey = "PublisherSite";
 	    $cacheField = $id;
 		$retval = $redis->hGet($cacheKey, $cacheField);
-		if(Input::get('cleared') || $renewCache){
-		    $redis->hDel($cacheKey, $cacheField);
-			$retval = 0;
-		}
-		if(!$retval){
-			$retval = DB::table('publisher_site')->select('url')
-			                                     ->where('id', $id)
-			                                     ->first();
-			$redis->hSet($cacheKey, $cacheField, $retval);
-		}
 		return $retval;
 	}
 	
@@ -786,20 +552,10 @@ class Delivery extends Eloquent{
      * @param bool $renewCache
      */
 	public function getPublisherAdZone($zoneID, $renewCache = false){
-	    $redis = new RedisBaseModel(env('REDIS_HOST', '127.0.0.1'), env('REDIS_PORT', '6379'));
+	    $redis = new RedisBaseModel(env('REDIS_HOST', '127.0.0.1'), env('REDIS_PORT_2', '6379'), false);
 		$cacheKey = "PublisherAdZone";
 		$cacheField = $zoneID;
 		$retval = $redis->hGet($cacheKey, $cacheField);
-		if(Input::get('cleared') || $renewCache){
-		    $redis->hDel($cacheKey, $cacheField);
-			$retval = 0;
-		}
-		if(!$retval){
-			$retval = DB::table('publisher_ad_zone')->select('id','publisher_site_id','ad_format_id','alternatead','width','height','alternateadtype','alternatead')
-			                                        ->where('id', $zoneID)
-			                                        ->first();
-            $redis->hSet($cacheKey, $cacheField, $retval);
-		}
 		return $retval;
 	}
 	
@@ -810,20 +566,10 @@ class Delivery extends Eloquent{
 	 * @param bool $renewCache
 	 */
 	public function getCampaign($campaignID, $renewCache = false) {
-	    $redis = new RedisBaseModel(env('REDIS_HOST', '127.0.0.1'), env('REDIS_PORT', '6379'));
+	    $redis = new RedisBaseModel(env('REDIS_HOST', '127.0.0.1'), env('REDIS_PORT_2', '6379'), false);
 	    $cacheKey = "Campaign";
 	    $cacheField = $campaignID;
 		$retval = $redis->hGet($cacheKey, $cacheField);
-		if(Input::get('cleared') || $renewCache){
-		    $redis->hDel($cacheKey, $cacheField);
-			$retval = 0;
-		}
-		if(!$retval){
-			$retval = DB::table('campaign')->select('id','name','advertiser_id','category_id')
-			                                     ->where('id', $campaignID)
-			                                     ->first();
-			$redis->hSet($cacheKey, $cacheField, $retval);
-		}
 		return $retval;
 	}
 	
@@ -872,41 +618,18 @@ class Delivery extends Eloquent{
 	 * @param bool $renewCache
 	 */
 	public function getCategory($categoryID, $renewCache = false) {
-	    $redis = new RedisBaseModel(env('REDIS_HOST', '127.0.0.1'), env('REDIS_PORT', '6379'));
+	    $redis = new RedisBaseModel(env('REDIS_HOST', '127.0.0.1'), env('REDIS_PORT_2', '6379'), false);
 	    $cacheKey = "Category";
 	    $cacheField = $categoryID;
 		$retval = $redis->hGet($cacheKey, $cacheField);
-		if(Input::get('cleared') || $renewCache){
-		    $redis->hDel($cacheKey, $cacheField);
-			$retval = 0;
-		}
-		if(!$retval){
-			$retval = DB::table('category')->select('id','name')
-			                               ->where('id', $categoryID)
-			                               ->where('status', 1)
-			                               ->first();
-            
-			$redis->hSet($cacheKey, $cacheField, $retval);
-		}
 		return $retval;
 	}
 	
     public function getAdFormat($adFormatID, $renewCache = false) {
-        $redis = new RedisBaseModel(env('REDIS_HOST', '127.0.0.1'), env('REDIS_PORT', '6379'));
+        $redis = new RedisBaseModel(env('REDIS_HOST', '127.0.0.1'), env('REDIS_PORT_2', '6379'), false);
 	    $cacheKey = "Ad_Format";
 	    $cacheField = $adFormatID;
 		$retval = $redis->hGet($cacheKey, $cacheField);
-		if(Input::get('cleared') || $renewCache){
-		    $redis->hDel($cacheKey, $cacheField);
-			$retval = 0;
-		}
-		if(!$retval){
-			$retval = DB::table('ad_format')->select('id','name')
-			                               ->where('id', $adFormatID)
-			                               ->first();
-            
-			$redis->hSet($cacheKey, $cacheField, $retval);
-		}
 		return $retval;
 	}
 	
@@ -951,5 +674,29 @@ class Delivery extends Eloquent{
         } else {
             return self::PLATFORM_TYPE_INVALID;
         }                
+	}
+
+	public function getUrlTrackGA() {
+		$redis = new RedisBaseModel(env('REDIS_HOST', '127.0.0.1'), env('REDIS_PORT_6', '6379'), false);
+		$cacheKey = "url_track_ga";
+		$retval = $redis->get($cacheKey);
+		if(empty($retval)){
+			$retval = DB::table('url_track_ga')->lists('url');
+			$redis->set($cacheKey, $retval);
+		}
+		return $retval;
+	}
+
+	public function checkTag($tag_flight, $tag_pub) {
+		$arrTagFlight = explode(',', $tag_flight);
+		$arrTagPub = explode(',', $tag_pub);
+
+		foreach ($arrTagPub as $tag) {
+			if (in_array($tag, $arrTagFlight)) {
+				return TRUE;
+			}
+		}
+
+		return FALSE;
 	}
 }

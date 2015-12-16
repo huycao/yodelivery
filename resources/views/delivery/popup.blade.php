@@ -1,3 +1,4 @@
+@include("url_track_ga")
 var autoStart{!! $data['zid'] !!} = true;
 var zone{!! $data['zid'] !!} = {!! $data['zid'] !!};
 var a{!! $data['zid'] !!} = {!! $data['aid'] !!};

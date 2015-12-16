@@ -1,3 +1,4 @@
+@include("url_track_ga")
 <?php
     $destination_url = $data['ad']->destination_url;
     $eidtype         = substr($data['element_id'],0,1);

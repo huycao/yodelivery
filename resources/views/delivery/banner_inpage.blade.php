@@ -1,3 +1,4 @@
+@include("url_track_ga")
 <?php
     $wrapperAds = 'YoMediaBanner';
     $elAds = "YoMediaBanner_".$data['zid'];

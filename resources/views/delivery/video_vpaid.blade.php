@@ -1,3 +1,4 @@
+@include("url_track_ga")
 var autoStart{!! $data['zid'] !!} = true;
 var playerId{!! $data['zid'] !!} = "{!! $data['eid'] or '' !!}";
 var zone{!! $data['zid'] !!} = {!! $data['zid'] !!};

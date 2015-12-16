@@ -1,3 +1,4 @@
+@include("url_track_ga")
 <?php
 $source ="";
 $width ="320";

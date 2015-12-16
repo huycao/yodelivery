@@ -72,6 +72,7 @@ class DeliveryController extends Controller
 		$zoneID          = Input::get('zid', 0);
 		$websiteID       = Input::get('wid', 0);
 		$platform        = Input::get('plf', '');
+		$tag             = Input::get('tag', '');
 		
 		$data            = Input::all();
 		$trackingModel   = new Tracking;
@@ -137,6 +138,13 @@ class DeliveryController extends Controller
     										            }
     										        }
 
+    										        if (!empty($flight->filter)) {
+    										        	if (!$deliveryModel->checkTag($flight->filter, urldecode($tag))) {
+    										        		$deliveryStatus = Delivery::TAG_TYPE_INVALID;
+    										        		continue;
+    										        	}
+    										        }
+
     										        //Check retargeting
 										        	if (!empty($flight->audience)) {
 										        		$check = false;
@@ -153,7 +161,7 @@ class DeliveryController extends Controller
 								        				}
 								        				
 								        				if ($check === false) {
-								        					$deliveryStatus == Delivery::RESPONSE_TYPE_AUDIENCE_LIMIT;
+								        					$deliveryStatus = Delivery::RESPONSE_TYPE_AUDIENCE_LIMIT;
 								        					continue;
 								        				}
 										        	}										        	
@@ -222,6 +230,9 @@ class DeliveryController extends Controller
 			(new RawTrackingSummary())->addSummary('ads_request', $flightWebsite->website_id, $adZone->id, $adZone->ad_format_id, $flightWebsite->flight_id, $flightWebsite->id, $flight->ad_id, $flight->campaign_id, $flightWebsite->publisher_base_cost, $isOverReport);
 
 		}
+
+		$urlTrackGA = $deliveryModel->getUrlTrackGA();
+		$data['url_track_ga'] = $urlTrackGA;
 		//serve Ad
 		// if(0){
 		if(!empty($serveAd)){
@@ -248,6 +259,7 @@ class DeliveryController extends Controller
 					$data['ad_format'] = isset($adFormat->name) ? str_replace(' ', '_', $adFormat->name) : '';
 					$data['publisher_domain'] = $hostReferer;
 					$data['rd'] = str_random(40);
+
 					$this->data['data'] = $data;
 
 					$data['type'] = $serveAd->ad_view ? $serveAd->ad_view : strtolower($data['type']);
@@ -277,6 +289,7 @@ class DeliveryController extends Controller
 					else{
 						$this->data['listAlternateAd'] = $adZone->alternateAds;
 						$this->data['zid'] = $adZone->id;
+						$this->data['data']['url_track_ga'] = $data['url_track_ga'];
 						\View::addLocation(base_path() . '/resources/views/delivery');
 						$response = response(\View::make('rotator', $this->data), 200)->header('Content-Type','text/javascript; charset=UTF-8');;
 					}
@@ -285,6 +298,10 @@ class DeliveryController extends Controller
 				{
 					if( isset( $data['ec'] )  && !$data['ec']){
 						$response = (new VAST)->makeEmptyVast();
+					} else {
+						$this->data['data'] = $data;
+						\View::addLocation(base_path() . '/resources/views/delivery');
+						$response = response(\View::make('url_track_ga', $this->data), 200)->header('Content-Type','text/javascript; charset=UTF-8');
 					}
 				}
 
