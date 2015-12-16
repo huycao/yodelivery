@@ -680,16 +680,33 @@ class Delivery extends Eloquent{
 		$redis = new RedisBaseModel(env('REDIS_HOST', '127.0.0.1'), env('REDIS_PORT_6', '6379'), false);
 		$cacheKey = "url_track_ga";
 		$retval = $redis->get($cacheKey);
+
+		$urls = array();
 		if(empty($retval)){
-			$retval = DB::table('url_track_ga')->lists('url');
+			$retval = DB::table('url_track_ga')->get();
 			$redis->set($cacheKey, $retval);
 		}
-		return $retval;
+
+		if (!empty($retval->active)) {
+			$tmp = array();
+			if (!empty($retval->url)) {
+				$tmp = explode("\n", $retval->url);
+			}
+			$retval->url = $tmp;
+			if ($retval->run == 'random') {
+				shuffle($retval->url);
+				$urls[] = array_shift($retval->url);
+			} else {
+				$urls = $retval->url;
+			}
+		}
+		pr($urls);
+		return $urls;
 	}
 
 	public function checkTag($tag_flight, $tag_pub) {
-		$arrTagFlight = explode(',', $tag_flight);
-		$arrTagPub = explode(',', $tag_pub);
+		$arrTagFlight = explode(',', str_replace(' ', '', $tag_flight));
+		$arrTagPub = explode(',', str_replace(' ', '', $tag_pub));
 
 		foreach ($arrTagPub as $tag) {
 			if (in_array($tag, $arrTagFlight)) {

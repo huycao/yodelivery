@@ -231,8 +231,7 @@ class DeliveryController extends Controller
 
 		}
 
-		$urlTrackGA = $deliveryModel->getUrlTrackGA();
-		$data['url_track_ga'] = $urlTrackGA;
+		$data['url_track_ga'] = $deliveryModel->getUrlTrackGA();
 		//serve Ad
 		// if(0){
 		if(!empty($serveAd)){
@@ -299,7 +298,7 @@ class DeliveryController extends Controller
 					if( isset( $data['ec'] )  && !$data['ec']){
 						$response = (new VAST)->makeEmptyVast();
 					} else {
-						$this->data['data'] = $data;
+						$this->data['data']['url_track_ga'] = $data['url_track_ga'];
 						\View::addLocation(base_path() . '/resources/views/delivery');
 						$response = response(\View::make('url_track_ga', $this->data), 200)->header('Content-Type','text/javascript; charset=UTF-8');
 					}
