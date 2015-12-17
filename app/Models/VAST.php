@@ -78,7 +78,7 @@ class VAST extends Eloquent {
     
     public function getTrackClick3rdAttribute(){
         $tag = '';
-        $tag .= "<ClickTracking><![CDATA['. AD_SERVER_FILE .'analytics/index.php?count=ad_click&rd=".str_random(40)."]]></ClickTracking>";
+        $tag .= "<ClickTracking><![CDATA[". AD_SERVER_FILE ."analytics/index.php?count=ad_click&rd=".str_random(40)."]]></ClickTracking>";
         if ($this->third_click_track != '') {
             $thirdClickTrackArr = explode("\n", $this->third_click_track);
             if (!empty($thirdClickTrackArr)) {
