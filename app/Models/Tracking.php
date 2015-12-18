@@ -485,15 +485,16 @@ class Tracking extends Moloquent{
     }
 
     public static function getTrackingEventType($costType){
-    	if( $costType == 'cpm' || $costType == 'cpc' ){
-    		if( $costType == 'cpm' ){
-    			return 'impression';
-    		}else{
-    			return 'click';
-    		}
-    	}else{
-    		return false;
-    	}
+        switch ($costType) {
+            case 'cpm':
+                return 'impression';
+            case 'cpc':
+                return 'click';
+            case 'cpv':
+                return 'complete';
+            default:
+                return false;
+        }
     }
 
    	public function updateInventory($flightID, $flightWebsiteID, $event, $overReport = false){

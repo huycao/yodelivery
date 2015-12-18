@@ -59,16 +59,12 @@ class Delivery extends Eloquent{
 	 * return boolean
 	 */
 	public function checkGeo($listCountries, $listProvinces){
-		if(empty($listCountries)){
+		if(empty($listCountries) || isLocal()){
 			return true;
 		}
 
 		$retval = false;
 		$ip = getClientIp(); //live
-		//test tren local
-		if (isLocal()) {
-		    $ip = '115.78.162.134'; // test
-		}
 		
         $geoip = GeoBaseModel::getGeoByIp($ip);
         pr($geoip);
@@ -279,7 +275,7 @@ class Delivery extends Eloquent{
 		//TODO : kiểm tra channel
 		// to do kiểm tra theo loại campaign : CPC hay CPM
 
-		if( $flight->cost_type == 'cpm' || $flight->cost_type == 'cpc' ){
+		//if( $flight->cost_type == 'cpm' || $flight->cost_type == 'cpc' ){
 			$event = Tracking::getTrackingEventType($flight->cost_type);
 			
 		    $overReport = FALSE;
@@ -300,7 +296,7 @@ class Delivery extends Eloquent{
         		    $overReport = TRUE;
         		}
 			}
-		}
+		//}
 
 		// WHEN READY TO DELIVERY
 		//if( $flight->frequency_cap ){
