@@ -362,7 +362,8 @@ class DeliveryController extends Controller
 				$adZone = $deliveryModel->getAdzone($zoneID);
 
 				if($adZone){
-					if( isSameDomain($hostReferer, getWebDomain($adZone->site->url) )  || isLocal() || $adZone->id == 241 || $platform === 'mobile_app'){
+					$publisherSite = $deliveryModel->getPublisherSite($adZone->publisher_site_id);
+					if( !$publisherSite ->domain_checking ||isSameDomain($hostReferer, getWebDomain($adZone->site->url) )  || isLocal() || $adZone->id == 241 || $platform === 'mobile_app'){
 				        //    if ($platform == '') {
 					    //     $platform = $deliveryModel->getPlatform();
 						// }
