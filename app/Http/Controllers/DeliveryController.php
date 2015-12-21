@@ -86,7 +86,7 @@ class DeliveryController extends Controller
 		//$uuid = $trackingModel->getVisitorId();
 
 		//ghi log ad request
-		(new RawTrackingAdRequest())->addAdRequest($zoneID, $websiteID);
+		(new RawTrackingAdRequest())->addAdRequest($websiteID, $zoneID);
 		// if($continueProcess){
 			//check pre process			
 			$hostReferer = $trackingModel->getRequestReferer();

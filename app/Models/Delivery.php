@@ -337,7 +337,7 @@ class Delivery extends Eloquent{
     public function sortAvailableFlightWebsites($listFlightWebsites, $deliveryInfo){
         if (!empty($listFlightWebsites)) {
         	shuffle($listFlightWebsites);
-        	foreach($listFlightWebsites as $k =>$flightWebsite) {
+        	foreach($listFlightWebsites as $k => $flightWebsite) {
         		$flight = $deliveryInfo['flights'][$flightWebsite->flight_id];
         		if (!empty($flight->audience)) {
         			$temp = array($k => $flightWebsite);
