@@ -211,9 +211,11 @@ class DeliveryController extends Controller
 			
 		// }
 		//invalid ads request
+		$bLogAdsSuccess = false;
 		if(empty($responseType)){
 			$responseType = Delivery::RESPONSE_TYPE_INVALID;
 		}elseif($responseType == Delivery::RESPONSE_TYPE_ADS_SUCCESS){
+			$bLogAdsSuccess = true;
 			$expandFields = array(
 				'flight_id'				=>	$flightWebsite->flight_id,
 				'ad_format_id'         	=>	$adZone->ad_format_id,
@@ -231,9 +233,6 @@ class DeliveryController extends Controller
 			$expandFields['checksum'] = $checksum = $trackingModel->makeChecksumHash($flightWebsite->id);
 			$eventChecksum = Delivery::RESPONSE_TYPE_ADS_SUCCESS;
 			$trackingModel->setChecksumTrackingEvent($checksum, Delivery::RESPONSE_TYPE_ADS_SUCCESS);
-
-			(new RawTrackingSummary())->addSummary('ads_request', $flightWebsite->website_id, $adZone->id, $adZone->ad_format_id, $flightWebsite->flight_id, $flightWebsite->id, $flight->ad_id, $flight->campaign_id, $flightWebsite->publisher_base_cost, $isOverReport);
-
 		}
 
 		$data['url_track_ga'] = $deliveryModel->getUrlTrackGA();
@@ -313,8 +312,10 @@ class DeliveryController extends Controller
 			}
 		}
 		
-		//ghi log process
-		//$trackingModel->logAfterProcess($responseType, $expandFields, $logPreProcess);
+		//ghi log ad success
+		if ($bLogAdsSuccess){
+			(new RawTrackingSummary())->addSummary('ads_request', $flightWebsite->website_id, $adZone->id, $adZone->ad_format_id, $flightWebsite->flight_id, $flightWebsite->id, $flight->ad_id, $flight->campaign_id, $flightWebsite->publisher_base_cost, $isOverReport);
+		}
 		
 		//response to client
 		$endProcess = microtime(1);
