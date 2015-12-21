@@ -334,9 +334,18 @@ class Delivery extends Eloquent{
 	/**
 	 * sort available flights base on priority and retargeting
 	 */
-    public function sortAvailableFlightWebsites($listFlightWebsites){
+    public function sortAvailableFlightWebsites($listFlightWebsites, $deliveryInfo){
         if (!empty($listFlightWebsites)) {
-            shuffle($listFlightWebsites);
+        	shuffle($listFlightWebsites);
+        	foreach($listFlightWebsites as $k =>$flightWebsite) {
+        		$flight = $deliveryInfo['flights'][$flightWebsite->flight_id];
+        		if (!empty($flight->audience)) {
+        			$temp = array($k => $flightWebsite);
+				    unset($listFlightWebsites[$k]);
+				    $listFlightWebsites = $temp + $listFlightWebsites;
+        		}
+        	}
+        	
             /*$arrayKey = array_keys($listFlightWebsites);
             foreach($listFlightWebsites as $k =>$flightWebsite) {
                 if (!empty($flightWebsite)) {

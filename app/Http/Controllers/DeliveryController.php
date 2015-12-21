@@ -10,6 +10,7 @@ use App\Models\RedisBaseModel;
 use Input;
 use Cookie;
 use App\Models\RawTrackingAudience;
+use App\Models\RawTrackingAdRequest;
 
 class DeliveryController extends Controller
 {
@@ -84,11 +85,10 @@ class DeliveryController extends Controller
 		}
 		//$uuid = $trackingModel->getVisitorId();
 
-		//ghi log trước khi xử lý
-		//$logPreProcess = $trackingModel->logPreProcess($requestType, $data);
-		
+		//ghi log ad request
+		(new RawTrackingAdRequest())->addAdRequest($zoneID, $websiteID);
 		// if($continueProcess){
-			//kiểm tra referrer
+			//check pre process			
 			$hostReferer = $trackingModel->getRequestReferer();
 			$responseType = $trackingModel->checkPreProcess($requestType, $hostReferer, $zoneID);
 			//pre validate ok
@@ -103,7 +103,8 @@ class DeliveryController extends Controller
 						// if(1){//test only
 						$publisherSite = $deliveryModel->getPublisherSite($adZone->publisher_site_id);
 						pr($publisherSite);
-						if( !$publisherSite->domain_checking || isSameDomain($hostReferer, getWebDomain($adZone->site->url) ) || isLocal() ){
+						$domainCheck = isset($publisherSite->domain_checking) ? $publisherSite->domain_checking : 1;
+						if( !$domainCheck || isSameDomain($hostReferer, getWebDomain($adZone->site->url) ) || isLocal() ){
 						 	//    if ($platform == '') {
 							//     $platform = $deliveryModel->getPlatform();
 							// }
@@ -111,14 +112,16 @@ class DeliveryController extends Controller
 
 							//read redis 1
 							$flightWebsites = $deliveryModel->getAvailableAds($adZone->publisher_site_id, $adZone->ad_format_id, $flightWebsiteID, $platform);
-							pr($flightWebsites);
-							if($flightWebsites){								
-								//sort available flights base on priority and retargeting
-								//TO DO retargeting
-								$flightWebsites = $deliveryModel->sortAvailableFlightWebsites($flightWebsites);
+
+							if($flightWebsites){
 								//lấy ad từ list thỏa điều kiện để trả về
 								$deliveryInfo = $deliveryModel->getFullFlightInfo($flightWebsites, $adZone->publisher_site_id, $adZone->ad_format_id);
+
+								//random array flight website, priority flight audience
+								$flightWebsites = $deliveryModel->sortAvailableFlightWebsites($flightWebsites, $deliveryInfo);
+								pr($flightWebsites);
 								pr($deliveryInfo);
+
 								$redis = new RedisBaseModel(env('REDIS_HOST', '127.0.0.1'), env('REDIS_PORT_6', '6379'), false);
 								foreach ($flightWebsites as $k => $flightWebsite) {
 									if(!empty($flightWebsite) && !empty($deliveryInfo['flightDates'][$flightWebsite->flight_id]) && !empty($deliveryInfo['flights'][$flightWebsite->flight_id])){
@@ -363,7 +366,8 @@ class DeliveryController extends Controller
 
 				if($adZone){
 					$publisherSite = $deliveryModel->getPublisherSite($adZone->publisher_site_id);
-					if( !$publisherSite->domain_checking || isSameDomain($hostReferer, getWebDomain($adZone->site->url) )  || isLocal() || $adZone->id == 241 || $platform === 'mobile_app'){
+					$domainCheck = isset($publisherSite->domain_checking) ? $publisherSite->domain_checking : 1;
+					if( !$domainCheck || isSameDomain($hostReferer, getWebDomain($adZone->site->url) )  || isLocal() || $adZone->id == 241 || $platform === 'mobile_app'){
 				        //    if ($platform == '') {
 					    //     $platform = $deliveryModel->getPlatform();
 						// }
