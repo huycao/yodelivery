@@ -338,17 +338,22 @@ class Delivery extends Eloquent{
         if (!empty($listFlightWebsites)) {
         	shuffle($listFlightWebsites);
         	foreach($listFlightWebsites as $k => $flightWebsite) {
-        		$flight = $deliveryInfo['flights'][$flightWebsite->flight_id];
-        		if (!empty($flight->audience)) {
-        			$audience = json_decode($flight->audience, true);
-        			if ($audience['operator'] === 'in') {
-        				$temp = array($k => $flightWebsite);
-					    unset($listFlightWebsites[$k]);
-					    $listFlightWebsites = $temp + $listFlightWebsites;
+        		if (isset($deliveryInfo['flights'])){
+        			if (isset($deliveryInfo['flights'][$flightWebsite->flight_id])){
+        				$flight = $deliveryInfo['flights'][$flightWebsite->flight_id];
+        				if (isset($flight->audience)){
+        					if (!empty($flight->audience)) {
+        						$audience = json_decode($flight->audience, true);	
+        						if ($audience['operator'] === 'in') {
+			        				$temp = array($k => $flightWebsite);
+								    unset($listFlightWebsites[$k]);
+								    $listFlightWebsites = $temp + $listFlightWebsites;
+			        			}
+        					}        					
+        				}
         			}
         		}
         	}
-        	
             /*$arrayKey = array_keys($listFlightWebsites);
             foreach($listFlightWebsites as $k =>$flightWebsite) {
                 if (!empty($flightWebsite)) {
