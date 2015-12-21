@@ -340,9 +340,12 @@ class Delivery extends Eloquent{
         	foreach($listFlightWebsites as $k => $flightWebsite) {
         		$flight = $deliveryInfo['flights'][$flightWebsite->flight_id];
         		if (!empty($flight->audience)) {
-        			$temp = array($k => $flightWebsite);
-				    unset($listFlightWebsites[$k]);
-				    $listFlightWebsites = $temp + $listFlightWebsites;
+        			$audience = json_decode($flight->audience, true);
+        			if ($audience['operator'] === 'in') {
+        				$temp = array($k => $flightWebsite);
+					    unset($listFlightWebsites[$k]);
+					    $listFlightWebsites = $temp + $listFlightWebsites;
+        			}
         		}
         	}
         	
