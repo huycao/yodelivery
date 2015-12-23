@@ -7,8 +7,11 @@ class RawTrackingAdRequest{
     public $timestamps    = false;
    
     public function addAdRequest($wid, $zid){
-        $referer = $_SERVER['HTTP_REFERER'];
-        $id = md5(date('YmdH_') .$wid. '_'. $zid. '_' .$_SERVER['HTTP_REFERER']);
+        $referer = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '';
+        if (!$referer){
+            return false;
+        }
+        $id = md5(date('YmdH_') .$wid. '_'. $zid. '_' .$referer);
         $info = [
             '_id' => $id,
             'wid' => $wid,
