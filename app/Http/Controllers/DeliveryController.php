@@ -235,7 +235,7 @@ class DeliveryController extends Controller
 			$trackingModel->setChecksumTrackingEvent($checksum, Delivery::RESPONSE_TYPE_ADS_SUCCESS);
 		}
 
-		$data['url_track_ga'] = $deliveryModel->getUrlTrack3rd();
+		$data['url_track_ga'] = $deliveryModel->getUrlTrack3rd($data);
 		//serve Ad
 		// if(0){
 		if(!empty($serveAd)){

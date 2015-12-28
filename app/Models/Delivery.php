@@ -689,7 +689,12 @@ class Delivery extends Eloquent{
         }                
 	}
 
-	public function getUrlTrack3rd() {
+	public function getUrlTrack3rd($data) {
+		if (isset($data['ec'])){
+			if ($data['ec'] == 0){
+				return array();
+			}
+		}
 		$referer = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '';
         $domain = getWebDomain($referer);
         $urls = array();
