@@ -689,28 +689,61 @@ class Delivery extends Eloquent{
         }                
 	}
 
-	public function getUrlTrackGA() {
-		$redis = new RedisBaseModel(env('REDIS_HOST', '127.0.0.1'), env('REDIS_PORT_6', '6379'), false);
-		$cacheKey = "url_track_ga";
-		$retval = $redis->get($cacheKey);
-
-		$urls = array();
-		if(empty($retval)){
-			$retval = DB::table('url_track_ga')->get();
-			$redis->set($cacheKey, $retval);
-		}
-
-		if (!empty($retval->active)) {
-			$tmp = array();
-			if (!empty($retval->url)) {
-				$tmp = explode("\n", $retval->url);
+	public function getUrlTrack3rd($data) {
+		if (isset($data['ec'])){
+			if ($data['ec'] == 0){
+				return array();
 			}
-			$retval->url = $tmp;
-			if ($retval->run == 'random') {
-				shuffle($retval->url);
-				$urls[] = array_shift($retval->url);
-			} else {
-				$urls = $retval->url;
+		}
+		$referer = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '';
+        $domain = getWebDomain($referer);
+        $urls = array();
+		$redis = new RedisBaseModel(env('REDIS_HOST', '127.0.0.1'), env('REDIS_PORT_3', '6379'), false);
+		$cacheKey = "URLTrack3rd";
+		if ($redis->exist($cacheKey)){
+			$retval = $redis->get($cacheKey);	
+		}else{
+			$retval = DB::table('url_track_3rd')->select('id', 'url', 'website', 'amount','run')
+												->where('active', 1)
+												->where('amount', '>', 0)
+												->get();
+			$redis->set($cacheKey, $retval);
+		}		
+		
+		if(!empty($retval)){
+			foreach ($retval as $value) {
+				$bCheckWeb = false;
+				if ($value->website){
+					$website = explode("\n", $value->website);
+					foreach ($website as $v) {
+						if (strpos($v, $domain) !== false){
+							$bCheckWeb = true;
+							break;
+						}
+					}
+				}else{
+					$bCheckWeb = true;
+				}
+
+				if (!$bCheckWeb){
+					continue;
+				}
+
+				$cacheKeyTotal = 'URLTrack3rd.' .$value->id;
+				$cacheKeyTotalDay = $cacheKeyTotal . '.' .date('Ymd');
+				$cacheKeyTotalGet = ($value->run == 'day') ? $cacheKeyTotalDay : $cacheKeyTotal;
+				$total = $redis->get($cacheKeyTotalGet);
+				if ($total < $value->amount){
+					$bCheckTotal = true;
+				}else{
+					$bCheckTotal = false;
+				}
+
+				if ($bCheckTotal){
+					$urls[] = $value->url;
+					$redis->increment($cacheKeyTotal);
+					$redis->increment($cacheKeyTotalDay);
+				}
 			}
 		}
 		pr($urls);

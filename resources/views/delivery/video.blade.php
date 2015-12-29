@@ -44,7 +44,7 @@ function loadAds() {
 		a{!! $data['zid'] !!},
 		zone{!! $data['zid'] !!},
 		autoStart{!! $data['zid'] !!}, 
-		100, 
+		10, 
 		0
 	);
 }

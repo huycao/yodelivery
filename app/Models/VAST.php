@@ -154,13 +154,11 @@ class VAST extends Eloquent {
     }
 
     function makeBackupVast($zoneId, $wrapperTag){
-        $ad              = new StdClass();
-        $ad->id          = $zoneID;
-        $ad->wrapper_tag = $wrapperTag;
-        $ad->isBackupAd  = true;
-        \View::addLocation(base_path() .'/resources/views/vast');
-        $body = View::make('wrapper')->with('ad',$ad);
+        $ad['publisher_ad_zone_id'] = $zoneId;
+        $ad['wrapper_tag'] = $wrapperTag;
         $this->setHeaderVast();
+        \View::addLocation(base_path() .'/resources/views/vast');
+        $body = \View::make('backup')->with('ad',$ad);
         return response($body, 200, $this->header);
     }
 

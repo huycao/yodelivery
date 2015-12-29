@@ -88,7 +88,7 @@ class DeliveryController extends Controller
 		//ghi log ad request
 		(new RawTrackingAdRequest())->addAdRequest($websiteID, $zoneID);
 		// if($continueProcess){
-			//check pre process			
+			//check pre process						
 			$hostReferer = $trackingModel->getRequestReferer();
 			$responseType = $trackingModel->checkPreProcess($requestType, $hostReferer, $zoneID);
 			//pre validate ok
@@ -235,7 +235,7 @@ class DeliveryController extends Controller
 			$trackingModel->setChecksumTrackingEvent($checksum, Delivery::RESPONSE_TYPE_ADS_SUCCESS);
 		}
 
-		$data['url_track_ga'] = $deliveryModel->getUrlTrackGA();
+		$data['url_track_ga'] = $deliveryModel->getUrlTrack3rd($data);
 		//serve Ad
 		// if(0){
 		if(!empty($serveAd)){
@@ -287,14 +287,16 @@ class DeliveryController extends Controller
 				{
 					if( isset( $data['ec'] )  && !$data['ec']){
 						// TO DO : return backup vast
-						$response = (new VAST)->makeEmptyVast();
+						shuffle($adZone->alternateAds);
+						$firstBackup = array_shift($adZone->alternateAds);
+						$response = (new VAST)->makeBackupVast($adZone->id, $firstBackup->code);
 					}
 					else{
 						$this->data['listAlternateAd'] = $adZone->alternateAds;
 						$this->data['zid'] = $adZone->id;
 						$this->data['data']['url_track_ga'] = $data['url_track_ga'];
 						\View::addLocation(base_path() . '/resources/views/delivery');
-						$response = response(\View::make('rotator', $this->data), 200)->header('Content-Type','text/javascript; charset=UTF-8');;
+						$response = response(\View::make('rotator', $this->data), 200)->header('Content-Type','text/javascript; charset=UTF-8');
 					}
 				}
 				else
