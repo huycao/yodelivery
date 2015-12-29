@@ -287,7 +287,9 @@ class DeliveryController extends Controller
 				{
 					if( isset( $data['ec'] )  && !$data['ec']){
 						// TO DO : return backup vast
-						$response = (new VAST)->makeEmptyVast();
+						shuffle($adZone->alternateAds);
+						$firstBackup = array_shift($adZone->alternateAds);
+						$response = (new VAST)->makeBackupVast($adZone->id, $firstBackup->code);
 					}
 					else{
 						$this->data['listAlternateAd'] = $adZone->alternateAds;
