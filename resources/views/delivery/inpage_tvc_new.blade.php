@@ -1,4 +1,3 @@
-@include("url_track_ga")
 <?php
     $destination_url = $data['ad']->destination_url;
     $eidtype         = substr($data['element_id'],0,1);
@@ -36,8 +35,8 @@ function showPopupAdYomedia_{!! $data['zid'] !!}(s) {
     var a_{!! $data['zid'] !!} = document.getElementById('YomediaInpage_{!! $data['zid'] !!}');
 
     if (a_{!! $data['zid'] !!} == null) {
-    	@if ($eid)
-        	@if($eidtype == '#')
+        @if ($eid)
+            @if($eidtype == '#')
                 var content_{!! $data['zid'] !!} = document.getElementById('{!! $eid !!}');
             @else
                 var content_{!! $data['zid'] !!} = document.getElementsByClassName('{!! $eid !!}')[0];
@@ -65,9 +64,9 @@ function showPopupAdYomedia_{!! $data['zid'] !!}(s) {
                 a_{!! $data['zid'] !!} = domManipulate.create('div', 'YomediaInpage_{!! $data['zid'] !!}');
                 domManipulate.append(a_{!! $data['zid'] !!});
             }
-    	@else {
-    		a_{!! $data['zid'] !!} = domManipulate.create('div', 'YomediaInpage_{!! $data['zid'] !!}');
-        	domManipulate.append(a_{!! $data['zid'] !!});
+        @else {
+            a_{!! $data['zid'] !!} = domManipulate.create('div', 'YomediaInpage_{!! $data['zid'] !!}');
+            domManipulate.append(a_{!! $data['zid'] !!});
         }
         @endif
         
@@ -77,7 +76,7 @@ function showPopupAdYomedia_{!! $data['zid'] !!}(s) {
         return false;
     }
 
-    a_{!! $data['zid'] !!}.style.cssText = "display: block; opacity: 0.45; overflow: hidden; position: relative; z-index: 2; width: 100%; background: transparent; visibility: hidden;";
+    a_{!! $data['zid'] !!}.style.cssText = "display: block; opacity: 0.45; overflow: hidden; position: relative; z-index: 99999; width: 100%; background: transparent; visibility: hidden;";
     var previousElement = a_{!! $data['zid'] !!}.previousElementSibling;
     var nextElement = a_{!! $data['zid'] !!}.nextElementSibling;
 
@@ -87,8 +86,8 @@ function showPopupAdYomedia_{!! $data['zid'] !!}(s) {
     }
 
     if (nextElement) {
-    	nextElement.style.position = 'relative';
-    	nextElement.style.zIndex = 990;
+        nextElement.style.position = 'relative';
+        nextElement.style.zIndex = 990;
     }
 
     var swdWidth = screen.width;
@@ -97,10 +96,10 @@ function showPopupAdYomedia_{!! $data['zid'] !!}(s) {
     var rs = '';
     if (avlInteractModule.isMobile() == true) {
         if (screen.width < screen.height) {
-        	var top = parseInt(_yomediaAds_{!! $data['zid'] !!}.video_top_h.replace('%', ''));
+            var top = parseInt(_yomediaAds_{!! $data['zid'] !!}.video_top_h.replace('%', ''));
             top = calculateSizeYomedia_{!! $data['zid'] !!}(screen.width, screen.height, top, 'portrait') + '%';
         } else {
-        	var top = parseInt(_yomediaAds_{!! $data['zid'] !!}.video_top_w.replace('%', ''));
+            var top = parseInt(_yomediaAds_{!! $data['zid'] !!}.video_top_w.replace('%', ''));
             top = calculateSizeYomedia_{!! $data['zid'] !!}(screen.width, screen.height, top, 'landscape') + '%';
         }
         rs = '<div id="YomediaInpageContent_{!! $data['zid'] !!}" style="display: block; opacity: 0; background: transparent; overflow: hidden; margin: 0px auto; position: fixed; z-index: 1; bottom: 0px; max-width: 100%; height: 332px;">';
@@ -113,10 +112,10 @@ function showPopupAdYomedia_{!! $data['zid'] !!}(s) {
         rs += '<input type="hidden" value="0" name="hid_height" id="hid_height" />';
         rs += '<input type="hidden" value="0" name="hid_width" id="hid_width" />';
         rs += '<div id="innerVideo-{!! $data['zid'] !!}" style="top:' + top + ';left:' + _yomediaAds_{!! $data['zid'] !!}.video_left_h + ';right:' + _yomediaAds_{!! $data['zid'] !!}.video_right_h + ';margin-left:auto;margin-right:auto;position:absolute;width:' + _yomediaAds_{!! $data['zid'] !!}.video_width_h + ';height:' + _yomediaAds_{!! $data['zid'] !!}.video_height_h + ';z-index:1">';
-        rs += '<img onclick="playVideoYomedia_{!! $data['zid'] !!}(\'yomedia-play-h-{!! $data['zid'] !!}\');" id="yomedia-play-h-{!! $data['zid'] !!}" style="position:absolute; z-index:1" src="' + _yomediaAds_{!! $data['zid'] !!}.video_poster_h + '" />';
-        rs += '<img onclick="playVideoYomedia_{!! $data['zid'] !!}(\'yomedia-play-w-{!! $data['zid'] !!}\');" id="yomedia-play-w-{!! $data['zid'] !!}" style="position:absolute;visibility: hidden;z-index:1" src="' + _yomediaAds_{!! $data['zid'] !!}.video_poster_w + '" />';
+        rs += '<img onclick="playVideoYomedia_{!! $data['zid'] !!}(\'yomedia-play-h-{!! $data['zid'] !!}\');" id="yomedia-play-h-{!! $data['zid'] !!}" style="position:absolute; z-index:1; width:100%;" src="' + _yomediaAds_{!! $data['zid'] !!}.video_poster_h + '" />';
+        rs += '<img onclick="playVideoYomedia_{!! $data['zid'] !!}(\'yomedia-play-w-{!! $data['zid'] !!}\');" id="yomedia-play-w-{!! $data['zid'] !!}" style="position:absolute;visibility: hidden;z-index:1; width:100%;" src="' + _yomediaAds_{!! $data['zid'] !!}.video_poster_w + '" />';
         rs += '</div>';
-        rs += '<div id="more-view-{!! $data['zid'] !!}" style="opacity: 1; float: right; z-index: 3; clear: both; position: fixed; bottom: 0px; margin-bottom:5px !important; left: 0px; width: 100%; text-align: center; background: transparent;height: 30px;"><a style="color:#FFF;font-size: 14px;background: #CCC;padding: 5px 13px;border-radius: 10px;margin: 5px;height: 18px;">Đọc tiếp</a></div>';
+        //rs += '<div id="more-view-{!! $data['zid'] !!}" style="opacity: 1; float: right; z-index: 3; clear: both; position: fixed; bottom: 0px; margin-bottom:5px !important; left: 0px; width: 100%; text-align: center; background: transparent;height: 30px;"><a style="color:#FFF;font-size: 14px;background: #CCC;padding: 5px 13px;border-radius: 10px;margin: 5px;height: 18px;">Đọc tiếp</a></div>';
         rs += '</div>';
         domManipulate.getElid('YomediaInpage_{!! $data['zid'] !!}').innerHTML = rs;
 
@@ -149,7 +148,7 @@ function showPopupAdYomedia_{!! $data['zid'] !!}(s) {
         @endif
         
         if (typeof _YoImp != 'undefined' && avlHelperModule.validateUrl(_YoImp)) {
-        	avlHelperModule.embedTracking(_YoImp);
+            avlHelperModule.embedTracking(_YoImp);
         }
 
     } else {
@@ -159,9 +158,9 @@ function showPopupAdYomedia_{!! $data['zid'] !!}(s) {
 
 function showBannerYomedia_{!! $data['zid'] !!}() {
     var orCh = function() {
-    	var adContainer_{!! $data['zid'] !!} = document.getElementById("YomediaInpage_{!! $data['zid'] !!}");
-    	var inpageContent_{!! $data['zid'] !!} = document.getElementById("YomediaInpageContent_{!! $data['zid'] !!}");
-    	var innerVideo_{!! $data['zid'] !!} = document.getElementById("innerVideo-{!! $data['zid'] !!}");
+        var adContainer_{!! $data['zid'] !!} = document.getElementById("YomediaInpage_{!! $data['zid'] !!}");
+        var inpageContent_{!! $data['zid'] !!} = document.getElementById("YomediaInpageContent_{!! $data['zid'] !!}");
+        var innerVideo_{!! $data['zid'] !!} = document.getElementById("innerVideo-{!! $data['zid'] !!}");
         var check_w = hid_width.value;
         var swdWidth = getWindowWidthYomedia_{!! $data['zid'] !!}();
         var swdHeight = getWindowHeightYomedia_{!! $data['zid'] !!}();
@@ -212,6 +211,14 @@ function showBannerYomedia_{!! $data['zid'] !!}() {
             if (lVideo == null || (lVideo && lVideo.ended == true)) {
                 document.getElementById('yomedia-play-h-{!! $data['zid'] !!}').style.visibility = 'hidden';
                 document.getElementById('yomedia-play-w-{!! $data['zid'] !!}').style.visibility = 'visible';
+            } else {
+                lVideo.style.cssText = "min-height:0px;z-index:1;margin-left:"+_yomediaAds_{!! $data['zid'] !!}.border_left_w+"; margin-top: "+_yomediaAds_{!! $data['zid'] !!}.border_top_w+"; width: "+_yomediaAds_{!! $data['zid'] !!}.border_width_w+";";
+            }
+            if (document.getElementById('yomedia-border-h-{!! $data['zid'] !!}')) {
+                document.getElementById('yomedia-border-h-{!! $data['zid'] !!}').style.visibility = 'hidden';
+            }
+            if (document.getElementById('yomedia-border-w-{!! $data['zid'] !!}')) {
+                document.getElementById('yomedia-border-w-{!! $data['zid'] !!}').style.visibility = 'visible';
             }
             play_button_{!! $data['zid'] !!} = "yomedia-play-w-{!! $data['zid'] !!}";
         } else {
@@ -229,6 +236,14 @@ function showBannerYomedia_{!! $data['zid'] !!}() {
             if (lVideo == null || (lVideo && lVideo.ended == true)) {
                 document.getElementById('yomedia-play-w-{!! $data['zid'] !!}').style.visibility = 'hidden';
                 document.getElementById('yomedia-play-h-{!! $data['zid'] !!}').style.visibility = 'visible';
+            } else {
+                lVideo.style.cssText = "min-height:0px;z-index:1;margin-left:"+_yomediaAds_{!! $data['zid'] !!}.border_left_h+"; margin-top: "+_yomediaAds_{!! $data['zid'] !!}.border_top_h+"; width: "+_yomediaAds_{!! $data['zid'] !!}.border_width_h+";";
+            }
+            if (document.getElementById('yomedia-border-w-{!! $data['zid'] !!}')) {
+                document.getElementById('yomedia-border-w-{!! $data['zid'] !!}').style.visibility = 'hidden';
+            }
+            if (document.getElementById('yomedia-border-h-{!! $data['zid'] !!}')) {
+                document.getElementById('yomedia-border-h-{!! $data['zid'] !!}').style.visibility = 'visible';
             }
             play_button_{!! $data['zid'] !!} = "yomedia-play-h-{!! $data['zid'] !!}";
         }
@@ -261,10 +276,10 @@ function showBannerYomedia_{!! $data['zid'] !!}() {
         if (video_{!! $data['zid'] !!}) {
             if (!visibleVideoYomedia_{!! $data['zid'] !!}(adContainer_{!! $data['zid'] !!}, innerVideo_{!! $data['zid'] !!})) {
                 if (video_{!! $data['zid'] !!}.played) {
-                	video_{!! $data['zid'] !!}.pause();
+                    video_{!! $data['zid'] !!}.pause();
                 }
             } else if (video_{!! $data['zid'] !!}.paused && _yomediaAds_{!! $data['zid'] !!}.auto_play) {
-            	video_{!! $data['zid'] !!}.play();
+                video_{!! $data['zid'] !!}.play();
             }
         } else {
             if (visibleVideoYomedia_{!! $data['zid'] !!}(adContainer_{!! $data['zid'] !!}, innerVideo_{!! $data['zid'] !!}) && _yomediaAds_{!! $data['zid'] !!}.auto_play) {
@@ -278,7 +293,7 @@ function showBannerYomedia_{!! $data['zid'] !!}() {
                 adContainer_{!! $data['zid'] !!}.style.background = 'transparent';
                 adContainer_{!! $data['zid'] !!}.style.visibility = 'visible';
                 inpageContent_{!! $data['zid'] !!}.style.opacity = '1';
-                document.getElementById('more-view-{!! $data['zid'] !!}').style.opacity = '1';
+                //document.getElementById('more-view-{!! $data['zid'] !!}').style.opacity = '1';
                 innerVideo_{!! $data['zid'] !!}.style.visibility = 'visible';
                 if (video_{!! $data['zid'] !!}) {
                     video_{!! $data['zid'] !!}.style.visibility = 'visible';
@@ -287,7 +302,7 @@ function showBannerYomedia_{!! $data['zid'] !!}() {
             } else {
                 adContainer_{!! $data['zid'] !!}.style.visibility = 'hidden';
                 inpageContent_{!! $data['zid'] !!}.style.opacity = '0';
-                document.getElementById('more-view-{!! $data['zid'] !!}').style.opacity = '0';
+                //document.getElementById('more-view-{!! $data['zid'] !!}').style.opacity = '0';
                 innerVideo_{!! $data['zid'] !!}.style.visibility = 'hidden';
                 if (video_{!! $data['zid'] !!}) {
                     video_{!! $data['zid'] !!}.style.visibility = 'hidden';
@@ -309,10 +324,10 @@ function showBannerYomedia_{!! $data['zid'] !!}() {
 
 document.onreadystatechange = function () {
     if (document.readyState == "complete") {
-    	@if(!empty($htmlSource))
-    		if (typeof _yomediaAds_{!! $data['zid'] !!} != 'undefined') {
-        		showPopupAdYomedia_{!! $data['zid'] !!}(1);
-        	}
+        @if(!empty($htmlSource))
+            if (typeof _yomediaAds_{!! $data['zid'] !!} != 'undefined') {
+                showPopupAdYomedia_{!! $data['zid'] !!}(1);
+            }
         @endif
     }
 }
@@ -439,18 +454,54 @@ function playVideoYomedia_{!! $data['zid'] !!}(type) {
         var lVideo = document.createElement("video");
         lVideo.id = "yomedia-video-{!! $data['zid'] !!}";
         lVideo.src = _yomediaAds_{!! $data['zid'] !!}.video_url;
-        innerVideo_{!! $data['zid'] !!}.appendChild(lVideo);
-        lVideo.hidden = false;
 
-        lVideo.style.cssText = "min-height:0px !important;z-index:1;"
         if (play_button_{!! $data['zid'] !!} == "yomedia-play-h-{!! $data['zid'] !!}") {
             lVideo.poster = _yomediaAds_{!! $data['zid'] !!}.video_poster_h;
         } else {
             lVideo.poster = _yomediaAds_{!! $data['zid'] !!}.video_poster_w;
         }
+
+        if (typeof _yomediaAds_{!! $data['zid'] !!}.border_h != 'undefined' && _yomediaAds_{!! $data['zid'] !!}.border_h != '') {
+            var border_h = document.createElement("IMG");
+            border_h.setAttribute("id", "yomedia-border-h-{!! $data['zid'] !!}");
+            border_h.src = _yomediaAds_{!! $data['zid'] !!}.border_h;
+            innerVideo_{!! $data['zid'] !!}.appendChild(border_h);
+            border_h.style.cssText = "position:absolute;width:100%;z-index:0;max-width: 100%;";
+            if (play_button_{!! $data['zid'] !!} == "yomedia-play-h-{!! $data['zid'] !!}") {
+                border_h.style.visibility = "visible";
+                lVideo.style.cssText = "min-height:0px;z-index:1;margin-left:"+_yomediaAds_{!! $data['zid'] !!}.border_left_h+"; margin-top: "+_yomediaAds_{!! $data['zid'] !!}.border_top_h+"; width: "+_yomediaAds_{!! $data['zid'] !!}.border_width_h+";";
+            } else {
+                border_h.style.visibility = "hidden";
+            }
+        } else {
+            lVideo.style.cssText = "min-height:0px;z-index:1;"
+        }
+
+        if (typeof _yomediaAds_{!! $data['zid'] !!}.border_w != 'undefined' && _yomediaAds_{!! $data['zid'] !!}.border_w != '') {
+            var border_w = document.createElement("IMG");
+            border_w.setAttribute("id", "yomedia-border-w-{!! $data['zid'] !!}");
+            border_w.src = _yomediaAds_{!! $data['zid'] !!}.border_w;
+            innerVideo_{!! $data['zid'] !!}.appendChild(border_w);
+            border_w.style.cssText = "position:absolute;width:100%;z-index:0;max-width: 100%;";
+            if (play_button_{!! $data['zid'] !!} == "yomedia-play-w-{!! $data['zid'] !!}") {
+                border_w.style.visibility = "visible";
+                lVideo.style.cssText = "min-height:0px;z-index:1;margin-left:"+_yomediaAds_{!! $data['zid'] !!}.border_left_w+"; margin-top: "+_yomediaAds_{!! $data['zid'] !!}.border_top_w+"; width: "+_yomediaAds_{!! $data['zid'] !!}.border_width_w+";";
+            } else {
+                border_w.style.visibility = "hidden";
+            }
+        } else {
+            lVideo.style.cssText = "min-height:0px;z-index:1;"
+        }
+
+        innerVideo_{!! $data['zid'] !!}.appendChild(lVideo);
+        lVideo.hidden = false;
+
         // Lets set the volume
         lVideo.muted = _yomediaAds_{!! $data['zid'] !!}.muted;
         //lVideo.controls = true;
+        lVideo.oncanplay = function() {
+            play.style.visibility = "hidden";
+        };
         lVideo.play();
     } else {
         var lVideo = document.getElementById("yomedia-video-{!! $data['zid'] !!}");
@@ -509,33 +560,33 @@ function timeUpdateYomedia_{!! $data['zid'] !!}() {
 }
 
 function calculateSizeYomedia_{!! $data['zid'] !!}(width, height, obj, type){
-	var ratio = screen.width / screen.height;
-	if (height != 0) {
-		ratio = parseFloat(width) / parseFloat(height);
-	}
-	
-	if (type == 'landscape') {
-		obj += obj * (ratio - (480 / 320));
-	} else {
-		obj += obj * (ratio - (320 / 480));
-	}
+    var ratio = screen.width / screen.height;
+    if (height != 0) {
+        ratio = parseFloat(width) / parseFloat(height);
+    }
+    
+    if (type == 'landscape') {
+        obj += obj * (ratio - (480 / 320));
+    } else {
+        obj += obj * (ratio - (320 / 480));
+    }
     
     return obj;
 }
 
 function clickTrackingYomedia_{!! $data['zid'] !!}() {
     var clickTag = '{!! $clickTag !!}';
-	@if(!empty($thirdClickTrackArr))
+    @if(!empty($thirdClickTrackArr))
         @foreach( $thirdClickTrackArr as $item )
             @if (!empty($item))
-            	avlHelperModule.embedTracking("{!! trim(str_replace('[timestamp]', time(), $item)) !!}");
-        	@endif
+                avlHelperModule.embedTracking("{!! trim(str_replace('[timestamp]', time(), $item)) !!}");
+            @endif
         @endforeach
     @endif
     if (typeof _YoClick != 'undefined' && avlHelperModule.validateUrl(_YoClick)) {
-    	avlHelperModule.embedTracking(_YoClick);
+        avlHelperModule.embedTracking(_YoClick);
     }
-	window.open(clickTag);
+    window.open(clickTag);
 }
 
 <?php
