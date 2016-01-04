@@ -312,7 +312,7 @@ class Delivery extends Eloquent{
         				    $visitorId = $trackingModel->getVisitorId();
         				    $cacheKey = "Tracking:TimeFrequencyCap_{$flight->id}_{$visitorId}_{$flight->event}";
     	                    $cacheField = date('Y_m_d');
-    	                    $redis->hSet($cacheKey, $cacheField, 1);
+    	                    $redis->hSet($cacheKey, $cacheField, 0);
     	                    if ($date->frequency_cap_time > 0) {
     	                    	$redis->expire($cacheKey, $date->frequency_cap_time * 60);
     	                    } else {
