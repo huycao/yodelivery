@@ -306,14 +306,18 @@ class Delivery extends Eloquent{
     		pr($dateRange);
     		foreach ($dateRange as $date) {
     			if(strtotime($date->start) <= $now &&  strtotime($date->end) >= $now){
-    			    if($date->frequency_cap > 0 &&  $date->frequency_cap_time > 0 ){
+    			    if($date->frequency_cap > 0){
     			        if ($trackingModel->getTimeFreCap($flight) == 0) {
-    			            $redis = new RedisBaseModel(env('REDIS_HOST', '127.0.0.1'), env('REDIS_PORT_2', '6379'), false);
+	                    	$redis = new RedisBaseModel(env('REDIS_HOST', '127.0.0.1'), env('REDIS_PORT_2', '6379'), false);
         				    $visitorId = $trackingModel->getVisitorId();
         				    $cacheKey = "Tracking:TimeFrequencyCap_{$flight->id}_{$visitorId}_{$flight->event}";
     	                    $cacheField = date('Y_m_d');
-    	                    $redis->hSet($cacheKey, $cacheField, 0);
-    	                    $redis->expire($cacheKey, $date->frequency_cap_time * 60);
+    	                    $redis->hSet($cacheKey, $cacheField, 1);
+    	                    if ($date->frequency_cap_time > 0) {
+    	                    	$redis->expire($cacheKey, $date->frequency_cap_time * 60);
+    	                    } else {
+    	                    	$redis->expire($cacheKey, 2);
+    	                    }
         				}
         				
         				if ($todayCapped >= ($date->frequency_cap-1)) {
