@@ -79,18 +79,18 @@ function showPopupAdYomedia_{!! $data['zid'] !!}(s) {
         return false;
     }
 
-    a_{!! $data['zid'] !!}.style.cssText = "display: block; opacity: 0.45; overflow: hidden; position: relative; z-index: 99999; width: 100%; background: transparent; visibility: hidden;";
+    a_{!! $data['zid'] !!}.style.cssText = "display: block; opacity: 0.45; overflow: hidden; position: relative; z-index: 996; width: 100%; background: transparent; visibility: hidden;";
     var previousElement = a_{!! $data['zid'] !!}.previousElementSibling;
     var nextElement = a_{!! $data['zid'] !!}.nextElementSibling;
 
     if (previousElement) {
         previousElement.style.position = 'relative';
-        previousElement.style.zIndex = 990;
+        previousElement.style.zIndex = 998;
     }
 
     if (nextElement) {
         nextElement.style.position = 'relative';
-        nextElement.style.zIndex = 990;
+        nextElement.style.zIndex = 998;
     }
 
     var swdWidth = screen.width;
