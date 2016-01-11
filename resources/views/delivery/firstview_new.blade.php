@@ -6,6 +6,9 @@ $width = $data['ad']->width;
 $height = $data['ad']->height;
 $destination_url = $data['ad']->destination_url;
 $btn_close = STATIC_URL. 'public/images/close_button.png';
+if (!empty($data['ad']->destination_url)) {
+    $data['ad']->destination_url = trim(str_replace('[timestamp]', time(), $data['ad']->destination_url));
+}
 $ovr = '';
 if (!empty($data['ovr'])) {
     $ovr = '&ovr=1';

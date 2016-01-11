@@ -186,7 +186,7 @@ class VAST extends Eloquent {
                 $this->wrapper_tag        = AD_SERVER_FILE . 'get-vast-tag?vast_tag=' . $vastTagUrl . '&skip=' . $ad->skipads . '&aid=' . $ad->id;
             }
             $this->bitrate                = $ad->video_bitrate;
-            $this->url                    = $ad->destination_url;
+            $this->url                    = $this->replaceParam($ad->destination_url);
             $this->ad_format              = $ad->ad_format_id;
             $this->referrer               = $referrer;
             $this->third_party_tracking   = $ad->third_party_tracking;

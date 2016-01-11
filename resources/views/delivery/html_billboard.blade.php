@@ -9,6 +9,9 @@
     $htmlSource = str_replace('[yomedia_maincontain]', $eid, $htmlSource);
     $htmlSource = str_replace('[yomedia_zone_id]', $data['zid'], $htmlSource);
     $displayType = isset($data['ad']->display_type) ? $data['ad']->display_type : '';
+    if (!empty($data['ad']->destination_url)) {
+        $data['ad']->destination_url = trim(str_replace('[timestamp]', time(), $data['ad']->destination_url));
+    }
     if( !empty( $data['ad']->third_impression_track ) ){
         $thirdImpressionTrackArr = explode("\n", $data['ad']->third_impression_track);
     }else{

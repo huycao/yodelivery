@@ -7,6 +7,9 @@
     $preExpandWidth = !empty($data['ad']->width_after) ? $data['ad']->width_after : $data['ad']->width;
     $preExpandHeight = !empty($data['ad']->height_after) ? $data['ad']->height_after : $data['ad']->height;
 
+    if (!empty($data['ad']->destination_url)) {
+        $data['ad']->destination_url = trim(str_replace('[timestamp]', time(), $data['ad']->destination_url));
+    }
     if( !empty( $data['ad']->third_impression_track ) ){
         $thirdImpressionTrackArr = explode("\n", $data['ad']->third_impression_track);
     }else{

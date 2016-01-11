@@ -9,6 +9,7 @@ if(isset($data['ad'])){
     $width = $data['ad']->width;
     $height = $data['ad']->height;
     if($data['ad']->destination_url!=""){
+        $data['ad']->destination_url = trim(str_replace('[timestamp]', time(), $data['ad']->destination_url));
         $destination_url = $data['ad']->destination_url;
     }
 }
@@ -17,7 +18,7 @@ if(isset($data['ad'])){
     function showYoMediaPopupAd_{!! $data['zid'] !!}(s) {
         if(avlInteractModule.isMobile() == false) return false;
         var c_{!! $data['zid'] !!} = avlInteractModule.getCookie('Yomedia_fv_{!! $data['zid'] !!}');
-        if (c_{!! $data['zid'] !!} != "1") {
+        if (1) {
             var a_{!! $data['zid'] !!} = document.getElementById("Yomedia_Full_Banner_{!! $data['zid'] !!}"), b_{!! $data['zid'] !!} = document.getElementById("backgroundId");
             void 0 == a_{!! $data['zid'] !!} && (a_{!! $data['zid'] !!} = domManipulate.create('div', 'Yomedia_Full_Banner_{!! $data['zid'] !!}', 'border: 0px none; margin: 0px; padding: 0px; text-align: left; overflow: visible; position: fixed; z-index: 100000; top: 0px; left: 0px;', ''), document.body.insertBefore(a_{!! $data['zid'] !!}, document.body.childNodes[0]));
             void 0 == b_{!! $data['zid'] !!} && (b_{!! $data['zid'] !!} = domManipulate.create('div', 'backgroundId_{!! $data['zid'] !!}', 'border: 0px none; margin: 0px; padding: 0px; text-align: left; overflow: visible; position: fixed; z-index: 9999; top: 0px; left: 0px;', ''),
@@ -51,7 +52,7 @@ if(isset($data['ad'])){
             document.getElementById("backgroundId_{!! $data['zid'] !!}").style.width = "100%";
             document.getElementById("backgroundId_{!! $data['zid'] !!}").style.height = "100%";
             document.getElementById("backgroundId_{!! $data['zid'] !!}").style.backgroundColor = 'rgba(0,0,0,0.8)';
-            document.getElementById("Yomedia_first_view_banner_{!! $data['zid'] !!}").innerHTML = '<div id = "banner-close_{!! $data['zid'] !!}" onclick = "closeYoMediaPopupAd_{!! $data['zid'] !!}()" style = "width: 40px;height: 40px;background-image: url('+avlProtocal + avlDomain+'/public/close_button.png);position: absolute;top: 0;right: 0;z-index: 50000;"></div></div><a href=""<img src = "{!! $source !!}" width="{!! $width !!}" height="{!! $height !!}"/>';
+            document.getElementById("Yomedia_first_view_banner_{!! $data['zid'] !!}").innerHTML = '<div id = "banner-close_{!! $data['zid'] !!}" onclick = "closeYoMediaPopupAd_{!! $data['zid'] !!}()" style = "width: 40px;height: 40px;background-image: url('+avlProtocal + avlDomain+'/public/close_button.png);position: absolute;top: 0;right: 0;z-index: 50000;"></div></div><a href=""><img src = "{!! $source !!}" width="{!! $width !!}" height="{!! $height !!}"/></a>';
             <?php $data['effect'] = 'Firstview';?>
     		@include('ga_campaign')
             document.getElementById("banner-close_{!! $data['zid'] !!}").setAttribute('onclick', 'closeYoMediaPopupAd_{!! $data['zid'] !!}()');

@@ -626,7 +626,7 @@ class DeliveryController extends Controller
                     }
                     
                     if(strpos($xml_file, '[yomedia_click_url]') !== FALSE){
-                       $url = '<![CDATA['.urlTracking('click', $ad->id, $flightWebsiteID, $publisherAdZoneID, $checksum, $ad->destination_url, $isOverReport ).']]>';
+                       $url = '<![CDATA['.urlTracking('click', $ad->id, $flightWebsiteID, $publisherAdZoneID, $checksum, $this->replaceParam($ad->destination_url), $isOverReport ).']]>';
                        $xml_file = str_replace('[yomedia_click_url]', $url, $xml_file); 
                     }
                     

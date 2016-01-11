@@ -26,6 +26,9 @@
         $ovr = '&ovr=1';
     }
     $trackUrl = AD_SERVER_FILE;
+    if (!empty($data['ad']->destination_url)) {
+        $data['ad']->destination_url = trim(str_replace('[timestamp]', time(), $data['ad']->destination_url));
+    }
     $destinationUrlEnCode = urlencode($data['ad']->destination_url);
     $impressionUrl = TRACKER_URL . "track?evt=impression&aid={$data['aid']}&fpid={$data['fpid']}&zid={$data['zid']}&rt=1&cs={$data['checksum']}{$ovr}";
     $clickTag = "{$trackUrl}track?evt=click&aid={$data['aid']}&fpid={$data['fpid']}&zid={$data['zid']}&rt=1&to={$destinationUrlEnCode}&cs={$data['checksum']}{$ovr}";

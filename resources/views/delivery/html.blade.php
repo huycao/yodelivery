@@ -21,6 +21,9 @@
     }else{
         $thirdClickTrackArr = [];
     }
+    if (!empty($data['ad']->destination_url)) {
+        $data['ad']->destination_url = trim(str_replace('[timestamp]', time(), $data['ad']->destination_url));
+    }
 
     $trackUrl = AD_SERVER_FILE;
     $destinationUrl = $data['ad']->destination_url;
