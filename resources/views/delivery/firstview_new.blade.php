@@ -46,7 +46,7 @@ if ( !empty( $data['ad']->third_click_track ) ){
         content += '<div id="yomedia-banner-bg"></div>';
         content += '<div id="yomedia-bg-{!! $data['zid'] !!}">';
         content += '<a onclick="clickTrackingYomedia_{!! $data['zid'] !!}();">';
-        content += '<img id="yomedia-inpage-banner-h" style="margin: 0px auto;display: block; width: {!! $width !!}px; height: {!! $height !!}px;" src="http://demo.yomedia.vn/2015/12/maggi-wap-firstview-ve-tranh/data/416x320.gif">';
+        content += '<img id="yomedia-inpage-banner-h" style="margin: 0px auto;display: block; width: {!! $width !!}px; height: {!! $height !!}px;" src="{!! $source !!}">';
         content += '</a>';
         document.body.style.overflow = 'hidden';
         wrapper_{!! $data['zid'] !!}.innerHTML = content;
