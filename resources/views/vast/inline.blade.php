@@ -34,7 +34,7 @@ if(!isset($_GET['v']) || $_GET['v'] != 3){
                                     @endif
                                 </VideoClicks>
                                 <MediaFiles>
-                                    <MediaFile bitrate="{!! $ad->bitrate !!}" delivery="progressive" height="{!! $ad->height !!}" maintainAspectRatio="true" scalable="true" type="{!! $ad->creativeType !!}" width="{!! $ad->width !!}" minSuggestedDuration="{!! $ad->durationText !!}"><![CDATA[{!! $ad->file !!}]]></MediaFile>
+                                    <MediaFile bitrate="{!! $ad->bitrate !!}" delivery="progressive" height="{!! $ad->height !!}" maintainAspectRatio="true" scalable="true" type="{!! $ad->creativeType !!}" width="{!! $ad->width !!}" minSuggestedDuration="{!! $ad->durationText !!}" @if(!empty($ad->vpaid)) apiFramework="VPAID" @endif><![CDATA[{!! $ad->file !!}]]></MediaFile>
                                 </MediaFiles>
                             </Linear>
                         @else

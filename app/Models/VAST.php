@@ -108,11 +108,17 @@ class VAST extends Eloquent {
             case 'swf':
                 $creativeType = 'application/x-shockwave-flash';break;
             case 'png':
-                $creativeType = 'image/png';break;
+                $creativeType = 'image/png';
+                break;
             case 'jpg':
-                $creativeType = 'image/jpeg';break;
+                $creativeType = 'image/jpeg';
+                break;
             case 'gif':
-                $creativeType = 'image/gif';break;
+                $creativeType = 'image/gif';
+                break;
+            default:
+                $creativeType = 'application/x-shockwave-flash';
+                break;
         }
         return $creativeType;
     }
@@ -203,6 +209,7 @@ class VAST extends Eloquent {
                 $this->flight_name        = isset($campaignInfo['flight_name']) ? $campaignInfo['flight_name'] : '';
                 $this->category_name      = isset($campaignInfo['category_name']) ? $campaignInfo['category_name'] : '';
             }
+            $this->vpaid                  = !empty($ad->vpaid) ? $ad->vpaid : 0;
             
             return true;
         }
