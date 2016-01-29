@@ -477,7 +477,9 @@ function playVideoYomedia_{!! $data['zid'] !!}(type) {
                 border_h.style.visibility = "hidden";
             }
         } else {
-            lVideo.style.cssText = "min-height:0px;z-index:1;"
+            if (play_button_{!! $data['zid'] !!} == "yomedia-play-h-{!! $data['zid'] !!}") {
+                lVideo.style.cssText = "min-height:0px;z-index:1;";
+            }
         }
 
         if (typeof _yomediaAds_{!! $data['zid'] !!}.border_w != 'undefined' && _yomediaAds_{!! $data['zid'] !!}.border_w != '') {
@@ -493,7 +495,9 @@ function playVideoYomedia_{!! $data['zid'] !!}(type) {
                 border_w.style.visibility = "hidden";
             }
         } else {
-            lVideo.style.cssText = "min-height:0px;z-index:1;"
+            if (play_button_{!! $data['zid'] !!} == "yomedia-play-w-{!! $data['zid'] !!}") {
+                lVideo.style.cssText = "min-height:0px;z-index:1;";
+            }
         }
 
         innerVideo_{!! $data['zid'] !!}.appendChild(lVideo);
