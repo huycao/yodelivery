@@ -507,9 +507,10 @@ function playVideoYomedia_{!! $data['zid'] !!}(type) {
         lVideo.muted = _yomediaAds_{!! $data['zid'] !!}.muted;
         //lVideo.controls = true;
         lVideo.oncanplay = function() {
+            lVideo.style.visibility = "visible";
+            lVideo.play();
             play.style.visibility = "hidden";
         };
-        lVideo.play();
     } else {
         var lVideo = document.getElementById("yomedia-video-{!! $data['zid'] !!}");
     }
