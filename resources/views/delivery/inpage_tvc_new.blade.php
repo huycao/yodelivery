@@ -476,6 +476,7 @@ function playVideoYomedia_{!! $data['zid'] !!}(type) {
             } else {
                 border_h.style.visibility = "hidden";
             }
+            border_h.addEventListener("click", clickVideoYomedia_{!! $data['zid'] !!});
         } else {
             if (play_button_{!! $data['zid'] !!} == "yomedia-play-h-{!! $data['zid'] !!}") {
                 lVideo.style.cssText = "min-height:0px;z-index:1;";
@@ -494,6 +495,7 @@ function playVideoYomedia_{!! $data['zid'] !!}(type) {
             } else {
                 border_w.style.visibility = "hidden";
             }
+            border_w.addEventListener("click", clickVideoYomedia_{!! $data['zid'] !!});
         } else {
             if (play_button_{!! $data['zid'] !!} == "yomedia-play-w-{!! $data['zid'] !!}") {
                 lVideo.style.cssText = "min-height:0px;z-index:1;";
@@ -508,9 +510,9 @@ function playVideoYomedia_{!! $data['zid'] !!}(type) {
         //lVideo.controls = true;
         lVideo.oncanplay = function() {
             lVideo.style.visibility = "visible";
-            lVideo.play();
             play.style.visibility = "hidden";
         };
+        lVideo.play();
     } else {
         var lVideo = document.getElementById("yomedia-video-{!! $data['zid'] !!}");
     }
