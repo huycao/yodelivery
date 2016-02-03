@@ -530,7 +530,7 @@ function clickVideoYomedia_{!! $data['zid'] !!}() {
     if (lVideo.paused == true) {
         lVideo.play();
     } else {
-        lVideo.pause();
+        //lVideo.pause();
         clickTrackingYomedia_{!! $data['zid'] !!}();
     }
 }
