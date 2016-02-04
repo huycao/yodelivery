@@ -182,7 +182,6 @@ class VAST extends Eloquent {
             $this->type_vast              = $ad->video_type_vast;
             //$this->vast_version           = $ad->vast_version;
             $this->skipads                = $ad->skipads;
-            $this->file                   = $ad->source_url;
             $this->title                  = $ad->name;
             
             if (empty($ad->vast_include)) {
@@ -209,7 +208,17 @@ class VAST extends Eloquent {
                 $this->flight_name        = isset($campaignInfo['flight_name']) ? $campaignInfo['flight_name'] : '';
                 $this->category_name      = isset($campaignInfo['category_name']) ? $campaignInfo['category_name'] : '';
             }
-            $this->vpaid                  = !empty($ad->vpaid) ? $ad->vpaid : 0;
+            if (!empty($ad->vpaid)) {
+                $this->vpaid                  = $ad->vpaid;
+                $params['clickTag'] = urlTracking('click', $this->id, $this->flight_publisher_id, $this->publisher_ad_zone_id, $this->checksum, $this->url, $this->ovr, $this->referrer);
+                $url_banner = urlencode($ad->source_url2 . '?' . http_build_query($params));
+                $url = urlencode($this->url);
+                $this->file = "{$ad->source_url}?url={$url_banner}&addonClick={$url}&addonPath=";
+
+            } else {
+                $this->vpaid = 0;                
+                $this->file = $ad->source_url;
+            }
             
             return true;
         }
