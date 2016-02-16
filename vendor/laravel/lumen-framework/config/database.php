@@ -94,12 +94,21 @@ return [
         
         'mongodb' => array(
             'driver'   => 'mongodb',
-            'host'     =>  array('mongo1.yomedia.vn', 'mongo2.yomedia.vn'),
+            'host'     => '127.0.0.1',
             'port'     => '27017',
             'username' => '',
             'password' => '',
             'database' => 'yomedia',
-            'options'  =>   array('replicaSet' => 'rs0')
+            //'options'  =>   array('replicaSet' => 'rs0')
+        ),
+
+        'mongodb1' => array(
+            'driver'   => 'mongodb',
+            'host'     => '127.0.0.1',
+            'port'     => '27018',
+            'username' => '',
+            'password' => '',
+            'database' => 'yomedia',
         ),
 
     ],
