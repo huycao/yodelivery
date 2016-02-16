@@ -311,6 +311,12 @@ function showBannerYomedia_{!! $data['zid'] !!}() {
                     video_{!! $data['zid'] !!}.style.visibility = 'hidden';
                     video_{!! $data['zid'] !!}.style.opacity = '0';
                 }
+                if (document.getElementById('yomedia-border-w-{!! $data['zid'] !!}')) {
+                    document.getElementById('yomedia-border-w-{!! $data['zid'] !!}').style.visibility = 'hidden';
+                }
+                if (document.getElementById('yomedia-border-h-{!! $data['zid'] !!}')) {
+                    document.getElementById('yomedia-border-h-{!! $data['zid'] !!}').style.visibility = 'hidden';
+                }
             }
         }
 
@@ -544,6 +550,14 @@ function endedYomedia_{!! $data['zid'] !!}() {
     play.style.visibility = "visible";
     var lVideo = document.getElementById("yomedia-video-{!! $data['zid'] !!}");
     lVideo.parentElement.removeChild(lVideo);
+    var border_h = document.getElementById("yomedia-border-h-{!! $data['zid'] !!}");
+    if (border_h) {
+        border_h.parentElement.removeChild(border_h);
+    }
+    var border_w = document.getElementById("yomedia-border-w-{!! $data['zid'] !!}");
+    if (border_w) {
+        border_w.parentElement.removeChild(border_w);
+    }
 }
 
 var duration;
