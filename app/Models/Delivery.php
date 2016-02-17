@@ -682,10 +682,15 @@ class Delivery extends Eloquent{
         $type = '';
         if ($detect->isMobile() || $detect->isTablet()) {
             $type = 'mobile';
+            if ($detect->isiOS()) {
+            	 $type = 'mobile_ios';
+            }
+            if ($detect->isAndroidOS()) {
+            	 $type = 'mobile_android';
+            }
         } else {
             $type = 'pc';
         }
-        
         if (!empty($arrPlatform) && in_array($type, $arrPlatform)) {
             return TRUE;
         } else {
