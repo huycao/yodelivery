@@ -34,6 +34,8 @@ avlInteractModule.innerHTMLAds('{!! $data['zid'] !!}', '{!! addslashes($htmlSour
 
 var imgW = 0, imgH = 0, fnext = 0;
 var play_button_{!! $data['zid'] !!} = "yomedia-play-h-{!! $data['zid'] !!}";
+var start_{!! $data['zid'] !!} = 0;
+var iOS_{!! $data['zid'] !!} = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
 function showPopupAdYomedia_{!! $data['zid'] !!}(s) {
     var a_{!! $data['zid'] !!} = document.getElementById('YomediaInpage_{!! $data['zid'] !!}');
 
@@ -156,6 +158,20 @@ function showPopupAdYomedia_{!! $data['zid'] !!}(s) {
 
     } else {
         domManipulate.getElid('YomediaInpage_{!! $data['zid'] !!}').style.display = 'none';
+    }
+    if (!iOS_{!! $data['zid'] !!}){
+        playVideoYomedia_{!! $data['zid'] !!}(play_button_{!! $data['zid'] !!});
+        var inpageYo = document.getElementById('YomediaInpage_{!! $data['zid'] !!}');
+        inpageYo.addEventListener("touchstart", videoStart_{!! $data['zid'] !!}, false);
+    }
+}
+
+function videoStart_{!! $data['zid'] !!}(){
+    var videoYo = document.getElementById('yomedia-video-{!! $data['zid'] !!}');
+    videoYo.play();
+    if (fnext == 0 && start_{!! $data['zid'] !!} == 0) {
+        startYomediaVideo_{!! $data['zid'] !!}();
+        start_{!! $data['zid'] !!} = 1;
     }
 }
 
@@ -518,11 +534,13 @@ function playVideoYomedia_{!! $data['zid'] !!}(type) {
             lVideo.style.visibility = "visible";
             play.style.visibility = "hidden";
         };
-        lVideo.play();
+        if (iOS_{!! $data['zid'] !!}){
+            lVideo.play();
+        }
     } else {
         var lVideo = document.getElementById("yomedia-video-{!! $data['zid'] !!}");
     }
-    if (fnext == 0) {
+    if (iOS_{!! $data['zid'] !!} && fnext == 0) {
         startYomediaVideo_{!! $data['zid'] !!}();
     }
 
