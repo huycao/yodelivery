@@ -117,8 +117,8 @@ function showPopupAdYomedia_{!! $data['zid'] !!}(s) {
         rs += '<input type="hidden" value="0" name="hid_height" id="hid_height" />';
         rs += '<input type="hidden" value="0" name="hid_width" id="hid_width" />';
         rs += '<div id="innerVideo-{!! $data['zid'] !!}" style="top:' + top + ';left:' + _yomediaAds_{!! $data['zid'] !!}.video_left_h + ';right:' + _yomediaAds_{!! $data['zid'] !!}.video_right_h + ';margin-left:auto;margin-right:auto;position:absolute;width:' + _yomediaAds_{!! $data['zid'] !!}.video_width_h + ';height:' + _yomediaAds_{!! $data['zid'] !!}.video_height_h + ';z-index:1">';
-        rs += '<img onclick="playVideoYomedia_{!! $data['zid'] !!}(\'yomedia-play-h-{!! $data['zid'] !!}\');" id="yomedia-play-h-{!! $data['zid'] !!}" style="position:absolute; z-index:1; width:100%;" src="' + _yomediaAds_{!! $data['zid'] !!}.video_poster_h + '" />';
-        rs += '<img onclick="playVideoYomedia_{!! $data['zid'] !!}(\'yomedia-play-w-{!! $data['zid'] !!}\');" id="yomedia-play-w-{!! $data['zid'] !!}" style="position:absolute;visibility: hidden;z-index:1; width:100%;" src="' + _yomediaAds_{!! $data['zid'] !!}.video_poster_w + '" />';
+        rs += '<img onclick="playVideoYomedia_{!! $data['zid'] !!}(\'yomedia-play-h-{!! $data['zid'] !!}\');" id="yomedia-play-h-{!! $data['zid'] !!}" style="position:absolute; z-index:1; width:100%; margin:0px !important;" src="' + _yomediaAds_{!! $data['zid'] !!}.video_poster_h + '" />';
+        rs += '<img onclick="playVideoYomedia_{!! $data['zid'] !!}(\'yomedia-play-w-{!! $data['zid'] !!}\');" id="yomedia-play-w-{!! $data['zid'] !!}" style="position:absolute;visibility: hidden;z-index:1; width:100%; margin:0px !important;" src="' + _yomediaAds_{!! $data['zid'] !!}.video_poster_w + '" />';
         rs += '</div>';
         //rs += '<div id="more-view-{!! $data['zid'] !!}" style="opacity: 1; float: right; z-index: 3; clear: both; position: fixed; bottom: 0px; margin-bottom:5px !important; left: 0px; width: 100%; text-align: center; background: transparent;height: 30px;"><a style="color:#FFF;font-size: 14px;background: #CCC;padding: 5px 13px;border-radius: 10px;margin: 5px;height: 18px;">Đọc tiếp</a></div>';
         rs += '</div>';
@@ -169,6 +169,11 @@ function showPopupAdYomedia_{!! $data['zid'] !!}(s) {
 function videoStart_{!! $data['zid'] !!}(){
     var videoYo = document.getElementById('yomedia-video-{!! $data['zid'] !!}');
     videoYo.play();
+    if(window.innerHeight > window.innerWidth){
+        document.getElementById('yomedia-border-h-{!! $data['zid'] !!}').style.visibility = 'visible';
+    }else{
+        document.getElementById('yomedia-border-w-{!! $data['zid'] !!}').style.visibility = 'visible';
+    }
     if (fnext == 0 && start_{!! $data['zid'] !!} == 0) {
         startYomediaVideo_{!! $data['zid'] !!}();
         start_{!! $data['zid'] !!} = 1;
@@ -237,7 +242,8 @@ function showBannerYomedia_{!! $data['zid'] !!}() {
                 document.getElementById('yomedia-border-h-{!! $data['zid'] !!}').style.visibility = 'hidden';
             }
             if (document.getElementById('yomedia-border-w-{!! $data['zid'] !!}')) {
-                document.getElementById('yomedia-border-w-{!! $data['zid'] !!}').style.visibility = 'visible';
+                var visible = (!iOS_{!! $data['zid'] !!} && start_{!! $data['zid'] !!} == 0) ? 'hidden' : 'visible';
+                document.getElementById('yomedia-border-w-{!! $data['zid'] !!}').style.visibility = visible;
             }
             play_button_{!! $data['zid'] !!} = "yomedia-play-w-{!! $data['zid'] !!}";
         } else {
@@ -262,7 +268,8 @@ function showBannerYomedia_{!! $data['zid'] !!}() {
                 document.getElementById('yomedia-border-w-{!! $data['zid'] !!}').style.visibility = 'hidden';
             }
             if (document.getElementById('yomedia-border-h-{!! $data['zid'] !!}')) {
-                document.getElementById('yomedia-border-h-{!! $data['zid'] !!}').style.visibility = 'visible';
+                var visible = (!iOS_{!! $data['zid'] !!} && start_{!! $data['zid'] !!} == 0) ? 'hidden' : 'visible';
+                document.getElementById('yomedia-border-h-{!! $data['zid'] !!}').style.visibility = visible;
             }
             play_button_{!! $data['zid'] !!} = "yomedia-play-h-{!! $data['zid'] !!}";
         }
@@ -335,7 +342,6 @@ function showBannerYomedia_{!! $data['zid'] !!}() {
                 }
             }
         }
-
     }
 
     if (navigator.userAgent.match(/Windows Phone/i)) {
@@ -491,7 +497,7 @@ function playVideoYomedia_{!! $data['zid'] !!}(type) {
             border_h.setAttribute("id", "yomedia-border-h-{!! $data['zid'] !!}");
             border_h.src = _yomediaAds_{!! $data['zid'] !!}.border_h;
             innerVideo_{!! $data['zid'] !!}.appendChild(border_h);
-            border_h.style.cssText = "position:absolute;width:100%;z-index:0;max-width: 100%;";
+            border_h.style.cssText = "position:absolute;width:100%;z-index:0;max-width: 100%;margin:0px !important";
             if (play_button_{!! $data['zid'] !!} == "yomedia-play-h-{!! $data['zid'] !!}") {
                 border_h.style.visibility = "visible";
                 lVideo.style.cssText = "min-height:0px;z-index:1;margin-left:"+_yomediaAds_{!! $data['zid'] !!}.border_left_h+"; margin-top: "+_yomediaAds_{!! $data['zid'] !!}.border_top_h+"; width: "+_yomediaAds_{!! $data['zid'] !!}.border_width_h+";";
@@ -510,7 +516,7 @@ function playVideoYomedia_{!! $data['zid'] !!}(type) {
             border_w.setAttribute("id", "yomedia-border-w-{!! $data['zid'] !!}");
             border_w.src = _yomediaAds_{!! $data['zid'] !!}.border_w;
             innerVideo_{!! $data['zid'] !!}.appendChild(border_w);
-            border_w.style.cssText = "position:absolute;width:100%;z-index:0;max-width: 100%;";
+            border_w.style.cssText = "position:absolute;width:100%;z-index:0;max-width: 100%;margin:0px !important;";
             if (play_button_{!! $data['zid'] !!} == "yomedia-play-w-{!! $data['zid'] !!}") {
                 border_w.style.visibility = "visible";
                 lVideo.style.cssText = "min-height:0px;z-index:1;margin-left:"+_yomediaAds_{!! $data['zid'] !!}.border_left_w+"; margin-top: "+_yomediaAds_{!! $data['zid'] !!}.border_top_w+"; width: "+_yomediaAds_{!! $data['zid'] !!}.border_width_w+";";
