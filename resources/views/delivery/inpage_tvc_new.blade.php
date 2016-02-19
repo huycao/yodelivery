@@ -139,8 +139,13 @@ function showPopupAdYomedia_{!! $data['zid'] !!}(s) {
             a_{!! $data['zid'] !!}.style.height = screen.height;
             document.getElementById("YomediaInpageContent_{!! $data['zid'] !!}").style.background = "transparent";
 
-            document.addEventListener("touchmove", showBannerYomedia_{!! $data['zid'] !!}, false);
-            document.addEventListener("scroll", showBannerYomedia_{!! $data['zid'] !!}, false);
+            if (window!=window.top) {
+                parent.document.addEventListener("touchmove", showBannerYomedia_{!! $data['zid'] !!}, false);
+                parent.document.addEventListener("scroll", showBannerYomedia_{!! $data['zid'] !!}, false);
+            }else{
+                document.addEventListener("touchmove", showBannerYomedia_{!! $data['zid'] !!}, false);
+                document.addEventListener("scroll", showBannerYomedia_{!! $data['zid'] !!}, false);
+            }  
         }
 
         avlHelperModule.embedTracking("{!!  TRACKER_URL  !!}track?evt=impression&aid={!! $data['aid'] !!}&fpid={!! $data['fpid'] !!}&zid={!! $data['zid'] !!}&rt=1&cs={!! $data['checksum'] !!}{!! $ovr !!}");
@@ -350,7 +355,11 @@ function showBannerYomedia_{!! $data['zid'] !!}() {
 
     var supportsOrientationChange = "onorientationchange" in window,
         orientationEvent = supportsOrientationChange ? "orientationchange" : "resize";
-    document.addEventListener('orientationchange', orCh());
+    if (window!=window.top) {
+        parent.document.addEventListener('orientationchange', orCh());
+    }else{
+        document.addEventListener('orientationchange', orCh());
+    }
 }
 
 document.onreadystatechange = function () {
