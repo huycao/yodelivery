@@ -136,7 +136,7 @@ function showPopupAdYomedia_{!! $data['zid'] !!}(s) {
         image.onload = function() {
             imgW = this.width;
             imgH = this.height;
-            a_{!! $data['zid'] !!}.style.height = '1px';
+            a_{!! $data['zid'] !!}.style.height = screen.height;
             document.getElementById("YomediaInpageContent_{!! $data['zid'] !!}").style.background = "transparent";
 
             document.addEventListener("touchmove", showBannerYomedia_{!! $data['zid'] !!}, false);
