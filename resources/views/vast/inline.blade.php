@@ -1,7 +1,4 @@
 <?php
-if($ad->skipads == "" || $ad->skipads == 0){
-    $ad->skipads = $ad->duration;
-}
 if(!isset($_GET['v']) || $_GET['v'] != 3){
     $ad->vast_version = 2;
 }else{
