@@ -30,7 +30,7 @@ class RawTrackingAudience{
      */
     public function incrementUpsert($table, $column, $amount = 1, array $where = array(), array $extra = array())
     {   
-        $db = \DB::connection('mongodb')->collection($table);
+        $db = \DB::connection('mongodb3')->collection($table);
         $query = array('$inc' => array($column => $amount));
 
         if ( ! empty($extra))

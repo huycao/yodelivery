@@ -111,6 +111,24 @@ return [
             'database' => 'yomedia',
         ),
 
+        'mongodb2' => array(
+            'driver'   => 'mongodb',
+            'host'     => '127.0.0.1',
+            'port'     => '27019',
+            'username' => '',
+            'password' => '',
+            'database' => 'yomedia',
+        ),
+
+        'mongodb3' => array(
+            'driver'   => 'mongodb',
+            'host'     => '127.0.0.1',
+            'port'     => '27020',
+            'username' => '',
+            'password' => '',
+            'database' => 'yomedia',
+        ),
+
     ],
 
     /*

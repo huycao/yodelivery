@@ -26,7 +26,7 @@ class RawTrackingConversion extends Moloquent {
         if ('' == $timeTo) {
             $timeTo = date('Y-m-d 23:59:59');
         }
-        return \DB::connection('mongodb')->collection($this->table)
+        return \DB::connection('mongodb2')->collection($this->table)
                                          ->where('created', '>=', $timeFrom)
                                          ->where('created', '<=', $timeTo)
                                          ->get();
