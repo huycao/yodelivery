@@ -813,9 +813,10 @@ class DeliveryController extends Controller
 			if($flightWebsites){								
 				//sort available flights base on priority and retargeting
 				//TO DO retargeting
-				$flightWebsites = $deliveryModel->sortAvailableFlightWebsites($flightWebsites);
+				
 				//lấy ad từ list thỏa điều kiện để trả về
 				$deliveryInfo = $deliveryModel->getFullFlightInfo($flightWebsites, $adZone->publisher_site_id, $adZone->ad_format_id);
+				$flightWebsites = $deliveryModel->sortAvailableFlightWebsites($flightWebsites, $deliveryInfo);
 				$redis = new RedisBaseModel(env('REDIS_HOST', '127.0.0.1'), env('REDIS_PORT_6', '6379'), false);
 				foreach ($flightWebsites as $k => $flightWebsite) {
 					if(!empty($flightWebsite) && !empty($deliveryInfo['flightDates'][$flightWebsite->flight_id]) && !empty($deliveryInfo['flights'][$flightWebsite->flight_id])){
