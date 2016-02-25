@@ -682,7 +682,7 @@ if ( ! function_exists('urlTracking'))
         if($referrer){
             $params['ref'] = $referrer;
         }
-        return TRACKER_URL(TRACKER_URL . "track?") . http_build_query($params);
+        return URL::to(TRACKER_URL . "track?") . http_build_query($params);
     }
 }
 
