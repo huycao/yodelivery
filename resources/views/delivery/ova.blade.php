@@ -15,7 +15,7 @@
         "pauseOnClickThrough": false,
         "skipAd": {
             "enabled": "true",
-            @if(!empty($ad->source_url2))
+            @if(!empty($ad->source_url2) && empty($ad->vpaid))
             "image": "{!! $ad->source_url2 !!}",
             "width": {!! $ad->width_2 !!},
             "height": {!! $ad->height_2 !!},
