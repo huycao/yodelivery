@@ -11,7 +11,7 @@ var elHeight{!! $data['zid'] !!} = {!! $data['eh'] or ''  !!};
 var InlineVideo{!! $data['zid'] !!} = new Array();
 
 function prerollComplete() {
-    setTimeout("avlInteractModule.removeVideoInline(playerId{!! $data['zid'] !!}, el{!! $data['zid'] !!})", 2000);
+    setTimeout("avlInteractModule.removeVideoInline(playerId{!! $data['zid'] !!}, el{!! $data['zid'] !!})", 500);
 }
 
 function onAdSchedulingComplete(ads) {
