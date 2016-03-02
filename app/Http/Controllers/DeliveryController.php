@@ -11,6 +11,7 @@ use Input;
 use Cookie;
 use App\Models\RawTrackingAudience;
 use App\Models\RawTrackingAdRequest;
+use App\Models\DeliveryMobileApp;
 
 class DeliveryController extends Controller
 {
@@ -789,10 +790,14 @@ class DeliveryController extends Controller
 		$requestType     = Input::get('rt', Delivery::REQUEST_TYPE_AD);
 		$flightWebsiteID = Input::get('fpid', '');
 		$zoneID          = Input::get('zid', 0);
+		$device_type     = Input::get('device_type', '');
+		$operating_system= Input::get('operating_system', '');
+		$user_agent      = Input::get('user_agent', '');
+		$ip_address      = Input::get('ip_address', '');
 		
 		$data            = Input::all();
 		$trackingModel   = new Tracking;
-		$deliveryModel   = new Delivery;
+		$deliveryModel   = new DeliveryMobileApp;
 		$isOverReport = $data['ovr'] = false;
 		$showBanner = showBanner();
 		if ($showBanner !== FALSE) {
@@ -825,11 +830,11 @@ class DeliveryController extends Controller
 						$flight      = $deliveryInfo['flights'][$flightWebsite->flight_id];
 						$ad          = $deliveryInfo['ads'][$flight->ad_id];
 						$arrPlatform = json_decode($ad->platform);
-						if (!empty($arrPlatform) && in_array('mobile_app', $arrPlatform) || isLocal()) {
+						if ($deliveryModel->checkPlatform($ad, $operating_system) === TRUE || isLocal()) {
 							$checkFlightDate = $deliveryModel->checkFlightDate($flightDates, $flight);
 							//flight date ok
 							if($checkFlightDate){
-								$deliveryStatus = $deliveryModel->deliveryAd($ad, $flightWebsite, $flight, $flightDates);
+								$deliveryStatus = $deliveryModel->deliveryAd($ad, $flightWebsite, $flight, $flightDates, $ip_address, $device_type, $operating_system, $user_agent);
 								if($deliveryStatus == Delivery::DELIVERY_STATUS_OK || $deliveryStatus == Delivery::DELIVERY_STATUS_OVER_REPORT){
 								    //Check retargeting
 						        	if (!empty($flight->audience)) {
@@ -881,16 +886,25 @@ class DeliveryController extends Controller
 		} elseif($responseType == Delivery::RESPONSE_TYPE_ADS_SUCCESS){
 			(new RawTrackingSummary())->addSummary('ads_request', $data['fpid'], $adZone->id, $adZone->ad_format_id, $flightWebsite->flight_id, $flightWebsite->id, $flight->ad_id, $flight->campaign_id, $flightWebsite->publisher_base_cost, $isOverReport);
 			if(!empty($serveAd)){
-				pr($serveAd);
+				$responseData['id'] = strval($serveAd->id);
 				$responseData['w'] = intval($serveAd->width);
 				$responseData['h'] = intval($serveAd->height);
-				$responseData['mime'] = !empty($serveAd->mime) ? $serveAd->mime : '';
+				$responseData['mime'] = '';
+				
 				if ($serveAd->ad_type === 'html') {
 					$responseData['adm'] = urlencode($serveAd->html_source);
+					$responseData['mime'] = 'text/html';
 				} else {
 					$responseData['adm'] = urlencode($serveAd->source_url);
+					$responseData['mime'] = getMime($serveAd->source_url);
 				}
 				$responseData['pos'] = !empty($serveAd->position) ? $serveAd->position : '';
+				$frequency = $deliveryModel->frequencyCapping($flightDates);
+
+	            if ($frequency) {
+	            	$responseData['freq_value'] = intval($frequency['frequency_cap']);
+	            	$responseData['freq_time'] = intval($frequency['frequency_cap_time']);
+	            }
 				$arrTrackingImpression = [];
 				$arrTrackingImpression[] = urlencode(urlTracking('impression', $data['aid'], $data['fpid'], $zoneID, '', '', $data['ovr'], '') . '&plf=mobile_app');
 				if (!empty($serveAd->third_impression_track)) {
