@@ -155,6 +155,10 @@
     }
     
 @endif
+@if ('' != $data['ad']->fb_like)
+    avlHelperModule.embedFBLike('{!! $data['ad']->fb_like !!}', 0, 0, {!! $data['ad']->fb_margin_right !!}, {!! $data['ad']->fb_margin_bottom !!});
+@endif
+
 //Minimize popup
 function minYoMediaPopupAd_{!! $data['zid'] !!}() {
     var sPos = 'right-bottom';
@@ -171,7 +175,6 @@ function setYoMediaExpand_{!! $data['zid'] !!}() {
     avlInteractModule.rectExpand('{!! $wrapperAds !!}', 'ex', sPos, parseInt('{!! $preExpandWidth !!}'), parseInt('{!! $preExpandHeight !!}'), parseInt('{!! $expandWidth !!}'), parseInt('{!! $expandHeight !!}'));
 }
 
-
 function setYoMediaPre_{!! $data['zid'] !!}() {
     var sPos = 'right-bottom';
     avlInteractModule.rectExpand('{!! $wrapperAds !!}', 'pre', sPos, parseInt('{!! $preExpandWidth !!}'), parseInt('{!! $preExpandHeight !!}'), parseInt('{!! $expandWidth !!}'), parseInt('{!! $expandHeight !!}'), 50);
@@ -179,6 +182,22 @@ function setYoMediaPre_{!! $data['zid'] !!}() {
 
 function closeYoMediaPopupAd_{!! $data['zid'] !!}() {
     avlInteractModule.closeAd('{!! $wrapperAds !!}', parseInt('900000'), 'showYoMediaPopupAd_{!! $data['zid'] !!}');
+}
+
+function setYomediaFBLike_{!! $data['zid'] !!}(r, b, mr, mb) {
+    avlHelperModule.controlFBLike(r, b, mr, mb);
+}
+
+function showYomediaFBLike_{!! $data['zid'] !!}() {
+    avlHelperModule.showFBLike();
+}
+
+function removeYomediaFBLike_{!! $data['zid'] !!}() {
+    avlHelperModule.removeFBLike();
+}
+
+function hideYomediaFBLike_{!! $data['zid'] !!}() {
+    avlHelperModule.hideFBLike();
 }
 
 function clickTrackingYomedia_{!! $data['zid'] !!}() {
@@ -293,6 +312,5 @@ function fireEventYomedia_{!! $data['zid'] !!}(node, eventName) {
         node.fireEvent("on" + eventName, event);
     }
 }
-
 var fn_{!! $data['zid'] !!}='';
 addAnEventListener_{!! $data['zid'] !!}(window,'message',iFrameListener_{!! $data['zid'] !!});

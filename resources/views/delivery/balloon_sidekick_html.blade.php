@@ -104,7 +104,9 @@ var flashVar = "zid={!! $data['zid'] !!}";
 ?>
 	
 	avlInteractModule.innerHTMLAds('{!! $data['zid'] !!}', '{!! addslashes($htmlSource) !!}', '{!! $displayType !!}');
-    
+    @if ('' != $data['ad']->fb_like)
+        avlHelperModule.embedFBLike('{!! $data['ad']->fb_like !!}', 0, 0, {!! $data['ad']->fb_margin_right !!}, {!! $data['ad']->fb_margin_bottom !!});  
+    @endif
 
 //Minimize popup
 function minYoMediaPopupAd_{!! $data['zid'] !!}() {
@@ -155,6 +157,22 @@ function closeYoMediaExpand_{!! $data['zid'] !!}() {
     clearInterval(VwAnimateInterval);
     window.VwAnimateInterval = setInterval("reshowYoMediaExpand_{!! $data['zid'] !!}();",15);
     reshowYoMediaExpand_{!! $data['zid'] !!}();
+}
+
+function setYomediaFBLike_{!! $data['zid'] !!}(r, b, mr, mb) {
+    avlHelperModule.controlFBLike(r, b, mr, mb);
+}
+
+function showYomediaFBLike_{!! $data['zid'] !!}() {
+    avlHelperModule.showFBLike();
+}
+
+function removeYomediaFBLike_{!! $data['zid'] !!}() {
+    avlHelperModule.removeFBLike();
+}
+
+function hideYomediaFBLike_{!! $data['zid'] !!}() {
+    avlHelperModule.hideFBLike();
 }
 
 function impressionTrackingYomedia() {
@@ -277,8 +295,6 @@ function create(a) {
     for (c.innerHTML = a; c.firstChild;)b.appendChild(c.firstChild);
     return b
 }
-
-
 <?php
 $eventArr = [
     'start','firstQuartile','midpoint','thirdQuartile','complete'

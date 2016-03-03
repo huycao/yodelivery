@@ -282,6 +282,31 @@ var avlHelperModule  = new function(){
 			css.type = 'text/css';
 			css.href = varObj;
 			html_doc.appendChild(css);
+		},
+		embedFBLike: function(url, r, b, mr, mb){
+			document.write('<div id="fb-root"></div>');         
+    		document.write('<script>(function(d, s, id) { var js, fjs = d.getElementsByTagName(s)[0]; if (d.getElementById(id)) return; js = d.createElement(s); js.id = id; js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.5"; fjs.parentNode.insertBefore(js, fjs);}(document, "script", "facebook-jssdk"));</script>');
+    		document.write('<div class="fb-like" id="YoFbLike" data-href="' +url+ '" data-layout="button_count" data-action="like" data-show-faces="false" data-share="false" style="position: fixed; width: 120px !important; height: 20px; z-index: 2147483646; overflow:hidden;padding:0px; border:none;text-align:left; bottom: ' +b+ 'px; right: ' +r+ 'px; margin-right: ' +mr+ 'px; margin-bottom: ' +mb+ 'px;"></div>');
+		},
+		controlFBLike: function(r, b, mr, mb){
+			var fb = document.getElementById('YoFbLike');
+			fb.style.right = r + 'px';
+			fb.style.bottom = b + 'px';
+			fb.style.marginRight = mr + 'px';
+			fb.style.marginBottom = mb + 'px';
+		},
+		hideFBLike: function(){
+			var fb = document.getElementById('YoFbLike');
+			fb.style.width = '0px';
+			fb.style.height = '0px';
+		},
+		showFBLike: function(){
+			var fb = document.getElementById('YoFbLike');
+			fb.style.width = '120px';
+			fb.style.height = '20px';
+		},
+		removeFBLike: function(){
+			document.getElementById('YoFbLike').remove();
 		}
 	}
 
