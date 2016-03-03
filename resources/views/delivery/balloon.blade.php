@@ -155,14 +155,6 @@
     }
     
 @endif
-<?php
-    $fb_like = isset($data['ad']->fb_like) ? $data['ad']->fb_like : '';
-    $fb_margin_right = isset($data['ad']->fb_margin_right) ? $data['ad']->fb_margin_right : 0;
-    $fb_margin_bottom = isset($data['ad']->fb_margin_bottom) ? $data['ad']->fb_margin_bottom : 0;
-?>
-@if ('' != $fb_like)
-    avlHelperModule.embedFBLike('{!! $fb_like !!}', 0, 0, {!! $fb_margin_right !!}, {!! $fb_margin_bottom !!});
-@endif
 
 //Minimize popup
 function minYoMediaPopupAd_{!! $data['zid'] !!}() {
@@ -187,22 +179,6 @@ function setYoMediaPre_{!! $data['zid'] !!}() {
 
 function closeYoMediaPopupAd_{!! $data['zid'] !!}() {
     avlInteractModule.closeAd('{!! $wrapperAds !!}', parseInt('900000'), 'showYoMediaPopupAd_{!! $data['zid'] !!}');
-}
-
-function setYomediaFBLike_{!! $data['zid'] !!}(r, b, mr, mb) {
-    avlHelperModule.controlFBLike(r, b, mr, mb);
-}
-
-function showYomediaFBLike_{!! $data['zid'] !!}() {
-    avlHelperModule.showFBLike();
-}
-
-function removeYomediaFBLike_{!! $data['zid'] !!}() {
-    avlHelperModule.removeFBLike();
-}
-
-function hideYomediaFBLike_{!! $data['zid'] !!}() {
-    avlHelperModule.hideFBLike();
 }
 
 function clickTrackingYomedia_{!! $data['zid'] !!}() {
