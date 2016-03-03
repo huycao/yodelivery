@@ -290,23 +290,32 @@ var avlHelperModule  = new function(){
 		},
 		controlFBLike: function(r, b, mr, mb){
 			var fb = document.getElementById('YoFbLike');
-			fb.style.right = r + 'px';
-			fb.style.bottom = b + 'px';
-			fb.style.marginRight = mr + 'px';
-			fb.style.marginBottom = mb + 'px';
+			if (fb){
+				fb.style.right = r + 'px';
+				fb.style.bottom = b + 'px';
+				fb.style.marginRight = mr + 'px';
+				fb.style.marginBottom = mb + 'px';
+			}
 		},
 		hideFBLike: function(){
 			var fb = document.getElementById('YoFbLike');
-			fb.style.width = '0px';
-			fb.style.height = '0px';
+			if (fb){
+				fb.style.width = '0px';
+				fb.style.height = '0px';
+			}
 		},
 		showFBLike: function(){
 			var fb = document.getElementById('YoFbLike');
-			fb.style.width = '120px';
-			fb.style.height = '20px';
+			if (fb){
+				fb.style.width = '120px';
+				fb.style.height = '20px';
+			}
 		},
 		removeFBLike: function(){
-			document.getElementById('YoFbLike').remove();
+			var fb = document.getElementById('YoFbLike');
+			if (fb){
+				fb.remove();
+			}
 		}
 	}
 

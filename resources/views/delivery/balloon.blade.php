@@ -155,8 +155,13 @@
     }
     
 @endif
-@if ('' != $data['ad']->fb_like)
-    avlHelperModule.embedFBLike('{!! $data['ad']->fb_like !!}', 0, 0, {!! $data['ad']->fb_margin_right !!}, {!! $data['ad']->fb_margin_bottom !!});
+<?php
+    $fb_like = isset($data['ad']->fb_like) ? $data['ad']->fb_like : '';
+    $fb_margin_right = isset($data['ad']->fb_margin_right) ? $data['ad']->fb_margin_right : 0;
+    $fb_margin_bottom = isset($data['ad']->fb_margin_bottom) ? $data['ad']->fb_margin_bottom : 0;
+?>
+@if ('' != $fb_like)
+    avlHelperModule.embedFBLike('{!! $fb_like !!}', 0, 0, {!! $fb_margin_right !!}, {!! $fb_margin_bottom !!});
 @endif
 
 //Minimize popup
