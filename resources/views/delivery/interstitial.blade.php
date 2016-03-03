@@ -52,7 +52,7 @@ function showPopupAdYomedia_{!! $data['zid'] !!}(s) {
     var yo_ad = document.getElementById('yomedia-popup-{!! $data['zid'] !!}');
     if (!yo_ad) {
         var banner_html = '<div id="yomedia-overlay-{!! $data['zid'] !!}" style="height: ' + screen.height + 'px; display: block; background-color: black; position: absolute; left: 0; top: 0; width: ' + screen.width + 'px; min-height: 100%; z-index: 1000000; overflow: hidden; opacity: 0.8;"></div>';
-        banner_html += '<div id="yomeida-popup-int-video-{!! $data['zid'] !!}" style="width: ' + _yomediaAds_{!! $data['zid'] !!}.popup.width + '; height: ' + _yomediaAds_{!! $data['zid'] !!}.popup.height + '; display: block; position: absolute; top: ' + _yomediaAds_{!! $data['zid'] !!}.popup.top + '; left: 0; right: 0; top: 0; bottom: 0; margin: auto; background-color: #FFFFFF; z-index: 1000001;">';
+        banner_html += '<div id="yomeida-popup-int-video-{!! $data['zid'] !!}" style="width: ' + _yomediaAds_{!! $data['zid'] !!}.popup.width + '; height: ' + _yomediaAds_{!! $data['zid'] !!}.popup.height + '; display: block; position: absolute; top: ' + _yomediaAds_{!! $data['zid'] !!}.popup.top + '; left: 0; right: 0; top: 0; bottom: 0; margin: auto; background-color: #FFFFFF; z-index: 1000001; cursor: pointer;">';
         if (typeof _yomediaAds_{!! $data['zid'] !!}.close_btn == 'undefined' ||  !_yomediaAds_{!! $data['zid'] !!}.close_btn) {
             banner_html += '<div onclick="closePopupAdYomedia_{!! $data['zid'] !!}(false);" id="yomedia-close-int-v" style="position: absolute; right: 3px;  top: 3px; color: #c3c3c3; font: 12px/12px Arial, sans-serif; cursor: pointer; z-index: 9999; padding: 3px 10px; border-radius: 10px; border: 1px solid #333333; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2); background: linear-gradient(to bottom, #666666 0%,#000000 100%);">close</div>';
         } else {
@@ -71,7 +71,7 @@ function showPopupAdYomedia_{!! $data['zid'] !!}(s) {
         banner_html += '</div>';//popup_int_con
         banner_html += '</div>';//popup_int_video
 
-        yo_ad = domManipulate.create('div', 'yomedia-popup-{!! $data['zid'] !!}', 'position:fixed; top:0;left:0;right:0;bottom:0; z-index: 9990', banner_html);
+        yo_ad = domManipulate.create('div', 'yomedia-popup-{!! $data['zid'] !!}', 'position:fixed; top:0;left:0;right:0;bottom:0; z-index: 9990;', banner_html);
         domManipulate.append(yo_ad);
         setTopYomedia_{!! $data['zid'] !!}();
 
