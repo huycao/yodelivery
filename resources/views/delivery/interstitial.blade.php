@@ -160,7 +160,7 @@ function showPopupAdYomedia_{!! $data['zid'] !!}(s) {
 
             videoObj_{!! $data['zid'] !!}.play();
             videoObj_{!! $data['zid'] !!}.on('ended', function(evt) {
-                //closePopupAdYomedia_{!! $data['zid'] !!}(true);
+                closePopupAdYomedia_{!! $data['zid'] !!}(true);
             });
         }
 
