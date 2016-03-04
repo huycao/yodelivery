@@ -1,7 +1,4 @@
 <?php
-    $fb_like = isset($data['ad']->fb_like) ? $data['ad']->fb_like : '';
-    $fb_margin_right = isset($data['ad']->fb_margin_right) ? $data['ad']->fb_margin_right : 0;
-    $fb_margin_bottom = isset($data['ad']->fb_margin_bottom) ? $data['ad']->fb_margin_bottom : 0;
     if (!empty($data['ad']->destination_url)) {
         $data['ad']->destination_url = trim(str_replace('[timestamp]', time(), $data['ad']->destination_url));
     }
@@ -33,6 +30,49 @@
         $videojs_source = $data['ad']->source_url_backup;
     }
 ?>
+avlInteractModule.innerHTMLAds('{!! $data['zid'] !!}', '{!! addslashes($htmlSource) !!}', '{!! $displayType !!}');
+if (_yomediaAds_{!! $data['zid'] !!}.twitter &&  _yomediaAds_{!! $data['zid'] !!}.twitter.url) {
+    var css = '<style type="text/css">';
+    css += '#yomeida-popup-int-video-{!! $data['zid'] !!} #twitter-widget-0{';
+    css += 'position: absolute !important;display: hidden;';
+    css += '}';
+    css += '</style>';
+    document.write(css);
+}
+var sns = '';
+if (_yomediaAds_{!! $data['zid'] !!}.facebook &&  _yomediaAds_{!! $data['zid'] !!}.facebook.url) {
+    sns += '<script>';
+    sns += '(function(d, s, id) {';
+    sns += 'var js, fjs = d.getElementsByTagName(s)[0];';
+    sns += 'if (d.getElementById(id)) return;';
+    sns += 'js = d.createElement(s); js.id = id;';
+    sns += 'js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.5";';
+    sns += 'fjs.parentNode.insertBefore(js, fjs);';
+    sns += '}';
+    sns += '(document, "script", "facebook-jssdk"));';
+    sns += '</script>';
+}
+
+sns += '<div id="yomedia-popup-{!! $data['zid'] !!}" style="position:fixed; top:0;left:0;right:0;bottom:0; z-index: 9999">';
+sns += '<div id="yomeida-popup-int-video-{!! $data['zid'] !!}" style="width: ' + _yomediaAds_{!! $data['zid'] !!}.popup.width + '; height: ' + _yomediaAds_{!! $data['zid'] !!}.popup.height + '; display: block; position: absolute; top: 0; left: 0; right: 0; bottom: 0; margin: auto; z-index: 1000004;">';
+if (_yomediaAds_{!! $data['zid'] !!}.twitter &&  _yomediaAds_{!! $data['zid'] !!}.twitter.url) {
+    sns += '<a href="' + _yomediaAds_{!! $data['zid'] !!}.twitter.url + '" class="twitter-follow-button" data-show-count="false" data-show-screen-name="false"></a>';
+    sns += '<script>';
+    sns += '!function(d,s,id){';
+    sns += 'var js,fjs=d.getElementsByTagName(s)[0];';
+    sns += 'if(!d.getElementById(id)){';
+    sns += 'js=d.createElement(s);';
+    sns += 'js.id=id;js.src="//platform.twitter.com/widgets.js";';
+    sns += 'fjs.parentNode.insertBefore(js,fjs);';
+    sns += '}';
+    sns += '}';
+    sns += '(document,"script","twitter-wjs");';
+    sns += '</script>';
+}
+sns += '</div>';
+sns += '</div>';
+
+document.write(sns);
 avlHelperModule.loadAvlStyle();
 avlHelperModule.embedCss('{!! $videojs_source !!}styles/black-poster.css');
 avlHelperModule.embedCss('{!! $videojs_source !!}styles/videojs.vast.css');
@@ -45,35 +85,38 @@ avlHelperModule.embedJs('{!! $videojs_source !!}js/ie8fix.js');
 avlHelperModule.embedJs('{!! $videojs_source !!}js/swfobject.js');
 avlHelperModule.embedJs('{!! $videojs_source !!}js/videojs-vast-vpaid.min.js');
 
-avlInteractModule.innerHTMLAds('{!! $data['zid'] !!}', '{!! addslashes($htmlSource) !!}', '{!! $displayType !!}');
 
 
 function showPopupAdYomedia_{!! $data['zid'] !!}(s) {
     var yo_ad = document.getElementById('yomedia-popup-{!! $data['zid'] !!}');
-    if (!yo_ad) {
+    if (yo_ad) {
         var banner_html = '<div id="yomedia-overlay-{!! $data['zid'] !!}" style="height: ' + screen.height + 'px; display: block; background-color: black; position: absolute; left: 0; top: 0; width: ' + screen.width + 'px; min-height: 100%; z-index: 1000000; overflow: hidden; opacity: 0.8;"></div>';
-        banner_html += '<div id="yomeida-popup-int-video-{!! $data['zid'] !!}" style="width: ' + _yomediaAds_{!! $data['zid'] !!}.popup.width + '; height: ' + _yomediaAds_{!! $data['zid'] !!}.popup.height + '; display: block; position: absolute; top: ' + _yomediaAds_{!! $data['zid'] !!}.popup.top + '; left: 0; right: 0; top: 0; bottom: 0; margin: auto; background-color: #FFFFFF; z-index: 1000001; cursor: pointer;">';
+        var overlay = domManipulate.create('div', 'yomedia-overlay-{!! $data['zid'] !!}', 'height: ' + screen.height + 'px; display: block; background-color: black; position: absolute; left: 0; top: 0; width: ' + screen.width + 'px; min-height: 100%; z-index: 1000000; overflow: hidden; opacity: 0.8;', '');;
+        document.getElementById('yomedia-popup-{!! $data['zid'] !!}').appendChild(overlay);
+        banner_html = '';
         if (typeof _yomediaAds_{!! $data['zid'] !!}.close_btn == 'undefined' ||  !_yomediaAds_{!! $data['zid'] !!}.close_btn) {
-            banner_html += '<div onclick="closePopupAdYomedia_{!! $data['zid'] !!}(false);" id="yomedia-close-int-v" style="position: absolute; right: 3px;  top: 3px; color: #c3c3c3; font: 12px/12px Arial, sans-serif; cursor: pointer; z-index: 9999; padding: 3px 10px; border-radius: 10px; border: 1px solid #333333; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2); background: linear-gradient(to bottom, #666666 0%,#000000 100%);">close</div>';
+            banner_html += '<div onclick="closePopupAdYomedia_{!! $data['zid'] !!}(false);" id="yomedia-close-int-v" style="position: absolute; right: 3px;  top: 3px; color: #c3c3c3; font: 12px/12px Arial, sans-serif; cursor: pointer; z-index: 9999; padding: 3px 10px; border-radius: 10px; border: 1px solid #333333; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2); background: linear-gradient(to bottom, #666666 0%,#000000 100%); ">close</div>';
         } else {
-            banner_html += '<div onclick="closePopupAdYomedia_{!! $data['zid'] !!}(false);" id="yomedia-close-int-v" style="position: absolute; right: 3px;  top: 3px;"><img src="' + _yomediaAds_{!! $data['zid'] !!}.close_btn + '"></div>';
+             banner_html += '<div onclick="closePopupAdYomedia_{!! $data['zid'] !!}(false);" id="yomedia-close-int-v" style="position: absolute; right: 3px;  top: 3px;"><img src="' + _yomediaAds_{!! $data['zid'] !!}.close_btn + '"></div>';
         }
-        banner_html += '<div id="yomeida-popup-int-con-{!! $data['zid'] !!}">';  
+        banner_html += '<div id="yomeida-popup-int-con-{!! $data['zid'] !!}" style="cursor: pointer;">';  
 
         //video
         if (typeof _yomediaAds_{!! $data['zid'] !!}.video != 'undefined' &&  _yomediaAds_{!! $data['zid'] !!}.video) {
             var video_width = parseInt(_yomediaAds_{!! $data['zid'] !!}.video.width.replace('px', ''));
             var video_height = parseInt(_yomediaAds_{!! $data['zid'] !!}.video.height.replace('px', ''));
-            banner_html += '<video id="yomedia-video-{!! $data['zid'] !!}" class="video-js vjs-default-skin" style="position: absolute;" width="' + video_width + '" height="' + video_height + '"><source src="{!! $videojs_source !!}blank.mp4" type="video/mp4"></video>';
+            banner_html += '<video id="yomedia-video-{!! $data['zid'] !!}" class="video-js vjs-default-skin" style="position: absolute;" width="' + video_width + '" height="' + video_height + '"><source src="http://static.yomedia.vn/public/source/wap_inpage/videojs/blank.mp4" type="video/mp4"></video>';
         }
 
-        banner_html += '<a onclick="clickTrackingYomedia_{!! $data['zid'] !!}();" target="_blank"><img src="' + _yomediaAds_{!! $data['zid'] !!}.popup.background + '" height="' + _yomediaAds_{!! $data['zid'] !!}.popup.height + '" width="' + _yomediaAds_{!! $data['zid'] !!}.popup.width + '"></a>';
+        banner_html += '<a onclick="clickTrackingYomedia_{!! $data['zid'] !!}();" target="_blank"><img id="yomedia-bg-{!! $data['zid'] !!}" src="' + _yomediaAds_{!! $data['zid'] !!}.popup.background + '" height="' + _yomediaAds_{!! $data['zid'] !!}.popup.height + '" width="' + _yomediaAds_{!! $data['zid'] !!}.popup.width + '"></a>';
+        if (_yomediaAds_{!! $data['zid'] !!}.facebook &&  _yomediaAds_{!! $data['zid'] !!}.facebook.url) {
+            banner_html += '<div id="fb-root"></div>';
+            banner_html += '<div class="fb-like" id="yomedia-facebook-{!! $data['zid'] !!}" data-href="' + _yomediaAds_{!! $data['zid'] !!}.facebook.url + '" data-layout="button_count" data-action="like" data-show-faces="false" data-share="false" data-width=120 style="position: absolute; width: 120px !important; height: 20px; z-index: 2147483646; overflow:hidden;padding:0px; border:none;text-align:left; top: ' + _yomediaAds_{!! $data['zid'] !!}.facebook.top + '; left: ' + _yomediaAds_{!! $data['zid'] !!}.facebook.left + ';"></div>';
+        }
         banner_html += '</div>';//popup_int_con
-        banner_html += '</div>';//popup_int_video
 
-        yo_ad = domManipulate.create('div', 'yomedia-popup-{!! $data['zid'] !!}', 'position:fixed; top:0;left:0;right:0;bottom:0; z-index: 9990;', banner_html);
-        domManipulate.append(yo_ad);
-        setTopYomedia_{!! $data['zid'] !!}();
+        var yo_ad = domManipulate.create('div', 'test', '', banner_html);
+        document.getElementById('yomeida-popup-int-video-{!! $data['zid'] !!}').appendChild(yo_ad);
 
         if (typeof _yomediaAds_{!! $data['zid'] !!}.video != 'undefined' &&  _yomediaAds_{!! $data['zid'] !!}.video) {
             var videoObj_{!! $data['zid'] !!} = videojs("yomedia-video-{!! $data['zid'] !!}", {hls: {withCredentials: true},"controls": true,"autoplay": false, bigPlayButton: false, controlBar: {playToggle: false, fullscreenToggle: false, currentTimeDisplay: false, timeDivider: false, durationDisplay: false, remainingTimeDisplay: false, progressControl: false, volumeControl: false, muteToggle: true}});
@@ -87,12 +130,8 @@ function showPopupAdYomedia_{!! $data['zid'] !!}(s) {
                 playAdAlways: true,
                 adCancelTimeout: 10000 
             });
-            if (typeof _yomediaAds_{!! $data['zid'] !!}.muted === 'boolean') {
-                videoObj_{!! $data['zid'] !!}.muted(_yomediaAds_{!! $data['zid'] !!}.muted);
-            }
-            if (typeof _yomediaAds_{!! $data['zid'] !!}.volume === 'number') {
-                videoObj_{!! $data['zid'] !!}.volume(_yomediaAds_{!! $data['zid'] !!}.volume);
-            }
+            videoObj_{!! $data['zid'] !!}.muted(_yomediaAds_{!! $data['zid'] !!}.muted);
+            videoObj_{!! $data['zid'] !!}.volume(_yomediaAds_{!! $data['zid'] !!}.volume);
 
             videoObj_{!! $data['zid'] !!}.play();
             videoObj_{!! $data['zid'] !!}.on('ended', function(evt) {
@@ -128,6 +167,11 @@ function closePopupAdYomedia_{!! $data['zid'] !!}(ended_video) {
     }
 }
 
+function getElementInsideContainer_{!! $data['zid'] !!}(containerID, childID) {
+    var elm = document.getElementById(childID);
+    var parent = elm ? elm.parentNode : {};
+    return (parent.id && parent.id === containerID) ? elm : {};
+}
 
 function clickTrackingYomedia_{!! $data['zid'] !!}() {
     var clickTag = '{!! $clickTag !!}';
@@ -150,6 +194,18 @@ document.onreadystatechange = function () {
                 showPopupAdYomedia_{!! $data['zid'] !!}(1);
             }
         @endif
+        if (_yomediaAds_{!! $data['zid'] !!}.twitter &&  _yomediaAds_{!! $data['zid'] !!}.twitter.url) {    
+            var image = new Image();
+            image.src = document.getElementById("yomedia-bg-{!! $data['zid'] !!}").src;
+            image.onload = function() {
+                var tw = getElementInsideContainer_{!! $data['zid'] !!}("yomeida-popup-int-video-{!! $data['zid'] !!}", "twitter-widget-0");
+                if (tw){
+                    tw.style.top = _yomediaAds_{!! $data['zid'] !!}.twitter.top;
+                    tw.style.left = _yomediaAds_{!! $data['zid'] !!}.twitter.left;
+                    tw.style.display = 'block';
+                }
+            }
+        }
     }
 }
 @include("footer")
