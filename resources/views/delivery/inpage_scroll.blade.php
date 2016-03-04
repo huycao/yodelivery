@@ -97,7 +97,7 @@ function showPopupAdYomedia_{!! $data['zid'] !!}(s) {
 
     var rs = '';
     if (avlInteractModule.isMobile() == true) {
-        rs = '<div id="YomediaInpageContent_{!! $data['zid'] !!}" style="display: block; opacity: 0; background: transparent; overflow: hidden; margin: 0px auto; z-index: 1; bottom: 0px; max-width: 100%; height: 332px;">';
+        rs = '<div id="YomediaInpageContent_{!! $data['zid'] !!}" style="display: block; opacity: 0; background: transparent; overflow: hidden; margin: 0px auto; position: fixed; z-index: 1; bottom: 0px; max-width: 100%; height: 332px;">';
         rs += '<a onclick="clickTrackingYomedia_{!! $data['zid'] !!}();">';
         rs += '<img id="yomedia-inpage-banner-h-{!! $data['zid'] !!}" style="margin: 0px auto;display: block;width:100%;max-width: 100%" src="' + _yomediaAds_{!! $data['zid'] !!}.background_h + '">';
         rs += '</a>';
