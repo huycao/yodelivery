@@ -43,11 +43,11 @@ if (typeof _YoImp != 'undefined' && avlHelperModule.validateUrl(_YoImp)) {
 
 function showYomediaSyncTO_{!! $data['zid'] !!}(){
 	stage1.setFlashVars('call=onBeginBig');
-    document.getElementById('YoExpand').style.display = "inline-block";
+    document.getElementById('YomediaSyncOver_{!! $data['zid'] !!}').style.display = "inline-block";
 }
 
 function closeYomediaSyncTO_{!! $data['zid'] !!}(){
-    document.getElementById('YoExpand').style.display = "none";
+    document.getElementById('YomediaSyncOver_{!! $data['zid'] !!}').style.display = "none";
 }
 
 function clickTrackingYomedia_{!! $data['zid'] !!}() {
@@ -62,7 +62,6 @@ function clickTrackingYomedia_{!! $data['zid'] !!}() {
     if (typeof _YoClick != 'undefined' && avlHelperModule.validateUrl(_YoClick)) {
         avlHelperModule.embedTracking(_YoClick);
     }
-    alert(clickTag);
     window.open(clickTag);
 }
 
