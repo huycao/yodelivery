@@ -97,6 +97,7 @@ class DeliveryController extends Controller
 				//read redis 1
 				$data['ref'] = $hostReferer;
 				$adZone = $deliveryModel->getAdzone($zoneID);
+
 				if($adZone && !empty($adZone->site)){
 					$expandFields['ad_format_id'] = $adZone->ad_format_id;
 					if($adZone->publisher_site_id == $websiteID){
@@ -179,6 +180,8 @@ class DeliveryController extends Controller
     												$data['aid']  = $ad->id;
     												$data['fpid'] = $flightWebsite->id;
     												$data['flight'] = $flight;
+    												$data['pageWidth'] = $adZone->width;
+
     												//over report
     												if($deliveryStatus == Delivery::DELIVERY_STATUS_OVER_REPORT){
     													$data['ovr'] = $isOverReport = true;
@@ -265,9 +268,7 @@ class DeliveryController extends Controller
 					$data['rd'] = str_random(40);
 
 					$this->data['data'] = $data;
-
 					$data['type'] = $serveAd->ad_view ? $serveAd->ad_view : strtolower($data['type']);
-
 					if( Input::get('test') == 1 ){
 			            return response(\View::make($data['type'], $this->data), 200)->header('Content-Type','text/javascript; charset=UTF-8');
 					}else{
