@@ -773,4 +773,26 @@ class Delivery extends Eloquent{
 
 		return FALSE;
 	}
+
+	public function rotatorPercentAd($zoneID, $listAlternateAd) {
+        $arrIndex = array();
+        $cnt = 0;
+        $cookieKey = "YoMediaCookie3rd{$zoneID}";
+        $cnt_alternate = isset($_COOKIE[$cookieKey]) ? $_COOKIE[$cookieKey] : 0;
+        $pattern = "/\b(?:(?:https?|ftp):\/\/|www\.)[-a-z0-9+&@#\/%?=~_|!:,.;]*[-a-z0-9+&@#\/%=~_|]/i";
+        foreach ($listAlternateAd as $alternateAd) {
+        	$weight = !empty($alternateAd->weight) ? $alternateAd->weight : 1;
+        	for($i = 0; $i < $weight; $i++) {
+        		$arrIndex[$cnt] = $alternateAd->code;
+        		$cnt++;
+        	}
+        }
+
+        if ($cnt_alternate >= count($arrIndex)) {
+        	$cnt_alternate = 0;
+        }
+        setcookie($cookieKey, $cnt_alternate + 1, time() +(86400*365), '/', getWebDomain(DOMAIN_COOKIE));
+
+        return $arrIndex[$cnt_alternate];
+    }
 }
