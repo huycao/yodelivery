@@ -1,5 +1,5 @@
 @include("url_track_ga")
-<?php if( count($listAlternateAd) > 0 ){ ?>
+@if( count($listAlternateAd) > 0 )
 
 <?php
 	
@@ -12,13 +12,13 @@
 var {!! $YoMediaZone3rd !!} = new Array();
 var {!! $YoMediaWeight3rd !!} = new Array();
 
-<?php $index = 0 ?>
 
-<?php foreach( $listAlternateAd as $item ){ ?>
-{!! $YoMediaZone3rd !!}[{!! $index !!}] = '{!! strToHex(str_replace("\r\n", '\n', $item->code)) !!}';
-{!! $YoMediaWeight3rd !!}[{!! $index !!}] = '{!! $item->weight !!}';
-<?php } ?>
+
+@foreach( $listAlternateAd as $key=>$item)
+{!! $YoMediaZone3rd !!}[{!! $key !!}] = '{!! strToHex(str_replace("\r\n", '\n', $item->code)) !!}';
+{!! $YoMediaWeight3rd !!}[{!! $key !!}] = '{!! $item->weight !!}';
+@endforeach
 
 avlInteractModule.rotatorPercentAd('{!! $YoMediaCookie3rd !!}', {!! $YoMediaZone3rd !!}, {!! $YoMediaWeight3rd !!}, '');
 
-<?php } ?>
+@endif
